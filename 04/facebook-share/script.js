@@ -30,7 +30,9 @@ var _combine_input = function () {
 
         var _result_html = $('<div><a>'
             //+ '分享到Facebook' 
-            + '<img src="https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/facebook-share/facebook-logo-white.svg" width="13" height="13" /> 分享'
+            + '<img src="https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/facebook-share/facebook-logo-white.svg" width="13" height="13" /> '
+            //+ "分享"
+            + $("#input_button").val().trim()
             + '</a></div>');
         _result_html.css({
             "background-color": "#5D7DAE",
@@ -162,7 +164,7 @@ var _load_file = function(evt) {
     var _file_name = evt.target.files[0].name;
     
     reader.onload = function(evt) {
-        if(evt.target.readyState != 2) return;
+        if(evt.target.readyState !== 2) return;
         if(evt.target.error) {
             alert('Error while reading file');
             return;
@@ -188,7 +190,7 @@ var _load_file = function(evt) {
             }
             
             //_download_file(_result, _file_name, "txt");
-        })
+        });
     };
 
     var _pos = _file_name.lastIndexOf(".");
