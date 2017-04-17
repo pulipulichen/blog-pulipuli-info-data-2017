@@ -28,10 +28,41 @@ var _combine_input = function () {
 	var _input = _panel.find("#preview");
 	_input.val(_result);
 
-        var _result_html = $('<a>分享到Facebook</a>');
+        var _result_html = $('<div><a>'
+            //+ '分享到Facebook' 
+            + '<img src="https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/facebook-share/facebook-logo-white.svg" width="13" height="13" /> 分享'
+            + '</a></div>');
+        _result_html.css({
+            "background-color": "#5D7DAE",
+            "height": "24px",
+            "width": "80px"
+        });
         
-        _result_html.attr("href", _result);
+        _result_html.find("a img").css({
+            "margin-top": '3px',
+            "margin-bottom": '-2px',
+        });
+        
+        _result_html.find("a").css({
+            'font-size':'13px',
+            'font-weight':'bold',
+            'text-align':'center',
+            'color':'#fff',
+            'border':'1px solid #FFF',
+            'background-color':'#5D7DAE',
+            'padding':'2px 10px',
+            'cursor':'pointer',
+            'text-decoration':'none',
+            'width':'80px',
+            'display':'block'
+        });
+        
+        _result_html.find("a").attr("href", _result);
 	_panel.find("#preview_html").html(_result_html);
+        var _div = $("<div></div>");
+        _result_html.clone().appendTo(_div);
+        _panel.find("#preview_html_source").val(_div.html());
+        
 };	// var _combine_input = function () {
 
 // ------------------------------------------------------
