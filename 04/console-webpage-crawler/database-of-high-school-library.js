@@ -42,6 +42,6 @@ main = function (_callback) {
 
 var scriptTag = document.createElement("script"),
     firstScriptTag = document.getElementsByTagName("script")[0]; 
-scriptTag.src = 'http://localhost/blogger-data/blog-pulipuli-info-data-2017/04/console-webpage-crawler/console-webpage-crawler-lib.js'; 
+scriptTag.src = 'https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/console-webpage-crawler/console-webpage-crawler-lib.js'; 
 scriptTag.id = "webcrawler_lib";
 firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); 

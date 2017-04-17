@@ -109,9 +109,10 @@ WEBCRAWLER.save_to_ods = function (_data) {
     // https://pulipulichen.github.io/jieba-js/xlsx.core.min.js
     
     if (typeof(XLSX) === "undefined") {
-        //$.getScript("https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/console-webpage-crawler/xlsx.core.min.js", function () {
-        $.getScript("xlsx.core.min.js", function () {
-            $.getScript("FileSaver.js", function () {
+        $.getScript("https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/console-webpage-crawler/xlsx.core.min.js", function () {
+        //$.getScript("xlsx.core.min.js", function () {
+            $.getScript("https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/console-webpage-crawler/FileSaver.js", function () {
+            //$.getScript("FileSaver.js", function () {
                 WEBCRAWLER.save_to_ods(_data);
             });
         });
