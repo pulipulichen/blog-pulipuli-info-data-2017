@@ -34,8 +34,10 @@ var _combine_input = function () {
             + '</a></div>');
         _result_html.css({
             "background-color": "#5D7DAE",
-            "height": "24px",
-            "width": "80px"
+            //"height": "24px",
+            //"width": "80px",
+            "border-radius": "6px",
+            "display": "inline-block"
         });
         
         _result_html.find("a img").css({
@@ -49,11 +51,11 @@ var _combine_input = function () {
             'text-align':'center',
             'color':'#fff',
             'border':'1px solid #FFF',
-            'background-color':'#5D7DAE',
+            //'background-color':'#5D7DAE',
             'padding':'2px 10px',
             'cursor':'pointer',
             'text-decoration':'none',
-            'width':'80px',
+            //'width':'80px',
             'display':'block'
         });
         
