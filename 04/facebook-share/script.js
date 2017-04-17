@@ -287,5 +287,9 @@ $(function () {
       PULI_UTIL.clipboard.copy($("#preview").val());
   });
   
+  $('#copy_source_code_html').click(function () {
+      PULI_UTIL.clipboard.copy($("#preview_html_source").val());
+  });
+  
   _combine_input();
 });
