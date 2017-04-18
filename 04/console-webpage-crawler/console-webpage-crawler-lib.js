@@ -232,28 +232,70 @@ WEBCRAWLER.get_int_by_selector = function (_doc, _selector) {
     return parseInt(_text, 10);
 };
 
-// ---------------------------------------------
+WEBCRAWLER.show_progression_lock = false;
 
-// 先偵測有沒有jQuery
-if (typeof($) !== "function") {
-    (function(document, tag) {
-        var scriptTag = document.createElement(tag), // create a script tag
-            firstScriptTag = document.getElementsByTagName(tag)[0]; // find the first script tag in the document
-        scriptTag.src = 'https://code.jquery.com/jquery-3.2.1.min.js'; // set the source of the script to your script
-        firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); // append the script to the DOM
+WEBCRAWLER.show_progression = function (_current, _total) {
+    if (typeof(_current) === "number" 
+            && typeof(_total) === "number" 
+            && WEBCRAWLER.show_progression_lock === false) {
+        WEBCRAWLER.show_progression_lock = true;
+        //console.log([_current, _total]);
+        if (_current === 0) {
+            _current = 0.01;
+        }
+        var _percent = _current / _total;
+        if (_percent > 1) {
+            _percent = 1;
+        }
+        _percent = _percent * 100;
+        _percent = Math.ceil(_percent);
+        console.log("LOADING: " + _percent + "%");
         
         setTimeout(function () {
-            $.getScript($("#webcrawler").attr("src"));
+            WEBCRAWLER.show_progression_lock = false;
         }, 1000);
-    }(document, 'script'));
-}   // if (typeof($) !== "function") {
-else {
-    if (typeof(main) === "function") {
-        console.log("開始讀取");
-        main(function (_data) {
-            console.log("讀取完成");
-            WEBCRAWLER.save_to_ods(_data);
-            
-        });
     }
-}   //else {
+};
+
+WEBCRAWLER.init = function () {
+    
+    // ---------------------------------------------
+
+    // 先偵測有沒有jQuery
+    if (typeof($) !== "function") {
+        (function(document, tag) {
+            if (document.getElementById("jquery") === null) {
+                var scriptTag = document.createElement(tag), // create a script tag
+                    firstScriptTag = document.getElementsByTagName(tag)[0]; // find the first script tag in the document
+                scriptTag.src = 'https://code.jquery.com/jquery-3.2.1.min.js'; // set the source of the script to your script
+                scriptTag.id = "jquery";
+                firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); // append the script to the DOM
+            }
+
+            setTimeout(function () {
+                //$.getScript($("#webcrawler_lib").attr("src"));
+                WEBCRAWLER.init();
+            }, 1000);
+        }(document, 'script'));
+    }   // if (typeof($) !== "function") {
+    else {
+        if (typeof(main) === "function") {
+            if (typeof(crawl_target_url) === "string"
+                    && crawl_target_url !== location.href) {
+                if (window.confirm("You are not stay in target URL: \n\n" + crawl_target_url + "\n\nDo you want to go to target URL?")) {
+                    location.href = crawl_target_url;
+                }
+                return;
+            }
+
+            console.log("開始讀取");
+            main(function (_data) {
+                console.log("讀取完成");
+                WEBCRAWLER.save_to_ods(_data);
+
+            });
+        }
+    }   //else {
+};
+
+WEBCRAWLER.init();

@@ -8,19 +8,7 @@ scriptTag.id = "webcrawler";
 firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); 
 */
 
-/** 本機測試用
-var scriptTag = document.createElement("script"),
-    firstScriptTag = document.getElementsByTagName("script")[0]; 
-scriptTag.src = 'http://localhost/blogger-data/blog-pulipuli-info-data-2017/04/console-webpage-crawler/config/database-of-high-school-library.js'; 
-scriptTag.id = "webcrawler";
-firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); 
-*/
-
-var DEBUG = {
-    use_local: false,
-    limit_one: false
-};
-
+crawl_target_url = "http://163.23.175.5/LIB/LibList.aspx?year=104&semi=2";
 main = function (_callback) {
     var _data = [];
     
@@ -68,6 +56,7 @@ main = function (_callback) {
     
     var _loop = function (_i) {
         if (_i < _link_array.length) {
+            WEBCRAWLER.show_progression(_i, _link_array.length);
             var _link = _link_array[_i];
             _get_data_from_link(_link, function (_result) {
                 for (var _key in _result) {
@@ -179,6 +168,22 @@ var _get_data_from_link = function (_link, _callback) {
     });
 };
 
+
+// ------------------------------------------------------------------------------
+// 下面程式碼請不要變更
+
+/** 本機測試用
+var scriptTag = document.createElement("script"),
+    firstScriptTag = document.getElementsByTagName("script")[0]; 
+scriptTag.src = 'http://localhost/blogger-data/blog-pulipuli-info-data-2017/04/console-webpage-crawler/config/database-of-high-school-library.js'; 
+scriptTag.id = "webcrawler";
+firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); 
+*/
+
+var DEBUG = {
+    use_local_file: false,
+    limit_one: false
+};
 
 var scriptTag = document.createElement("script"),
     firstScriptTag = document.getElementsByTagName("script")[0]; 
