@@ -18,7 +18,7 @@ firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
 
 var DEBUG = {
     use_local: false,
-    limit_one: true
+    limit_one: false
 };
 
 main = function (_callback) {
