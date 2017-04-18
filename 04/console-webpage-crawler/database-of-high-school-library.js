@@ -10,6 +10,7 @@ firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag);
 */
 
 var DEBUG = {
+    use_local: false,
     limit_one: true
 };
 
@@ -173,6 +174,11 @@ var _get_data_from_link = function (_link, _callback) {
 
 var scriptTag = document.createElement("script"),
     firstScriptTag = document.getElementsByTagName("script")[0]; 
-scriptTag.src = 'http://localhost/blogger-data/blog-pulipuli-info-data-2017/04/console-webpage-crawler/console-webpage-crawler-lib.js'; 
+if (DEBUG.use_local_file === true) {
+    scriptTag.src = 'http://localhost/blogger-data/blog-pulipuli-info-data-2017/04/console-webpage-crawler/console-webpage-crawler-lib.js'; 
+}
+else {
+    scriptTag.src = 'https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/console-webpage-crawler/console-webpage-crawler-lib.js'; 
+}
 scriptTag.id = "webcrawler_lib";
 firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); 
