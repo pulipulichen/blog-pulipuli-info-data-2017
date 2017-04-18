@@ -44,7 +44,8 @@ main = function (_callback) {
             var _d = {};
             _d["縣市別 district"] = _district;
             _d["學校名稱 school_name"] = _school_name;
-            _d["網頁連結 link"] = _link;
+            //http://163.23.175.5/LIB/LibView.aspx?10612
+            _d["網頁連結 link"] = "http://163.23.175.5/LIB/" + _link;
             _link_array.push(_link);
             
             _data.push(_d);
@@ -110,7 +111,7 @@ var _get_data_from_link = function (_link, _callback) {
         if (_tel !== undefined) {
             _tel_zip = _tel.split(")")[0];
             _tel_zip = _tel_zip.substring(1, _tel_zip.length);
-            _tel = _tel.split(")")[1];
+            //_tel = _tel.split(")")[1];
         }
         _result["學校電話區碼 tel_zip"] = _tel_zip;
         _result["學校電話 tel"] = _tel;
