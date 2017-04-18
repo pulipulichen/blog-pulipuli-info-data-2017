@@ -1,12 +1,19 @@
 // http://163.23.175.5/LIB/LibList.aspx?year=104&semi=2
 
-/**
+/** 本機測試用
 var scriptTag = document.createElement("script"),
     firstScriptTag = document.getElementsByTagName("script")[0]; 
-scriptTag.src = 'http://localhost/blogger-data/blog-pulipuli-info-data-2017/04/console-webpage-crawler/database-of-high-school-library.js'; 
+scriptTag.src = 'https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/console-webpage-crawler/config/database-of-high-school-library.js'; 
 scriptTag.id = "webcrawler";
 firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); 
+*/
 
+/** 本機測試用
+var scriptTag = document.createElement("script"),
+    firstScriptTag = document.getElementsByTagName("script")[0]; 
+scriptTag.src = 'http://localhost/blogger-data/blog-pulipuli-info-data-2017/04/console-webpage-crawler/config/database-of-high-school-library.js'; 
+scriptTag.id = "webcrawler";
+firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); 
 */
 
 var DEBUG = {
