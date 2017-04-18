@@ -43,16 +43,26 @@ WEBCRAWLER.alphabet_array = WEBCRAWLER.alphabet.split("");
 
 WEBCRAWLER.get_alphabet_col = function (_col) {
     var _key = "";
-    while (_col > WEBCRAWLER.alphabet_array.length) {
+    var _is_over = false;
+    
+    while (_col > WEBCRAWLER.alphabet_array.length - 1) {
+        _is_over = true;
+        //console.log("over");
         var _i = _col % WEBCRAWLER.alphabet_array.length;
-        var _v = WEBCRAWLER.alphabet_array[_i];
-        _key = _key + _v;
+        var _v = WEBCRAWLER.alphabet_array[(_i)];
+        _key = _v + _key;
         _col = (_col-_i) / WEBCRAWLER.alphabet_array.length;
     }
 
     var _i = _col % WEBCRAWLER.alphabet_array.length;
-    var _v = WEBCRAWLER.alphabet_array[_i];
-    _key = _key + _v;
+    if (_is_over === true) {
+        _v = WEBCRAWLER.alphabet_array[(_i-1)];
+    }
+    else {
+        _v = WEBCRAWLER.alphabet_array[(_i)];
+    }
+    
+    _key = _v + _key;
     
     return _key;
 };
@@ -189,6 +199,39 @@ WEBCRAWLER.s2ab = function (s) {
     return buf;
 };
 
+WEBCRAWLER.ajax_from_url = function (_url, _callback) {
+    $.ajax({
+        url: _url,
+        type: 'GET',
+        success: function(res) {
+           var data = $.parseHTML(res);  //<----try with $.parseHTML().
+           _callback($(data));
+        }
+    });
+};
+
+WEBCRAWLER.get_text_by_selector = function (_doc, _selector) {
+    if (_doc.find(_selector).length === 1) {
+        return _doc.find(_selector).text().trim();
+    }
+    else if (_doc.find(_selector).length > 1) {
+        var _output = [];
+        _doc.find(_selector).each(function (_i, _ele) {
+            _output.push($(_ele).text());
+        });
+        return _output.join(";");
+    }
+};
+
+WEBCRAWLER.get_int_by_selector = function (_doc, _selector) {
+    var _text = WEBCRAWLER.get_text_by_selector(_doc, _selector);
+    if (_text === undefined) {
+        return _text;
+    }
+    _text = _text.replace(",", "");
+    return parseInt(_text, 10);
+};
+
 // ---------------------------------------------
 
 // 先偵測有沒有jQuery
@@ -206,8 +249,11 @@ if (typeof($) !== "function") {
 }   // if (typeof($) !== "function") {
 else {
     if (typeof(main) === "function") {
+        console.log("開始讀取");
         main(function (_data) {
+            console.log("讀取完成");
             WEBCRAWLER.save_to_ods(_data);
+            
         });
     }
 }   //else {

@@ -12,12 +12,20 @@ and open the template in the editor.
     </head>
     <body>
         <script>
+/*
 var scriptTag = document.createElement("script"),
     firstScriptTag = document.getElementsByTagName("script")[0]; 
 scriptTag.src = 'database-of-high-school-library.js'; 
 scriptTag.id = "webcrawler";
 firstScriptTag.parentNode.insertBefore(scriptTag, firstScriptTag); 
-
+*/
+        </script>
+        <script src="console-webpage-crawler-lib.js"></script>
+        <script>
+            console.log(WEBCRAWLER.get_alphabet_col(25));
+            console.log(WEBCRAWLER.get_alphabet_col(26));
+            console.log(WEBCRAWLER.get_alphabet_col(27));
+            console.log(WEBCRAWLER.get_alphabet_col(28));
         </script>
     </body>
 </html>
