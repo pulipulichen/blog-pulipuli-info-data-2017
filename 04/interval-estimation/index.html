@@ -47,11 +47,18 @@ and open the template in the editor.
 <div class="ui bottom attached active tab segment input-field-container" data-tab="textarea">
     
     <!-- https://apps.lazza.dk/facebook/ -->
-  
-    <div class="field">
-        <label for="input_data">請輸入數值資料：一行一筆資料</label>
-        <textarea class="change-trigger focus_select" 
-                  id="input_data">0.7
+
+    <div class="ui top attached tabular menu">
+        <div class="item" data-tab="normal">多筆數值 (常態分佈/t分佈)</div>
+        <div class="active item" data-tab="prop">單筆比例 (二項分佈)</div>
+        
+    </div>
+    
+    <div class="ui bottom attached active tab segment dist-mode" data-tab="normal">
+        <div class="field">
+            <label for="input_data">請輸入數值資料：一行一筆資料</label>
+            <textarea class="change-trigger focus_select" 
+                      id="input_data">0.7
 0.895
 0.305
 0.4
@@ -60,11 +67,60 @@ and open the template in the editor.
 0.115
 0.1
 0.9
-0.55
-</textarea>
+0.55</textarea>
+        </div>
+        <div class="field">
+            母體分佈模式選擇：
+        </div>
+        <div class="field">
+            <div class="ui radio checkbox">
+                <input type="radio" class="change-trigger" 
+                       name="input_dist"
+                       id="input_dist_auto" 
+                       value="dist_auto"
+                       checked="checked" />
+                <label for="input_dist_auto">根據樣本數量選擇：小於30選用t分佈、否則使用常態分佈</label>
+            </div>
+        </div>
+        <div class="field">
+            <div class="ui radio checkbox">
+                <input type="radio" class="change-trigger" 
+                       name="input_dist"
+                       id="input_dist_t" 
+                       value="dist_t"  />
+                <label for="input_dist_t">t分佈(樣本數量小於30)</label>
+            </div>
+        </div>
+        <div class="field">
+            <div class="ui radio checkbox">
+                <input type="radio" class="change-trigger" 
+                       name="input_dist"
+                       id="input_dist_normal" 
+                       value="dist_normal"  />
+                <label for="input_dist_normal">常態分佈(樣本數量在30以上)</label>
+            </div>
+        </div>
     </div>
+    
+    <div class="ui bottom attached tab segment dist-mode" data-tab="prop">
+        <div class="field">
+            <label for="input_prop">樣本比例</label>
+            <input type="text" class="change-trigger focus_select" 
+                   id="input_prop" 
+                   value="0.25" 
+                   placeholder="請輸入樣本比例" />
+        </div>
+        <div class="field">
+            <label for="input_n">樣本數量</label>
+            <input type="text" class="change-trigger focus_select" 
+                   id="input_n" 
+                   value="50" 
+                   placeholder="請輸入樣本數量" />
+        </div>
+    </div>
+        
     <div class="field">
-        <label for="input_alpha">請輸入信心水準：介於0~1之間</label>
+        <label for="input_alpha">請輸入信心水準：介於0~1之間，通常是0.1、0.05、0.01</label>
         <input type="text" class="change-trigger focus_select" 
                id="input_alpha" 
                value="0.05" 
@@ -78,37 +134,8 @@ and open the template in the editor.
                placeholder="請輸入小數點位數" />
     </div>
     
-    <div class="field">
-        母體分佈模式選擇：
-    </div>
-    <div class="field">
-        <div class="ui radio checkbox">
-            <input type="radio" class="change-trigger" 
-                   name="input_dist"
-                   id="input_dist_auto" 
-                   value="dist_auto"
-                   checked="checked" />
-            <label for="input_dist_auto">根據樣本數量選擇：小於30選用t分佈、否則使用常態分佈</label>
-        </div>
-    </div>
-    <div class="field">
-        <div class="ui radio checkbox">
-            <input type="radio" class="change-trigger" 
-                   name="input_dist"
-                   id="input_dist_t" 
-                   value="dist_t"  />
-            <label for="input_dist_t">t分佈(樣本數量小於30)</label>
-        </div>
-    </div>
-    <div class="field">
-        <div class="ui radio checkbox">
-            <input type="radio" class="change-trigger" 
-                   name="input_dist"
-                   id="input_dist_normal" 
-                   value="dist_normal"  />
-            <label for="input_dist_normal">常態分佈(樣本數量在30以上)</label>
-        </div>
-    </div>
+        
+        
 </div>
 
 <!-- -------------------------------------- -->

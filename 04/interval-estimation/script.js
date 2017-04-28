@@ -1,132 +1,190 @@
 
 var _combine_input = function () {
-	// 開頭設定
-	var _result = "";
-        var _panel = $(".file-process-framework");
-	
-        
-	// ------------------------------------------
-        // 資料處理設定
-        var _dist = $('[name="input_dist"]:checked').val();
-        //console.log(_dist);
-        
-        var _data_text = $("#input_data").val().split("\n");
-        var _data = [];
-        for (var _i = 0; _i < _data_text.length; _i++) {
-            var _d = _data_text[_i];
-            if (isNaN(_d) || _d.trim() === "") {
-                continue;
-            }
-            else {
-                _d = eval(_d.trim());
-                _data.push(_d);
-            }
+    // 開頭設定
+    var _result = "";
+    var _panel = $(".file-process-framework");
+
+    // ------------------------------------------
+    // 資料處理設定
+    var _dist_mode = $(".dist-mode:visible").data("tab");
+
+    if (_dist_mode === "normal") {
+        _result = _calc_normal_dist();
+    }
+    else if (_dist_mode === "prop") {
+        _result = _calc_prop_dist();
+    }
+
+
+    // ------------------------------------------
+    // 結束設定
+
+    var _input = _panel.find("#preview");
+    _input.val(_result);
+
+    _panel.find("#preview_html").html(_result);
+};	// var _combine_input = function () {
+
+var _calc_normal_dist = function () {
+    var _dist = $('[name="input_dist"]:checked').val();
+    //console.log(_dist);
+
+    var _data_text = $("#input_data").val().split("\n");
+    var _data = [];
+    for (var _i = 0; _i < _data_text.length; _i++) {
+        var _d = _data_text[_i];
+        if (isNaN(_d) || _d.trim() === "") {
+            continue;
         }
-        
-        var _n = _data.length;
-        if (_n === 0) {
-            return;
+        else {
+            _d = eval(_d.trim());
+            _data.push(_d);
         }
-        
-        var _sum = 0;
-        for (var _i = 0; _i < _data.length; _i++) {
-            _sum = _sum + _data[_i];
+    }
+
+    var _n = _data.length;
+    if (_n === 0) {
+        return;
+    }
+
+    var _sum = 0;
+    for (var _i = 0; _i < _data.length; _i++) {
+        _sum = _sum + _data[_i];
+    }
+    var _avg = _sum / _data.length;
+
+    // -----------------------------
+
+    var _diff_mean_pow = 0;
+    for (var _i = 0; _i < _data.length; _i++) {
+        var _diff = _data[_i] - _avg;
+        _diff = _diff * _diff;
+        _diff_mean_pow = _diff_mean_pow + _diff;
+    }
+
+    var _s2 = _diff_mean_pow / (_data.length - 1);
+    var _s = Math.sqrt(_s2);
+
+    // ------------------------------------
+
+    var _df = _data.length - 1;
+    var _p = $("#input_alpha").val();
+    _p = eval(_p);
+    var _interval = 0;
+
+    var _a = _s / (Math.sqrt(_n));
+    var _score = 1;
+    var _score_type = "t";
+
+    if (_dist === "dist_auto") {
+        if (_n < 30) {
+            _dist = "dist_t";
         }
-        var _avg = _sum / _data.length;
-        
-        // -----------------------------
-        
-        var _diff_mean_pow = 0;
-        for (var _i = 0; _i < _data.length; _i++) {
-            var _diff = _data[_i] - _avg;
-            _diff = _diff * _diff;
-            _diff_mean_pow = _diff_mean_pow + _diff;
+        else {
+            _dist = "dist_normal";
         }
-        
-        var _s2 = _diff_mean_pow / (_data.length-1);
-        var _s = Math.sqrt(_s2);
-        
-        // ------------------------------------
-        
-        var _df = _data.length - 1;
-        var _p = $("#input_alpha").val();
-        _p = eval(_p);
-        var _interval = 0;
-        
-        var _a = _s / (Math.sqrt(_n));
-        var _score = 1;
-        var _score_type = "t";
-        
-        if (_dist === "dist_auto") {
-            if (_n < 30) {
-                _dist = "dist_t";
-            }
-            else {
-                _dist = "dist_normal";
-            }
+    }
+
+    if (_dist === "dist_t") {
+        var _score = tdistr(_df, _p);
+        _interval = _score * _a;
+    }
+    else if (_dist === "dist_normal") {
+        _score_type = "c";
+        var _score = critz(_p / 2);
+        if (_score < 0) {
+            _score = _score * -1;
         }
-        
-        if (_dist === "dist_t") {
-            var _score = tdistr(_df, _p);
-            _interval = _score * _a;
-        }
-        else if (_dist === "dist_normal") {
-            _score_type = "c";
-            var _score = critz(_p/2);
-            if (_score < 0) {
-                _score = _score * -1;
-            }
-            _interval = _score * _a;
-        }
-        
-        
-        // ----------------------------------
-        
-        
-        
-        // ----------------------------------
-        
+        _interval = _score * _a;
+    }
+
+
+    // ----------------------------------
+
+
+
+    // ----------------------------------
+
 //        console.log({
 //            x: _avg,
 //            s2: _s2
 //        });
-        
-        var _precision = $("#input_precise").val();
-        _precision = eval(_precision);
-        var _lower = _avg - _interval;
-        _lower = precision_string(_lower, _precision);
-        var _higher = _avg + _interval;
-        _higher = precision_string(_higher, _precision);
-        
-        var _q = (1 - _p) * 100;
-        
-        _result = '<table border="1" class="result"><tbody>'
+
+    var _precision = $("#input_precise").val();
+    _precision = eval(_precision);
+    var _lower = _avg - _interval;
+    _lower = precision_string(_lower, _precision);
+    var _higher = _avg + _interval;
+    _higher = precision_string(_higher, _precision);
+
+    var _q = (1 - _p) * 100;
+
+    var _result = '<div class="analyze-result"><table border="1" class="result"><tbody>'
             + '<tr><td rowspan="2">&nbsp;</td><td style="vertical-align: bottom;text-align: center;" rowspan="2">母體平均數</td>'
-                + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">母體標準差</td>'
-                + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">' + _score_type + '值</td>'
-                + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">df</td>'
-                + '<td colspan="2">' + _q + '%差異數的信賴區間</td></tr>'
+            + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">母體標準差</td>'
+            + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">' + _score_type + '值</td>'
+            + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">df</td>'
+            + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">抽樣誤差</td>'
+            + '<td colspan="2">' + _q + '%差異數的信賴區間</td></tr>'
             + '<tr><td style="text-align: center;">下限</td><td style="text-align: center;">上限</td></tr>'
             + '<tr>'
-                + '<td>變項</td>'
-                + '<td style="text-align: right;">' + precision_string(_avg, _precision) + '</td>'
-                + '<td style="text-align: right;">' + precision_string(_s, _precision) + '</td>'
-                + '<td style="text-align: right;">' + precision_string(_score, _precision) + '</td>'
-                + '<td style="text-align: right;">' + _df + '</td>'
-                + '<td style="text-align: right;">' + _lower + '</td>'
-                + '<td style="text-align: right;">' + _higher + '</td>'
+            + '<td>變項</td>'
+            + '<td style="text-align: right;">' + precision_string(_avg, _precision) + '</td>'
+            + '<td style="text-align: right;">' + precision_string(_s, _precision) + '</td>'
+            + '<td style="text-align: right;">' + precision_string(_score, _precision) + '</td>'
+            + '<td style="text-align: right;">' + _df + '</td>'
+            + '<td style="text-align: right;">' + precision_string(_interval, _precision) + '</td>'
+            + '<td style="text-align: right;">' + _lower + '</td>'
+            + '<td style="text-align: right;">' + _higher + '</td>'
             + '</tr>'
-            + '</tbody></table><div>分析結果顯示，(' + _lower + ', ' + _higher + ')有' + _q + '%的機會包含母體平均數。</div>';
-        //_result = (_lower) + ", " + _avg + ", " + (_higher);
-        
-        // ------------------------------------------
-	// 結束設定
-        
-	var _input = _panel.find("#preview");
-	_input.val(_result);
+            + '</tbody></table><div>分析結果顯示，(' + _lower + ', ' + _higher + ')有' + _q + '%的機會包含母體平均數。</div></div>';
+    //_result = (_lower) + ", " + _avg + ", " + (_higher);
+    return _result;
+};
 
-	_panel.find("#preview_html").html(_result);
-};	// var _combine_input = function () {
+var _calc_prop_dist = function () {
+    var _n = $("#input_n").val();
+    _n = eval(_n);
+    var _p = $("#input_alpha").val();
+    _p = eval(_p);
+    
+    var _sample_p = $("#input_prop").val();
+    _sample_p = eval(_sample_p);
+    var _sample_q = 1 - _sample_p;
+    
+    var _score = critz(_p / 2);
+    if (_score < 0) {
+        _score = _score * -1;
+    }
+    
+    var _interval = _score * Math.sqrt( (_sample_p * _sample_q) / _n );
+    
+    var _precision = $("#input_precise").val();
+    _precision = eval(_precision);
+    
+    var _lower = _sample_p - _interval;
+    var _higher = _sample_p + _interval;
+    
+    var _q = (1 - _p) * 100;
+    
+    return '<div class="analyze-result"><table border="1" class="result"><tbody>'
+            + '<tr><td rowspan="2">&nbsp;</td><td style="vertical-align: bottom;text-align: center;" rowspan="2">母體比例</td>'
+            + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">c值</td>'
+            + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">n</td>'
+            + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">抽樣誤差</td>'
+            + '<td colspan="2">' + _q + '%差異數的信賴區間</td></tr>'
+            + '<tr><td style="text-align: center;">下限</td><td style="text-align: center;">上限</td></tr>'
+            + '<tr>'
+            + '<td>變項</td>'
+            + '<td style="text-align: right;">' + precision_string(_sample_p, _precision) + '</td>'
+            + '<td style="text-align: right;">' + precision_string(_score, _precision) + '</td>'
+            + '<td style="text-align: right;">' + _n + '</td>'
+            + '<td style="text-align: right;">' + precision_string(_interval, _precision) + '</td>'
+            + '<td style="text-align: right;">' + precision_string(_lower, _precision) + '</td>'
+            + '<td style="text-align: right;">' + precision_string(_higher, _precision) + '</td>'
+            + '</tr>'
+            + '</tbody></table><div>分析結果顯示，(' + precision_string(_lower, _precision) + ', ' + precision_string(_higher, _precision) + ')有' + _q + '%的機會包含母體比例。</div></div>';
+};
 
 // ------------------------------------------------------
 
@@ -445,27 +503,28 @@ var _download_file = function (data, filename, type) {
 };
 
 $(function () {
-  var _panel = $(".file-process-framework");
-  //_panel.find(".input-mode.textarea").click(_load_textarea).keyup(_load_textarea);
-  _panel.find(".myfile").change(_load_file);
-  _panel.find(".download-file").click(_download_file_button);
-  _panel.find(".change-trigger").change(_combine_input);
-  _panel.find(".key-up-trigger").keyup(_combine_input);
-  
-  _panel.find(".focus_select").focus(function () {
-      $(this).select();
-  });
-  
-  //$('.menu .item').tab();
-  
-  
-  $('#copy_source_code').click(function () {
-      PULI_UTIL.clipboard.copy($("#preview").val());
-  });
-  
-  $('#copy_source_code_html').click(function () {
-      PULI_UTIL.clipboard.copy($("#preview_html_source").val());
-  });
-  
-  _combine_input();
+    $('.menu .item').tab();
+    var _panel = $(".file-process-framework");
+    //_panel.find(".input-mode.textarea").click(_load_textarea).keyup(_load_textarea);
+    _panel.find(".myfile").change(_load_file);
+    _panel.find(".download-file").click(_download_file_button);
+    _panel.find(".change-trigger").change(_combine_input);
+    _panel.find(".key-up-trigger").keyup(_combine_input);
+
+    _panel.find(".focus_select").focus(function () {
+        $(this).select();
+    });
+
+    //$('.menu .item').tab();
+
+
+    $('#copy_source_code').click(function () {
+        PULI_UTIL.clipboard.copy($("#preview").val());
+    });
+
+    $('#copy_source_code_html').click(function () {
+        PULI_UTIL.clipboard.copy($("#preview_html_source").val());
+    });
+
+    _combine_input();
 });
