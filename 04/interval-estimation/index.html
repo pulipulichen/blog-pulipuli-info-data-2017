@@ -23,8 +23,10 @@ and open the template in the editor.
 <script src="http://pulipulichen.github.io/blogger/posts/2016/12/puli-util.clipboard.js"></script>
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 
-<script src="script.js"></script>
 <script src="statistics-distributions.js"></script>
+<script src="critz.js"></script>
+<script src="script.js"></script>
+
 
 <!-- ------------------------------------------------------------ -->
 
@@ -75,16 +77,38 @@ and open the template in the editor.
                value="3" 
                placeholder="請輸入小數點位數" />
     </div>
-    <!--
+    
+    <div class="field">
+        母體分佈模式選擇：
+    </div>
     <div class="field">
         <div class="ui radio checkbox">
             <input type="radio" class="change-trigger" 
-                   id="input_dist_t" 
-                   value="t_dist" checked="checked"  />
-            <label for="input_dist_t">t分佈</label>
+                   name="input_dist"
+                   id="input_dist_auto" 
+                   value="dist_auto"
+                   checked="checked" />
+            <label for="input_dist_auto">根據樣本數量選擇：小於30選用t分佈、否則使用常態分佈</label>
         </div>
     </div>
-    -->
+    <div class="field">
+        <div class="ui radio checkbox">
+            <input type="radio" class="change-trigger" 
+                   name="input_dist"
+                   id="input_dist_t" 
+                   value="dist_t"  />
+            <label for="input_dist_t">t分佈(樣本數量小於30)</label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="ui radio checkbox">
+            <input type="radio" class="change-trigger" 
+                   name="input_dist"
+                   id="input_dist_normal" 
+                   value="dist_normal"  />
+            <label for="input_dist_normal">常態分佈(樣本數量在30以上)</label>
+        </div>
+    </div>
 </div>
 
 <!-- -------------------------------------- -->

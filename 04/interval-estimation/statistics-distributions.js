@@ -483,6 +483,9 @@ function precision ($x, sign) {
 
 function precision_string ($x, sign) {
 	if ($x) {
+            if (typeof($x) !== "string") {
+                $x = "" + $x;
+            }
 		return round_to_precision($x, precision($x, sign));
 	} else {
 		return "0";

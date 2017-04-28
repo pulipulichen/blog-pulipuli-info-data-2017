@@ -7,6 +7,8 @@ var _combine_input = function () {
         
 	// ------------------------------------------
         // 資料處理設定
+        var _dist = $('[name="input_dist"]:checked').val();
+        //console.log(_dist);
         
         var _data_text = $("#input_data").val().split("\n");
         var _data = [];
@@ -49,12 +51,38 @@ var _combine_input = function () {
         var _df = _data.length - 1;
         var _p = $("#input_alpha").val();
         _p = eval(_p);
-        var _t = tdistr(_df, _p);
+        var _interval = 0;
+        
+        var _a = _s / (Math.sqrt(_n));
+        var _score = 1;
+        var _score_type = "t";
+        
+        if (_dist === "dist_auto") {
+            if (_n < 30) {
+                _dist = "dist_t";
+            }
+            else {
+                _dist = "dist_normal";
+            }
+        }
+        
+        if (_dist === "dist_t") {
+            var _score = tdistr(_df, _p);
+            _interval = _score * _a;
+        }
+        else if (_dist === "dist_normal") {
+            _score_type = "c";
+            var _score = critz(_p/2);
+            if (_score < 0) {
+                _score = _score * -1;
+            }
+            _interval = _score * _a;
+        }
+        
         
         // ----------------------------------
         
-        var _a = _s / (Math.sqrt(_n));
-        var _interval = _t * _a;
+        
         
         // ----------------------------------
         
@@ -70,25 +98,25 @@ var _combine_input = function () {
         var _higher = _avg + _interval;
         _higher = precision_string(_higher, _precision);
         
-        var _q = 1 - _p;
+        var _q = (1 - _p) * 100;
         
         _result = '<table border="1" class="result"><tbody>'
             + '<tr><td rowspan="2">&nbsp;</td><td style="vertical-align: bottom;text-align: center;" rowspan="2">母體平均數</td>'
                 + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">母體標準差</td>'
-                + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">t值</td>'
+                + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">' + _score_type + '值</td>'
                 + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">df</td>'
                 + '<td colspan="2">' + _q + '%差異數的信賴區間</td></tr>'
             + '<tr><td style="text-align: center;">下限</td><td style="text-align: center;">上限</td></tr>'
             + '<tr>'
                 + '<td>變項</td>'
-                + '<td style="text-align: right;">' + precision_string("" + _avg, _precision) + '</td>'
-                + '<td style="text-align: right;">' + precision_string("" + _s, _precision) + '</td>'
-                + '<td style="text-align: right;">' + precision_string("" + _t, _precision) + '</td>'
+                + '<td style="text-align: right;">' + precision_string(_avg, _precision) + '</td>'
+                + '<td style="text-align: right;">' + precision_string(_s, _precision) + '</td>'
+                + '<td style="text-align: right;">' + precision_string(_score, _precision) + '</td>'
                 + '<td style="text-align: right;">' + _df + '</td>'
                 + '<td style="text-align: right;">' + _lower + '</td>'
                 + '<td style="text-align: right;">' + _higher + '</td>'
             + '</tr>'
-            + '</tbody></table>';
+            + '</tbody></table><div>分析結果顯示，(' + _lower + ', ' + _higher + ')有' + _q + '%的機會包含母體平均數。</div>';
         //_result = (_lower) + ", " + _avg + ", " + (_higher);
         
         // ------------------------------------------
