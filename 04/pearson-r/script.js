@@ -96,10 +96,23 @@ var _calc_pearson_correlation = function () {
     var _precision = $("#input_precise").val();
     _precision = eval(_precision);
     
-    var _table = $('<div class="analyze-result"><table border="1"><tbody><tr class="x-attr"><td colspan="2"></td></tr></tbody></table></div>')
+    
+    var _display_detail = ($("#input_display_detail:checked").length === 1);
+    var _colspan = 2;
+    if (_display_detail === false) {
+        _colspan = 1;
+    }
+    
+    var _table = $('<div class="analyze-result"><table border="1"><tbody><tr class="x-attr"><td colspan="' + _colspan + '"></td></tr></tbody></table></div>')
     var _tr_x_attr = _table.find("tr.x-attr");
     
     var _tbody = _table.find("tbody");
+    var _sign = {
+        "*": false,
+        "**": false,
+        "***": false
+    };
+    
     for (var _x_attr in _result_data) {
         
         if (_tr_x_attr.find('th[data-attr="' + _x_attr + '"]').length === 0) {
@@ -118,7 +131,10 @@ var _calc_pearson_correlation = function () {
                 }
 
                 _tr_y_attr.append('<th>' + _y_attr + '</th>');
-                _tr_y_attr.append('<td>Pearson相關<br />顯著性(雙尾)<br />個數</td>');
+                
+                if (_display_detail === true) {
+                    _tr_y_attr.append('<td>Pearson相關<br />顯著性(雙尾)<br />個數</td>');
+                }
             }
             
             //console.log(['y', _y_attr, _d]);
@@ -127,18 +143,26 @@ var _calc_pearson_correlation = function () {
             if (_d !== null) {
                 var _text = [];
                 var _r =  precision_string(_d.r, _precision);
-                if (_d.p < 0.01) {
+                if (_d.p < 0.001) {
+                    _r = _r + '***';
+                    _sign["***"] = true;
+                }
+                else if (_d.p < 0.01) {
                     _r = _r + '**';
+                    _sign["**"] = true;
                 }
                 else if (_d.p < 0.05) {
                     _r = _r + '*';
+                    _sign["*"] = true;
                 }
                 _text.push(_r);
-                var _p =  precision_string(_d.p, _precision);
-                //var _p = _d.p;
-                _text.push(_p);
-                var _n =  _d.n;
-                _text.push(_n);
+                if (_display_detail === true) {
+                    var _p =  precision_string(_d.p, _precision);
+                    //var _p = _d.p;
+                    _text.push(_p);
+                    var _n =  _d.n;
+                    _text.push(_n);
+                }
                 _td.html(_text.join('<br />'));
             }
         }
@@ -164,6 +188,20 @@ var _calc_pearson_correlation = function () {
     // -------------------------------------------------
     
     var _div = $('<div></div>').append(_table);
+    
+    for (var _i in _sign) {
+        if (_sign[_i] === true) {
+            var _s = 0.05;
+            if (_i === "**") {
+                _s = 0.01;
+            }
+            else if (_i === "***") {
+                _s = 0.001;
+            }
+            _div.append('<div>' + _i + ': 在顯著水準為' + _s + '時(雙尾)，相關顯著。</div>');
+        }
+    }
+    
     return _div.html();
 };
 
@@ -171,9 +209,11 @@ var _get_pearson_correlation = function (_ary1, _ary2) {
     
     var _r = pearsonCorrelation(_ary1, _ary2);
     var _n = _ary1.length;
-    var _t = _r * Math.sqrt( (_n-2) / (1-(_r*_r)) );
-    var _p = (1-tprob((_n-2), _t))*2;
     
+    var _t = _r * Math.sqrt( (_n-2) / (1-(_r*_r)) );
+    _t = Math.abs(_t);
+    var _p = ((tprob((_n-2), _t))*2);
+    //console.log(_p);
     if (_p === 2) {
         _p = 0;
     }
@@ -343,6 +383,40 @@ var _download_file = function (data, filename, type) {
 
 };
 
+var pearsonCorrelation = function (_ary1, _ary2) {
+    var _avg1 = _calc_avg(_ary1);
+    var _avg2 = _calc_avg(_ary2);
+    
+    //console.log([_avg1, _avg2]);
+    
+    var _a = 0;
+    var _b1 = 0;
+    var _b2 = 0;
+    for (var _i = 0; _i < _ary1.length; _i++) {
+        var _x = (_ary1[_i]-_avg1);
+        var _y = (_ary2[_i]-_avg2);
+        _a += _x*_y;
+        _b1 += _x*_x;
+        _b2 += _y*_y;
+    }
+    
+    if (_b1*_b2 === 0) {
+        return 0;
+    }
+    return _a / (Math.sqrt(_b1) * Math.sqrt(_b2));
+};
+
+var _calc_avg = function (_ary) {
+    if (_ary.length === 0) {
+        return;
+    }
+    var _sum = 0;
+    for (var _i = 0; _i < _ary.length; _i++) {
+        _sum += _ary[_i];
+    }
+    return _sum / _ary.length;
+};
+
 /**
  * https://gist.github.com/ronaldsmartin/47f5239ab1834c47088e
  * @returns {undefined}
@@ -411,48 +485,63 @@ var _load_google_spreadsheet = function () {
     var _url = this.value.trim();
     
     if (_url.indexOf('https://docs.google.com/spreadsheets/d/') !== 0
-            || _url.indexOf('/edit?usp=sharing') === -1) {
+            || _url.indexOf('/pubhtml') === -1) {
         return;
     }
     
-    var _id = _url.substring(('https://docs.google.com/spreadsheets/d/').length, _url.length - ('/edit?usp=sharing').length);
+    // https://docs.google.com/spreadsheets/d/1KL07qS2txPpnZSvLt0gBWJ2_lGsVTr51s5JkE4bg2tY/pubhtml?gid=539063364&single=true
+    
+    // https://docs.google.com/spreadsheets/d/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/pubhtml
+    // https://docs.google.com/spreadsheets/d/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/pubhtml
+    // https://docs.google.com/spreadsheets/d/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/pubhtml?gid=1213777536&single=true
+    // 
+    // https://docs.google.com/spreadsheets/d/0AtMEoZDi5-pedElCS1lrVnp0Yk1vbFdPaUlOc3F3a2c/pubhtml
+    // 
+    // https://spreadsheets.google.com/feeds/list/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/data/public/values?alt=json-in-script&gid=1213777536&callback=a&
+    
+    // https://spreadsheets.google.com/feeds/list/0AtMEoZDi5-pedElCS1lrVnp0Yk1vbFdPaUlOc3F3a2c/od6/public/values?alt=json-in-script&callback=a
+    
+    // https://spreadsheets.google.com/feeds/list/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/od6/public/values?alt=json&gid=1213777536&callback=a
+    
+    
+    // https://docs.google.com/spreadsheets/d/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/pub?gid=1213777536&single=true&output=csv
+    // https://spreadsheets.google.com/feeds/list/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/1/public/values?alt=json&gid=1213777536&callback=a
+    
+    // https://docs.google.com/spreadsheets/d/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/pubhtml
+    
+    var _id = _url.substring(('https://docs.google.com/spreadsheets/d/').length, _url.length - ('/pubhtml').length);
+    console.log(_id);
     
     var _input = this;
     var _selector = $(_input).data("file-to-textarea");
     _selector = $(_selector);
     
-    var _sheet = $(_input).data("sheet-selector");
-    _sheet = $(_sheet).val().trim();
-    
-    if (_sheet === "") {
-        return;
-    }
-    
     //var _json_url = 'https://spreadsheets.google.com/feeds/list/' + _id + '/od6/public/values?alt=json-in-script&callback=?';
-    var _json_url = "https://script.google.com/macros/s/AKfycbzGvKKUIaqsMuCj7-A2YRhR-f7GZjl4kSxSN1YyLkS01_CfiyE/exec?id=" + _id + '&sheet=' + _sheet + '&callback=?';
+    var _json_url = 'https://spreadsheets.google.com/feeds/list/' + _id + '/1/public/values?alt=json-in-script&gid=1213777536&callback=?';
     //console.log(_json_url);
     $.getJSON(_json_url, function (_data) {
-        _data = _data["records"];
+        _data = _data.feed.entry;
         var _text = [];
         var _attr_list = [];
         
         //console.log(_data);
         for (var _i = 0; _i < _data.length; _i++) {
-            var _line = [];
-            for (var _attr in _data[_i]) {
+            var _line = _data[_i].content.$t.split(", ");
+            for (var _j = 0; _j < _line.length; _j++) {
+                var _t = _line[_j].split(": ");
+                var _attr = _t[0];
+                var _value = _t[1];
+                
                 if (_i === 0) {
                     _attr_list.push(_attr);
                 }
-                
-                var _value = _data[_i][_attr];
-                //console.log(_value);
-                _line.push(_value);
+                _line[_j] = _value;
             }
             _text.push(_line.join(','));
         }
         
         _text = _attr_list.join(",") + "\n" + _text.join("\n");
-        //console.log(_text);
+        console.log(_text);
         
         // ----------------------------
         
@@ -492,7 +581,9 @@ $(function () {
     });
     
     _panel.find(".file-change-trigger").change(_load_file);
-    _panel.find(".google-spreadsheet-trigger").change(_load_google_spreadsheet).change();
+    _panel.find(".google-spreadsheet-trigger")
+            .change(_load_google_spreadsheet)
+            //.change();
     _panel.find(".change-trigger-input").change(_change_tirgger_input);
 
     //$('.menu .item').tab();

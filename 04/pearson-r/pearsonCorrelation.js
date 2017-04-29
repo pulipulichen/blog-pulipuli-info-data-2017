@@ -17,6 +17,7 @@
  *  @param  {string}  p2 Item two for comparison.
  *  @return {float}  The pearson correlation score.
  */
+
 function pearsonCorrelation(prefs_array1, prefs_array2) {
     var p1 = "x";
     var p2 = "y";
@@ -35,11 +36,11 @@ function pearsonCorrelation(prefs_array1, prefs_array2) {
         }
     }
     
+    //console.log(prefs);
+    
     // ----------------
     
     var si = [];
-
-    
 
     for (var key in prefs[p1]) {
         if (prefs[p2][key]) {
@@ -54,12 +55,14 @@ function pearsonCorrelation(prefs_array1, prefs_array2) {
     }
 
     var sum1 = 0;
-    for (var i = 0; i < n; i++)
+    for (var i = 0; i < n; i++) {
         sum1 += prefs[p1][si[i]];
+    }
 
     var sum2 = 0;
-    for (var i = 0; i < si.length; i++)
+    for (var i = 0; i < si.length; i++) {
         sum2 += prefs[p2][si[i]];
+    }
 
     var sum1Sq = 0;
     for (var i = 0; i < si.length; i++) {
@@ -80,6 +83,7 @@ function pearsonCorrelation(prefs_array1, prefs_array2) {
     var den = Math.sqrt((sum1Sq - Math.pow(sum1, 2) / n) *
             (sum2Sq - Math.pow(sum2, 2) / n));
 
+    console.log([pSum, sum1, sum2, n]);
     if (den === 0) {
         return 0;
     }

@@ -24,7 +24,6 @@ and open the template in the editor.
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 
 <script src="statistics-distributions.js"></script>
-<script src="pearsonCorrelation.js"></script>
 <script src="script.js"></script>
 
 
@@ -72,16 +71,17 @@ and open the template in the editor.
         </div>
     </div>
     
-    <div class="ui bottom attached active tab segment" data-tab="mode_file">
+    <div class="ui bottom attached active tab segment" data-tab="mode_google_spreadsheet">
         <div class="field">
             <label for="input_url">
-                請輸入Google試算表共用網址： 
+                請輸入Google試算表發佈連結：(<a href="http://www.ioa.tw/google-sheets-api-note.html" target="pub">操作教學</a>) 
             </label>
             <input type="text" id="input_url" class="google-spreadsheet-trigger focus_select" 
                    data-sheet-selector="#input_url_sheet"
                    data-file-to-textarea="#input_data"
-                   value="https://docs.google.com/spreadsheets/d/1KL07qS2txPpnZSvLt0gBWJ2_lGsVTr51s5JkE4bg2tY/edit?usp=sharing" />
-        </div>
+                   value="https://docs.google.com/spreadsheets/d/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/pubhtml" />
+        </div> 
+        <!--
         <div class="field">
             <label for="input_url_sheet">
                 請輸入工作表名稱： 
@@ -90,6 +90,7 @@ and open the template in the editor.
                    data-trigger-selector="#input_url"
                    value="data" />
         </div>
+        -->
     </div>
     
     <div class="field">
@@ -98,6 +99,15 @@ and open the template in the editor.
                id="input_precise" 
                value="3" 
                placeholder="請輸入小數點位數" />
+    </div>
+    <div class="field">
+        <div class="ui checkbox">
+            <input type="checkbox" class="change-trigger" 
+                   name="input_display_detail"
+                   id="input_display_detail" 
+                   value="input_display_detail" checked="checked"  />
+            <label for="input_display_detail">顯示顯著性跟個數</label>
+        </div>
     </div>
 </div>
 

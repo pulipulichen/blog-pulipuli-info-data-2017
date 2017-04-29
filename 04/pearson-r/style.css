@@ -78,3 +78,8 @@ table td {
 .analyze-result .row td {
     text-align: right;
 }
+
+.analyze-result .row th {
+    text-align: left;
+    vertical-align: top;
+}
