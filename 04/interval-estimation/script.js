@@ -167,6 +167,20 @@ var _calc_prop_dist = function () {
     
     var _q = (1 - _p) * 100;
     
+    _score = precision_string(_score, _precision);
+    if ($("#input_display_percent:checked").length > 0) {
+        _sample_p = precision_string(_sample_p * 100, _precision) + "%";
+        _interval = precision_string(_interval*100, _precision) + "%";
+        _lower = precision_string(_lower*100, _precision)+"%";
+        _higher = precision_string(_higher*100, _precision)+"%";
+    }
+    else {
+        _sample_p = precision_string(_sample_p, _precision);
+        _interval = precision_string(_interval, _precision);
+        _lower = precision_string(_lower, _precision);
+        _higher = precision_string(_higher, _precision);
+    }
+    
     return '<div class="analyze-result"><table border="1" class="result"><tbody>'
             + '<tr><td rowspan="2">&nbsp;</td><td style="vertical-align: bottom;text-align: center;" rowspan="2">母體比例</td>'
             + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">c值</td>'
@@ -176,14 +190,14 @@ var _calc_prop_dist = function () {
             + '<tr><td style="text-align: center;">下限</td><td style="text-align: center;">上限</td></tr>'
             + '<tr>'
             + '<td>變項</td>'
-            + '<td style="text-align: right;">' + precision_string(_sample_p, _precision) + '</td>'
-            + '<td style="text-align: right;">' + precision_string(_score, _precision) + '</td>'
+            + '<td style="text-align: right;">' + _sample_p + '</td>'
+            + '<td style="text-align: right;">' + _score + '</td>'
             + '<td style="text-align: right;">' + _n + '</td>'
-            + '<td style="text-align: right;">' + precision_string(_interval, _precision) + '</td>'
-            + '<td style="text-align: right;">' + precision_string(_lower, _precision) + '</td>'
-            + '<td style="text-align: right;">' + precision_string(_higher, _precision) + '</td>'
+            + '<td style="text-align: right;">' + _interval + '</td>'
+            + '<td style="text-align: right;">' + _lower + '</td>'
+            + '<td style="text-align: right;">' + _higher + '</td>'
             + '</tr>'
-            + '</tbody></table><div>分析結果顯示，(' + precision_string(_lower, _precision) + ', ' + precision_string(_higher, _precision) + ')有' + _q + '%的機會包含母體比例。</div></div>';
+            + '</tbody></table><div>分析結果顯示，(' + _lower + ', ' + _higher + ')有' + _q + '%的機會包含母體比例。</div></div>';
 };
 
 // ------------------------------------------------------
