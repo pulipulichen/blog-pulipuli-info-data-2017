@@ -50,7 +50,8 @@ and open the template in the editor.
 
     <div class="ui top attached tabular menu">
         <div class="item" data-tab="mode_textarea">文字框輸入</div>
-        <div class="active item" data-tab="mode_file">選擇檔案輸入</div>
+        <div class="item" data-tab="mode_file">選擇檔案輸入</div>
+        <div class="active item" data-tab="mode_google_spreadsheet">Google試算表共用網址</div>
     </div>
     
     <div class="ui bottom attached  tab segment" data-tab="mode_textarea">
@@ -61,13 +62,33 @@ and open the template in the editor.
         </div>
     </div>
     
-    <div class="ui bottom attached active tab segment" data-tab="mode_file">
+    <div class="ui bottom attached tab segment" data-tab="mode_file">
         <div class="field">
             <label for="input_file">
                 請上傳CSV檔案： 
                 (<a href="https://docs.google.com/spreadsheets/d/1KL07qS2txPpnZSvLt0gBWJ2_lGsVTr51s5JkE4bg2tY/export?format=csv">範例檔案下載</a>)
             </label>
             <input type="file" id="input_file" class="file-change-trigger" data-file-to-textarea="#input_data" />
+        </div>
+    </div>
+    
+    <div class="ui bottom attached active tab segment" data-tab="mode_file">
+        <div class="field">
+            <label for="input_url">
+                請輸入Google試算表共用網址： 
+            </label>
+            <input type="text" id="input_url" class="google-spreadsheet-trigger focus_select" 
+                   data-sheet-selector="#input_url_sheet"
+                   data-file-to-textarea="#input_data"
+                   value="https://docs.google.com/spreadsheets/d/1KL07qS2txPpnZSvLt0gBWJ2_lGsVTr51s5JkE4bg2tY/edit?usp=sharing" />
+        </div>
+        <div class="field">
+            <label for="input_url_sheet">
+                請輸入工作表名稱： 
+            </label>
+            <input type="text" id="input_url_sheet" class="change-trigger-input focus_select" 
+                   data-trigger-selector="#input_url"
+                   value="data" />
         </div>
     </div>
     

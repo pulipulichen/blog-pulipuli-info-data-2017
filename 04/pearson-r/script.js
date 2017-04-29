@@ -343,11 +343,139 @@ var _download_file = function (data, filename, type) {
 
 };
 
+/**
+ * https://gist.github.com/ronaldsmartin/47f5239ab1834c47088e
+ * @returns {undefined}
+ */
+/*
+var _load_google_spreadsheet = function () {
+    var _url = this.value.trim();
+    
+    if (_url.indexOf('https://docs.google.com/spreadsheets/d/') !== 0
+            || _url.indexOf('/edit?usp=sharing') === -1) {
+        return;
+    }
+    
+    var _id = _url.substring(('https://docs.google.com/spreadsheets/d/').length, _url.length - ('/edit?usp=sharing').length);
+    
+    var _input = this;
+    var _selector = $(_input).data("file-to-textarea");
+    _selector = $(_selector);
+    
+    var _sheet = $(_input).data("sheet-selector");
+    _sheet = $(_sheet).val().trim();
+    
+    if (_sheet === "") {
+        return;
+    }
+    
+    //var _json_url = 'https://spreadsheets.google.com/feeds/list/' + _id + '/od6/public/values?alt=json-in-script&callback=?';
+    var _json_url = "https://script.google.com/macros/s/AKfycbzGvKKUIaqsMuCj7-A2YRhR-f7GZjl4kSxSN1YyLkS01_CfiyE/exec?id=" + _id + '&sheet=' + _sheet + '&callback=?';
+    //console.log(_json_url);
+    $.getJSON(_json_url, function (_data) {
+        _data = _data["records"];
+        var _text = [];
+        var _attr_list = [];
+        
+        //console.log(_data);
+        for (var _i = 0; _i < _data.length; _i++) {
+            var _line = [];
+            for (var _attr in _data[_i]) {
+                if (_i === 0) {
+                    _attr_list.push(_attr);
+                }
+                
+                var _value = _data[_i][_attr];
+                //console.log(_value);
+                _line.push(_value);
+            }
+            _text.push(_line.join(','));
+        }
+        
+        _text = _attr_list.join(",") + "\n" + _text.join("\n");
+        //console.log(_text);
+        
+        // ----------------------------
+        
+        _selector.val(_text).change();
+        
+        //console.log(_data);
+    });
+    
+    // https://script.google.com/macros/s/AKfycbzGvKKUIaqsMuCj7-A2YRhR-f7GZjl4kSxSN1YyLkS01_CfiyE/exec
+    
+    //console.log(_id);
+};
+*/
+var _load_google_spreadsheet = function () {
+    var _url = this.value.trim();
+    
+    if (_url.indexOf('https://docs.google.com/spreadsheets/d/') !== 0
+            || _url.indexOf('/edit?usp=sharing') === -1) {
+        return;
+    }
+    
+    var _id = _url.substring(('https://docs.google.com/spreadsheets/d/').length, _url.length - ('/edit?usp=sharing').length);
+    
+    var _input = this;
+    var _selector = $(_input).data("file-to-textarea");
+    _selector = $(_selector);
+    
+    var _sheet = $(_input).data("sheet-selector");
+    _sheet = $(_sheet).val().trim();
+    
+    if (_sheet === "") {
+        return;
+    }
+    
+    //var _json_url = 'https://spreadsheets.google.com/feeds/list/' + _id + '/od6/public/values?alt=json-in-script&callback=?';
+    var _json_url = "https://script.google.com/macros/s/AKfycbzGvKKUIaqsMuCj7-A2YRhR-f7GZjl4kSxSN1YyLkS01_CfiyE/exec?id=" + _id + '&sheet=' + _sheet + '&callback=?';
+    //console.log(_json_url);
+    $.getJSON(_json_url, function (_data) {
+        _data = _data["records"];
+        var _text = [];
+        var _attr_list = [];
+        
+        //console.log(_data);
+        for (var _i = 0; _i < _data.length; _i++) {
+            var _line = [];
+            for (var _attr in _data[_i]) {
+                if (_i === 0) {
+                    _attr_list.push(_attr);
+                }
+                
+                var _value = _data[_i][_attr];
+                //console.log(_value);
+                _line.push(_value);
+            }
+            _text.push(_line.join(','));
+        }
+        
+        _text = _attr_list.join(",") + "\n" + _text.join("\n");
+        //console.log(_text);
+        
+        // ----------------------------
+        
+        _selector.val(_text).change();
+        
+        //console.log(_data);
+    });
+    
+    // https://script.google.com/macros/s/AKfycbzGvKKUIaqsMuCj7-A2YRhR-f7GZjl4kSxSN1YyLkS01_CfiyE/exec
+    
+    //console.log(_id);
+};
+
 var _load_data = function (_selector, _file_path, _callback) {
     $.get(_file_path, function (_data) {
         $(_selector).val(_data);
         _callback();
     });
+};
+
+var _change_tirgger_input = function () {
+    var _selector = $(this).data("trigger-selector");
+    $(_selector).change();
 };
 
 $(function () {
@@ -364,6 +492,8 @@ $(function () {
     });
     
     _panel.find(".file-change-trigger").change(_load_file);
+    _panel.find(".google-spreadsheet-trigger").change(_load_google_spreadsheet).change();
+    _panel.find(".change-trigger-input").change(_change_tirgger_input);
 
     //$('.menu .item').tab();
     
