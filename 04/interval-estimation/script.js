@@ -68,8 +68,10 @@ var _calc_normal_dist = function () {
     // ------------------------------------
 
     var _df = _data.length - 1;
-    var _p = $("#input_alpha").val();
-    _p = eval(_p);
+    var _q = $("#input_alpha_q").val();
+    _q = eval(_q) / 100;
+    var _p = 1-_q;
+    //_p = eval(_p);
     var _interval = 0;
 
     var _a = _s / (Math.sqrt(_n));
@@ -117,8 +119,8 @@ var _calc_normal_dist = function () {
     var _higher = _avg + _interval;
     _higher = precision_string(_higher, _precision);
 
-    var _q = (1 - _p) * 100;
-
+    //var _q = (1 - _p) * 100;
+    _q = _q * 100;
     var _result = '<div class="analyze-result"><table border="1" class="result"><tbody>'
             + '<tr><td rowspan="2">&nbsp;</td><td style="vertical-align: bottom;text-align: center;" rowspan="2">母體平均數</td>'
             + '<td style="vertical-align: bottom;text-align: center;" rowspan="2">母體標準差</td>'
@@ -145,8 +147,9 @@ var _calc_normal_dist = function () {
 var _calc_prop_dist = function () {
     var _n = $("#input_n").val();
     _n = eval(_n);
-    var _p = $("#input_alpha").val();
-    _p = eval(_p);
+    var _q = $("#input_alpha_q").val();
+    _q = eval(_q) / 100;
+    var _p = 1-_q;
     
     var _sample_p = $("#input_prop").val();
     _sample_p = eval(_sample_p);
@@ -165,8 +168,9 @@ var _calc_prop_dist = function () {
     var _lower = _sample_p - _interval;
     var _higher = _sample_p + _interval;
     
-    var _q = (1 - _p) * 100;
+    //var _q = (1 - _p) * 100;
     
+    _q = _q * 100;
     _score = precision_string(_score, _precision);
     if ($("#input_display_percent:checked").length > 0) {
         _sample_p = precision_string(_sample_p * 100, _precision) + "%";
@@ -541,4 +545,17 @@ $(function () {
     });
 
     _combine_input();
+    
+    /*
+    var _d = [];
+    for (var _i = 0; _i < 1100; _i++) {
+        if (_i < 580) {
+            _d.push(1);
+        }
+        else {
+            _d.push(0);
+        }
+    }
+    $("#input_data").val(_d.join("\n"));
+    */
 });

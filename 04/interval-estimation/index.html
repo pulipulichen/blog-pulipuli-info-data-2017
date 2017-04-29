@@ -7,7 +7,7 @@ and open the template in the editor.
 <html>
     <head>
         <title>
-            Confidence Intervals with t-distributions
+            Confidence Intervals Calculator
         </title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,7 +104,7 @@ and open the template in the editor.
     
     <div class="ui bottom attached tab segment dist-mode" data-tab="prop">
         <div class="field">
-            <label for="input_prop">樣本比例</label>
+            <label for="input_prop">樣本比例：請輸入0~1之間的數值</label>
             <input type="text" class="change-trigger focus_select" 
                    id="input_prop" 
                    value="0.25" 
@@ -118,7 +118,7 @@ and open the template in the editor.
                    placeholder="請輸入樣本數量" />
         </div>
         <div class="field">
-            <div class="ui radio checkbox">
+            <div class="ui checkbox">
                 <input type="checkbox" class="change-trigger" 
                        name="input_display_percent"
                        id="input_display_percent" 
@@ -129,11 +129,14 @@ and open the template in the editor.
     </div>
         
     <div class="field">
-        <label for="input_alpha">請輸入信心水準：介於0~1之間，通常是0.1、0.05、0.01</label>
+        <label for="input_alpha">信心水準百分比：介於0~100之間，通常是90、95、99。信心水準越高，表示此區間包含母體參數的機率越高。</label>
+        <div class="inline field">
         <input type="text" class="change-trigger focus_select" 
-               id="input_alpha" 
-               value="0.05" 
-               placeholder="請輸入信心水準" />
+               id="input_alpha_q" 
+               value="95" 
+               placeholder="請輸入信心水準百分比" />
+        %
+        </div>
     </div>
     <div class="field">
         <label for="input_precise">小數點位數</label>
