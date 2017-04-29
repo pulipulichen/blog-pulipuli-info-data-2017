@@ -231,10 +231,16 @@ var _load_file = function(evt) {
     //console.log(1);
     if(!window.FileReader) return; // Browser is not compatible
 
-    var _panel = $(".file-process-framework");
+    var _file_input = this;
+    var _selector = $(this).data("file-to-textarea");
+    _selector = $(_selector);
     
-    _panel.find(".loading").removeClass("hide");
-
+    if (_selector.length === 0) {
+        return;
+    }
+    //console.log(_selector);
+    //return;
+    
     var reader = new FileReader();
     var _result;
 
@@ -253,27 +259,16 @@ var _load_file = function(evt) {
         _result =  evt.target.result;
 
         _process_file(_result, function (_result) {
-            _panel.find(".preview").val(_result);
-            _panel.find(".filename").val(_file_name);
-                        
-            $(".file-process-framework .myfile").val("");
-            $(".file-process-framework .loading").addClass("hide");
-            _panel.find(".display-result").show();
-            _panel.find(".display-result .encoding").show();
-
-            var _auto_download = (_panel.find('[name="autodownload"]:checked').length === 1);
-            if (_auto_download === true) {
-                _panel.find(".download-file").click();
-            }
-            
-            //_download_file(_result, _file_name, "txt");
+            _selector.val(_result);
+            _selector.change();
+            $(_file_input).val("");
         });
     };
 
-    var _pos = _file_name.lastIndexOf(".");
-    _file_name = _file_name.substr(0, _pos)
-        + _output_filename_surffix
-        + _file_name.substring(_pos, _file_name.length);
+//    var _pos = _file_name.lastIndexOf(".");
+//    _file_name = _file_name.substr(0, _pos)
+//        + _output_filename_surffix
+//        + _file_name.substring(_pos, _file_name.length);
 
     //console.log(_file_name);
 
@@ -359,7 +354,7 @@ $(function () {
     $('.menu .item').tab();
     var _panel = $(".file-process-framework");
     //_panel.find(".input-mode.textarea").click(_load_textarea).keyup(_load_textarea);
-    _panel.find(".myfile").change(_load_file);
+    
     _panel.find(".download-file").click(_download_file_button);
     _panel.find(".change-trigger").change(_combine_input);
     _panel.find(".key-up-trigger").keyup(_combine_input);
@@ -367,6 +362,8 @@ $(function () {
     _panel.find(".focus_select").focus(function () {
         $(this).select();
     });
+    
+    _panel.find(".file-change-trigger").change(_load_file);
 
     //$('.menu .item').tab();
     

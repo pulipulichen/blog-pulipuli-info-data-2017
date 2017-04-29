@@ -49,11 +49,11 @@ and open the template in the editor.
     <!-- https://apps.lazza.dk/facebook/ -->
 
     <div class="ui top attached tabular menu">
-        <div class="active item" data-tab="mode_textarea">文字框輸入</div>
-        <div class="item" data-tab="mode_file">選擇檔案輸入</div>
+        <div class="item" data-tab="mode_textarea">文字框輸入</div>
+        <div class="active item" data-tab="mode_file">選擇檔案輸入</div>
     </div>
     
-    <div class="ui bottom attached active tab segment" data-tab="mode_textarea">
+    <div class="ui bottom attached  tab segment" data-tab="mode_textarea">
         <div class="field">
             <label for="input_data">請輸入CSV資料：一行一筆資料</label>
             <textarea class="change-trigger focus_select" 
@@ -61,10 +61,13 @@ and open the template in the editor.
         </div>
     </div>
     
-    <div class="ui bottom attached tab segment" data-tab="mode_file">
+    <div class="ui bottom attached active tab segment" data-tab="mode_file">
         <div class="field">
-            <label for="input_file">請上傳CSV：</label>
-            <input type="file" id="input_file" data-file-to-textarea="#input_data" />
+            <label for="input_file">
+                請上傳CSV檔案： 
+                (<a href="https://docs.google.com/spreadsheets/d/1KL07qS2txPpnZSvLt0gBWJ2_lGsVTr51s5JkE4bg2tY/export?format=csv">範例檔案下載</a>)
+            </label>
+            <input type="file" id="input_file" class="file-change-trigger" data-file-to-textarea="#input_data" />
         </div>
     </div>
     
