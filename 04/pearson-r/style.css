@@ -87,6 +87,17 @@ table td {
 .analyze-result .bottom-border-thin {
     border-bottom-width: 1px;
 }
+
+.analyze-result tbody tr.row:last-of-type th,
+.analyze-result tbody tr.row:last-of-type td {
+    border-bottom-width: 0;
+}
+
+.analyze-result thead tr:first-of-type th,
+.analyze-result thead tr:first-of-type td {
+    border-top-width: 0;
+}
+
 .analyze-result .top-border-thin {
     border-top-width: 1px;
 }
@@ -98,6 +109,15 @@ table td {
 .analyze-result th, 
 .analyze-result td {
     word-break: keep-all;
+    font-weight: normal;
+}
+
+.analyze-result .caption {
+    text-align: center;
+}
+.analyze-result .note {
+    text-align: left;
+    display: block;
 }
 
 .analyze-result td {
@@ -141,8 +161,8 @@ table td {
     cursor: move !important;
 }
 
-.analyze-result tbody td,
-.analyze-result tbody th {
-    border-top-width: 0;
-    border-bottom-width: 0;
+.analyze-result tbody tr td,
+.analyze-result tbody tr th {
+    border-top: 0px solid black;
+    border-bottom: 0px solid black;
 }

@@ -162,8 +162,9 @@ var _draw_result_table = function () {
         _colspan = 1;
     }
     
-    var _table = $('<div class="analyze-result"><table border="1">'
-        + '<caption>' + "相關分析" + '</caption>'
+    var _table = $('<div class="analyze-result"><div class="caption">相關分析</caption>'
+        + '<table border="1" cellpadding="0" cellspacing="0">'
+        //+ '<caption>' + "相關分析" + '</caption>'
         + '<thead><tr class="x-attr"><th colspan="' + _colspan + '" class="right-border-bold"></th></tr></thead>'
         + '<tbody></tbody>' 
         + '</table><div class="note"></div></div>');
@@ -294,7 +295,9 @@ var _draw_descriptive_table = function () {
     var _attr_list = _get_attr_list();
     
     //var _result_div = $('<div></div>');
-    var _table = $('<div class="analyze-result descriptive-table"><table><caption>樣本敘述統計量</caption>'
+    var _table = $('<div class="analyze-result descriptive-table">'
+        + '<div class="caption">樣本敘述統計量</caption>'
+        + '<table cellspacing="0" cellpadding="0">'
         + '<thead><tr><th class="right-border-bold"></th><th>平均數</th><th>標準差</th><th>個數</th></tr></thead>'
         + '<tbody></tbody></table></div>');
     var _tbody = _table.find('tbody');
