@@ -85,30 +85,33 @@
 var SIGNIFICANT = 10; // number of significant digits to be returned
 
 function chisqrdistr ($n, $p) {
-	if ($n <= 0 || Math.abs($n) - Math.abs(integer($n)) != 0) {
-		throw("Invalid n: $n\n"); /* degree of freedom */
-	}
-	if ($p <= 0 || $p > 1) {
-		throw("Invalid p: $p\n"); 
-	}
-	return precision_string(_subchisqr($n-0, $p-0));
+    if ($n <= 0 || Math.abs($n) - Math.abs(integer($n)) !== 0) {
+            throw("Invalid n: $n\n"); /* degree of freedom */
+    }
+    if ($p <= 0 || $p > 1) {
+            throw("Invalid p: $p\n"); 
+    }
+    //return precision_string(_subchisqr($n-0, $p-0));
+    return _subchisqr($n-0, $p-0);
 }
 
 function udistr ($p) {
-	if ($p > 1 || $p <= 0) {
-		throw("Invalid p: $p\n");
-	}
-	return precision_string(_subu($p-0));
+    if ($p > 1 || $p <= 0) {
+            throw("Invalid p: $p\n");
+    }
+    //return precision_string(_subu($p-0));
+    return _subu($p-0);
 }
 
 function tdistr ($n, $p) {
-    if ($n <= 0 || Math.abs($n) - Math.abs(integer($n)) != 0) {
+    if ($n <= 0 || Math.abs($n) - Math.abs(integer($n)) !== 0) {
             throw("Invalid n: $n\n");
     }
     if ($p <= 0 || $p >= 1) {
             throw("Invalid p: $p\n");
     }
-    return precision_string(_subt($n-0, $p-0));
+    //return precision_string(_subt($n-0, $p-0));
+    return _subt($n-0, $p-0);
 }
 
 function fdistr ($n, $m, $p) {
@@ -121,11 +124,13 @@ function fdistr ($n, $m, $p) {
 	if (($p<=0) || ($p>1)) {
 		throw("Invalid p: $p\n");
 	}
-	return precision_string(_subf($n-0, $m-0, $p-0));
+	//return precision_string(_subf($n-0, $m-0, $p-0));
+        return _subf($n-0, $m-0, $p-0);
 }
 
 function uprob ($x) {
-	return precision_string(_subuprob($x-0));
+    //return precision_string(_subuprob($x-0));
+    return _subuprob($x-0);
 }
 
 function chisqrprob ($n,$x) {
@@ -310,7 +315,7 @@ function _subt ($n, $p) {
 					+ (1/$n1 - 1/$n) / 6) / 2);
 			$x += $delta;
 			$round = round_to_precision($delta, Math.abs(integer(log10(Math.abs($x))-4)));
-		} while (($x) && ($round != 0));
+		} while (($x) && ($round !== 0));
 	}
 	return $x;
 }
@@ -327,11 +332,11 @@ function _subtprob ($n, $x) {
 		$y = 1 + ($i-1) / $i * $z * $y;
 	} 
 
-	if ($n % 2 == 0) {
+	if ($n % 2 === 0) {
 		$a = Math.sin($w)/2;
 		$b = .5;
 	} else {
-		$a = ($n == 1) ? 0 : Math.sin($w)*Math.cos($w)/Math.PI;
+		$a = ($n === 1) ? 0 : Math.sin($w)*Math.cos($w)/Math.PI;
 		$b= .5 + $w/Math.PI;
 	}
 	return max(0, 1 - $b - $a * $y);
@@ -344,7 +349,7 @@ function _subf ($n, $m, $p) {
 		throw("Invalid p: $p\n");
 	}
 
-	if ($p == 1) {
+	if ($p === 1) {
 		$x = 0;
 	} else if ($m == 1) {
 		$x = 1 / Math.pow(_subt($n, 0.5 - $p / 2), 2);
@@ -490,7 +495,7 @@ function precision_string ($x, sign) {
             throw "錯誤";
             _result = 0;
         }
-        
+        /*
         if (_result !== 0) {
             if (typeof(_result) !== "string") {
                 _result = "" + _result;
@@ -498,6 +503,7 @@ function precision_string ($x, sign) {
 
             _result = round_to_precision(_result, precision(_result, sign+1));
         }
+        */
         
         //var _i = 2;
         //if (_result < 0) {
