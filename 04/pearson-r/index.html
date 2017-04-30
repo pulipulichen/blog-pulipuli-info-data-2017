@@ -24,6 +24,7 @@ and open the template in the editor.
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 
 <script src="statistics-distributions.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="script.js"></script>
 
 
@@ -31,7 +32,7 @@ and open the template in the editor.
 
 <form class="file-process-framework ui form">
 
-  <div class="ui two column doubling grid">
+  <div class="ui two column stackable grid">
     <div class="column">
 	<div class="ui segment">
 	
@@ -43,7 +44,7 @@ and open the template in the editor.
 
 <!-- --------------------------------- -->
 
-<div class="ui bottom attached active tab segment input-field-container" data-tab="textarea">
+<div class="ui bottom attached active tab segment input-field-container">
     
     <!-- https://apps.lazza.dk/facebook/ -->
 
@@ -106,7 +107,7 @@ and open the template in the editor.
                    name="input_display_detail"
                    id="input_display_detail" 
                    value="input_display_detail" checked="checked"  />
-            <label for="input_display_detail">顯示顯著性跟個數</label>
+            <label for="input_display_detail">顯示「顯著性」跟「個數」等細節資料</label>
         </div>
     </div>
 </div>
@@ -114,9 +115,20 @@ and open the template in the editor.
 <!-- -------------------------------------- -->
 
 		</div> <!-- <div class="ui segment"> -->
+                
+        <div class="ui segment">
+	
+    
+<h1 class="ui horizontal divider header">
+  Variables
+</h1>
+        <div class="ui segment sortable" id="variables_container">
+        </div>
+            
+        </div><!-- <div class="ui segment"> -->                
+
 	</div> <!-- <div class="column"> -->
   <!-- -------------------------------------- -->
-  
     <div class="column">
   <div class="ui segment display-result" style="">
   <!-- <div class="display-result"> -->
@@ -138,7 +150,6 @@ and open the template in the editor.
     
     <div class="field">
       <label for="preview">
-        分析結果: 
         <button type="button" id="copy_source_code" class="hide">Copy Source Code</button>
         <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em; display: none;">
           Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>

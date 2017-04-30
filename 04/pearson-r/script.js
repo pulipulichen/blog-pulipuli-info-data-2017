@@ -9,21 +9,17 @@ var _combine_input = function () {
     // 資料處理設定
     
     
-    _result = _calc_pearson_correlation();
-    
-
+    _calc_pearson_correlation();
 
     // ------------------------------------------
     // 結束設定
 
-    var _input = _panel.find("#preview");
-    _input.val(_result);
-
-    _panel.find("#preview_html").html(_result);
+    
 };	// var _combine_input = function () {
 
 var _calc_pearson_correlation = function () {
-    var _result = "";
+    //var _result = "";
+    var _attr_list = [];
     var _panel = $(".file-process-framework");
     
     var _csv_lines = _panel.find("#input_data").val().trim().split("\n");
@@ -32,11 +28,12 @@ var _calc_pearson_correlation = function () {
         return "";
     }
     
-    var _data = {};
+    //var _data = {};
     var _pair_number;
-    var _attr_list = [];
+    //var _attr_list = [];
     
     // ----------------------------
+    // load data
     
     for (var _i = 0; _i < _csv_lines.length; _i++) {
         var _line = _csv_lines[_i].split(",");
@@ -61,30 +58,92 @@ var _calc_pearson_correlation = function () {
         }
     }
     
+    // -----------------------------------
+    // 畫變數表
+    
+    var _var_container = _panel.find("#variables_container");
+    _var_container.empty();
+    for (var _i = 0; _i < _attr_list.length; _i++) {
+        var _attr = _attr_list[_i];
+        var _div = $('<div class="field"><div class="ui checkbox">'
+            + '<input type="checkbox" name="variables" value="' + _attr + '" id="variables_' + _attr + '" checked="checked" /> '
+            + '<label for="variables_' + _attr + '">' 
+                + '<i class="resize vertical icon"></i> '
+                + _attr 
+                + '</label>'
+            + '</div></div>');
+        _div.appendTo(_var_container);
+        _div.find('input').change(_draw_result_table);
+        _div.bind('dragstop', _draw_result_table);
+    }
+    
+    // -----------------------------------
+    
     // console.log(_data);
+    return _draw_result_table();
+};
+
+var _is_variable_selected = function (_attr) {
+    return ($('#variables_' + _attr + ':checked').length === 1);
+};
+
+_data = {};
+
+var _get_attr_list = function () {
+    var _attr_list = [];
+    $('[name="variables"]:checked').each(function (_i, _ele) {
+        _attr_list.push(_ele.value);
+    });
+    return _attr_list;
+};
+
+var _draw_result_table = function () {
+    
+    _reset_result();
+    var _result_div = $('<div></div>');
+    
+    var _attr_list = _get_attr_list();
+    
+    // -------------------------------------
+    // 描述性統計量
+    
+    _result_div.append(_draw_descriptive_table());
     
     // ------------------------
     // 先畫表格吧...
     var _result_data = {};
     for (var _i = 0; _i < _attr_list.length; _i++) {
         var _x_attr = _attr_list[_i];
+        
+        if (_is_variable_selected(_x_attr) === false) {
+            continue;
+        }
+        
         var _ary1 = _data[_x_attr];
         for (var _j = 0; _i !== _attr_list.length -1 && _j < _i; _j++) {
+            var _y_attr = _attr_list[_j];
+            if (_is_variable_selected(_y_attr) === false) {
+                continue;
+            }
             if (typeof(_result_data[_x_attr]) === "undefined") {
                 _result_data[_x_attr] = {};
             }
-            var _y_attr = _attr_list[_j];
+            
             if (_j !== _i) {
                 _result_data[_x_attr][_y_attr] = null;
             }
         }
         
         for (var _j = _i+1; _j < _attr_list.length; _j++) {
+            var _y_attr = _attr_list[_j];
+            if (_is_variable_selected(_y_attr) === false) {
+                continue;
+            }
             if (typeof(_result_data[_x_attr]) === "undefined") {
                 _result_data[_x_attr] = {};
             }
             
-            var _y_attr = _attr_list[_j];
+            
             var _ary2 = _data[_y_attr];
             _result_data[_x_attr][_y_attr] = _get_pearson_correlation(_ary1, _ary2);
         }
@@ -103,10 +162,15 @@ var _calc_pearson_correlation = function () {
         _colspan = 1;
     }
     
-    var _table = $('<div class="analyze-result"><table border="1"><tbody><tr class="x-attr"><td colspan="' + _colspan + '"></td></tr></tbody></table></div>')
+    var _table = $('<div class="analyze-result"><table border="1">'
+        + '<caption>' + "相關分析" + '</caption>'
+        + '<thead><tr class="x-attr"><th colspan="' + _colspan + '" class="right-border-bold"></th></tr></thead>'
+        + '<tbody></tbody>' 
+        + '</table><div class="note"></div></div>');
     var _tr_x_attr = _table.find("tr.x-attr");
     
     var _tbody = _table.find("tbody");
+    var _note = _table.find(".note");
     var _sign = {
         "*": false,
         "**": false,
@@ -123,36 +187,47 @@ var _calc_pearson_correlation = function () {
         for (var _y_attr in _result_data[_x_attr]) {
             
             var _d = _result_data[_x_attr][_y_attr];
-            var _tr_y_attr = _tbody.find('tr[data-attr="' + _y_attr + '"]');
-            if (_tr_y_attr.length === 0) {
+            var _tr_y_attr_r = _tbody.find('tr.r[data-attr="' + _y_attr + '"]');
+            var _tr_y_attr_p = _tbody.find('tr.p[data-attr="' + _y_attr + '"]');
+            var _tr_y_attr_n = _tbody.find('tr.n[data-attr="' + _y_attr + '"]');
+            if (_tr_y_attr_r.length === 0) {
                 if (_d !== null) {
-                    _tr_y_attr = $('<tr class="row" data-attr="' + _y_attr + '"></tr>');
-                    _tbody.append(_tr_y_attr);
+                    _tr_y_attr_r = $('<tr class="row r" data-attr="' + _y_attr + '"></tr>');
+                    _tbody.append(_tr_y_attr_r);
+                    _tr_y_attr_p = $('<tr class="row p" data-attr="' + _y_attr + '"></tr>');
+                    _tbody.append(_tr_y_attr_p);
+                    _tr_y_attr_n = $('<tr class="row n" data-attr="' + _y_attr + '"></tr>');
+                    _tbody.append(_tr_y_attr_n);
                 }
 
-                _tr_y_attr.append('<th>' + _y_attr + '</th>');
+                _tr_y_attr_r.append('<th class="right-border-none bottom-border-thin" rowspan="3">' + _y_attr + '</th>');
                 
                 if (_display_detail === true) {
-                    _tr_y_attr.append('<td>Pearson相關<br />顯著性(雙尾)<br />個數</td>');
+                    //_tr_y_attr_r.append('<td class="right-border-bold">Pearson相關<br />顯著性(雙尾)<br />個數</td>');
+                    _tr_y_attr_r.append('<th class="right-border-bold left-border-none">Pearson相關</th>');
+                    _tr_y_attr_p.append('<th class="right-border-bold left-border-none">顯著性(雙尾)</th>');
+                    _tr_y_attr_n.append('<th class="right-border-bold left-border-none bottom-border-thin">個數</th>');
                 }
             }
             
             //console.log(['y', _y_attr, _d]);
             
-            var _td = $('<td></td>').appendTo(_tr_y_attr);
+            var _td_r = $('<td></td>').appendTo(_tr_y_attr_r);
+            var _td_p = $('<td></td>').appendTo(_tr_y_attr_p);
+            var _td_n = $('<td></td>').appendTo(_tr_y_attr_n);
             if (_d !== null) {
                 var _text = [];
                 var _r =  precision_string(_d.r, _precision);
                 if (_d.p < 0.001) {
-                    _r = _r + '***';
+                    _r = _r + '<sup>***</sup>';
                     _sign["***"] = true;
                 }
                 else if (_d.p < 0.01) {
-                    _r = _r + '**';
+                    _r = _r + '<sup>**</sup>';
                     _sign["**"] = true;
                 }
                 else if (_d.p < 0.05) {
-                    _r = _r + '*';
+                    _r = _r + '<sup>*</sup>';
                     _sign["*"] = true;
                 }
                 _text.push(_r);
@@ -163,7 +238,9 @@ var _calc_pearson_correlation = function () {
                     var _n =  _d.n;
                     _text.push(_n);
                 }
-                _td.html(_text.join('<br />'));
+                _td_r.html(_r);
+                _td_p.html(_p);
+                _td_n.html(_n);
             }
         }
     }
@@ -187,7 +264,7 @@ var _calc_pearson_correlation = function () {
     
     // -------------------------------------------------
     
-    var _div = $('<div></div>').append(_table);
+    _result_div.append(_table);
     
     for (var _i in _sign) {
         if (_sign[_i] === true) {
@@ -198,16 +275,56 @@ var _calc_pearson_correlation = function () {
             else if (_i === "***") {
                 _s = 0.001;
             }
-            _div.append('<div>' + _i + ': 在顯著水準為' + _s + '時(雙尾)，相關顯著。</div>');
+            _note.append('<div>' + _i + '. 在顯著水準為' + _s + '時(雙尾)，相關顯著。</div>');
         }
     }
     
-    return _div.html();
+    // -------------------------
+    
+    //return _div.html();
+    var _panel = $(".file-process-framework");
+    var _result = _result_div.html();
+    var _input = _panel.find("#preview");
+    _input.val(_result);
+
+    _panel.find("#preview_html").html(_result);
+};
+
+var _draw_descriptive_table = function () {
+    var _attr_list = _get_attr_list();
+    
+    //var _result_div = $('<div></div>');
+    var _table = $('<div class="analyze-result descriptive-table"><table><caption>樣本敘述統計量</caption>'
+        + '<thead><tr><th class="right-border-bold"></th><th>平均數</th><th>標準差</th><th>個數</th></tr></thead>'
+        + '<tbody></tbody></table></div>');
+    var _tbody = _table.find('tbody');
+    
+    for (var _i = 0; _i < _attr_list.length; _i++) {
+        var _attr = _attr_list[_i];
+        var _d = _data[_attr];
+        var _avg = _calc_avg(_d);
+        var _stdev = _calc_stdev(_d);
+        
+        var _tr = $('<tr>'
+            + '<th>' + _attr + '</th>'
+            + '<td>' + _get_fix_precision(_avg) + '</td>'
+            + '<td>' + _get_fix_precision(_stdev) + '</td>'
+            + '<td>' + _d.length + '</td></tr>').appendTo(_tbody);
+    } 
+    
+    return _table;
+};
+
+var _get_fix_precision = function (_number) {
+    var _precision = $("#input_precise").val();
+    _precision = eval(_precision);
+    return precision_string(_number, _precision);
 };
 
 var _get_pearson_correlation = function (_ary1, _ary2) {
     
     var _r = pearsonCorrelation(_ary1, _ary2);
+    //_r = Math.abs(_r);
     var _n = _ary1.length;
     
     var _t = _r * Math.sqrt( (_n-2) / (1-(_r*_r)) );
@@ -216,6 +333,15 @@ var _get_pearson_correlation = function (_ary1, _ary2) {
     //console.log(_p);
     if (_p === 2) {
         _p = 0;
+    }
+    
+    if (isNaN(_p)) {
+        console.log({
+            'n-2': _n-2,
+            't': _t
+        });
+        console.log(['tprob', tprob((_n-2), _t)]);
+        throw "錯誤：NaN (r: " + _r + ";t: " + _t + "; _n: " + _n + " )";
     }
     
     return {
@@ -414,7 +540,21 @@ var _calc_avg = function (_ary) {
     for (var _i = 0; _i < _ary.length; _i++) {
         _sum += _ary[_i];
     }
-    return _sum / _ary.length;
+    return (_sum / _ary.length);
+};
+
+var _calc_stdev = function (_ary) {
+    if (_ary.length === 0) {
+        return;
+    }
+    var _avg = _calc_avg(_ary);
+    var _var = 0;
+    
+    for (var _i = 0; _i < _ary.length; _i++) {
+        var _a = (_ary[_i] - _avg);
+        _var += _a*_a;
+    }
+    return Math.sqrt(_var / (_ary.length-1));
 };
 
 /**
@@ -598,4 +738,11 @@ $(function () {
     $('#copy_source_code_html').click(function () {
         PULI_UTIL.clipboard.copy($("#preview_html_source").val());
     });
+    
+    $( ".sortable" ).sortable({
+        beforeStop: function () {
+            _draw_result_table();
+        }
+    });
+    $( ".sortable" ).disableSelection();
 });

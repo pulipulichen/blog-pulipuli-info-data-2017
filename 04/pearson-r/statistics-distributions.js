@@ -132,14 +132,15 @@ function chisqrprob ($n,$x) {
 	if (($n <= 0) || ((Math.abs($n) - (Math.abs(integer($n)))) != 0)) {
 		throw("Invalid n: $n\n"); /* degree of freedom */
 	}
-	return precision_string(_subchisqrprob($n-0, $x-0));
+	return _subchisqrprob($n-0, $x-0);
 }
 
 function tprob ($n, $x) {
-	if (($n <= 0) || ((Math.abs($n) - Math.abs(integer($n))) !=0)) {
-		throw("Invalid n: $n\n"); /* degree of freedom */
-	}
-	return precision_string(_subtprob($n-0, $x-0));
+    if (($n <= 0) || ((Math.abs($n) - Math.abs(integer($n))) !==0)) {
+        throw("Invalid n: $n\n"); /* degree of freedom */
+    }
+    //return precision_string(_subtprob($n-0, $x-0));
+    return _subtprob($n-0, $x-0);
 }
 
 function fprob ($n, $m, $x) {
@@ -149,7 +150,7 @@ function fprob ($n, $m, $x) {
 	if (($m<=0) || ((Math.abs($m)-(Math.abs(integer($m))))!=0)) {
 		throw("Invalid m: $m\n"); /* second degree of freedom */
 	} 
-	return precision_string(_subfprob($n-0, $m-0, $x-0));
+	return _subfprob($n-0, $m-0, $x-0);
 }
 
 
@@ -483,26 +484,65 @@ function precision ($x, sign) {
 
 function precision_string ($x, sign) {
     //var _min = Math.pow(0.1, sign+1);
-    if ($x) {
-        if (typeof($x) !== "string") {
-            $x = "" + $x;
+    if ($x !== undefined) {
+        var _result = $x;
+        if (isNaN(_result)) {
+            throw "錯誤";
+            _result = 0;
         }
-
-        var _result = round_to_precision($x, precision($x, sign));
         
-        var _i = 2;
-        if (_result < 0) {
-            _i++;
-        }
-        if ( ((_result+"").length > sign+_i) ) {
-            _result = (_result+"").substr(0, sign+_i);
-            if (_result.indexOf("e") > - 1) {
-                _result = "0";
+        if (_result !== 0) {
+            if (typeof(_result) !== "string") {
+                _result = "" + _result;
             }
-            _result = eval(_result);
+
+            _result = round_to_precision(_result, precision(_result, sign+1));
         }
+        
+        //var _i = 2;
+        //if (_result < 0) {
+        //    _i++;
+        //}
+        
+        if ((_result+"").indexOf("e") > - 1) {
+            _result = 0;
+        }
+        //_result = eval(_result);
+        
+        var _parts = (_result+"").split(".");
+        if (_parts.length > 1) {
+            var _a = _parts[0];
+            var _b = _parts[1];
+            
+            if ( (_b.length > sign) ) {
+                _b = _b.substr(0, sign+1);
+                var _last = _b.substr(_b.length-1, 1);
+                _b = _b.substr(0, sign);
+                //console.log(['b',_b]);
+                _b = eval(_b);
+                if (_last > 4) {
+                    _b++;
+                }
+                _b = "" + _b;
+            }
+            
+            while (_b.length < sign) {
+                _b += "0";
+            }
+            _result = _a + "." + _b;
+        }
+        
+        if (_result === 0 || _result === "0") {
+            _result = "0.";
+            for (var _i = 0; _i < sign; _i++) {
+                _result += "0";
+            }
+        }
+        
+        //console.log([$x, _result]);
         return _result;
     } else {
+        //console.log(["x", $x]);
         return "0";
     }
 }
