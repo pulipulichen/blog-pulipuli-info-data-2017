@@ -193,6 +193,7 @@ var _draw_result_table = function () {
             var _d = _result_data[_x_attr][_y_attr];
             var _tr_y_attr_r = _tbody.find('tr.r[data-attr="' + _y_attr + '"]');
             var _tr_y_attr_p = _tbody.find('tr.p[data-attr="' + _y_attr + '"]');
+            var _tr_y_attr_r2 = _tbody.find('tr.r2[data-attr="' + _y_attr + '"]');
             var _tr_y_attr_n = _tbody.find('tr.n[data-attr="' + _y_attr + '"]');
             if (_tr_y_attr_r.length === 0) {
                 if (_d !== null) {
@@ -201,6 +202,8 @@ var _draw_result_table = function () {
                     if (_display_detail === true) {
                         _tr_y_attr_p = $('<tr class="row p" data-attr="' + _y_attr + '"></tr>');
                         _tbody.append(_tr_y_attr_p);
+                        _tr_y_attr_r2 = $('<tr class="row r2" data-attr="' + _y_attr + '"></tr>');
+                        _tbody.append(_tr_y_attr_r2);
                         _tr_y_attr_n = $('<tr class="row n" data-attr="' + _y_attr + '"></tr>');
                         _tbody.append(_tr_y_attr_n);
                     }
@@ -212,7 +215,7 @@ var _draw_result_table = function () {
                 
                 var _rowspan = 1;
                 if (_display_detail === true) {
-                    _rowspan = 3;
+                    _rowspan = 4;
                 }
 
                 _tr_y_attr_r.append('<th class="right-border-none bottom-border-thin" rowspan="' + _rowspan + '" align="left" valign="top">' + _y_attr + '</th>');
@@ -221,6 +224,7 @@ var _draw_result_table = function () {
                     //_tr_y_attr_r.append('<td class="right-border-bold">Pearson相關<br />顯著性(雙尾)<br />個數</td>');
                     _tr_y_attr_r.append('<th class="right-border-bold left-border-none" align="left">Pearson相關</th>');
                     _tr_y_attr_p.append('<th class="right-border-bold left-border-none" align="left">顯著性(雙尾)</th>');
+                    _tr_y_attr_r2.append('<th class="right-border-bold left-border-none" align="left">決定係數</th>');
                     _tr_y_attr_n.append('<th class="right-border-bold left-border-none bottom-border-thin" align="left">個數</th>');
                 }
             }
@@ -231,6 +235,7 @@ var _draw_result_table = function () {
             
             if (_display_detail === true) {
                 var _td_p = $('<td align="right"></td>').appendTo(_tr_y_attr_p);
+                var _td_r2 = $('<td align="right"></td>').appendTo(_tr_y_attr_r2);
                 var _td_n = $('<td align="right"></td>').appendTo(_tr_y_attr_n);
             }
             
@@ -242,8 +247,9 @@ var _draw_result_table = function () {
             }
             
             if (_d !== null) {
-                var _text = [];
+                //var _text = [];
                 var _r =  precision_string(_d.r, _precision);
+                var _r2 = precision_string(_d.r*_d.r, _precision);
                 if (_d.p < 0.001) {
                     _r = _r + '<sup>***</sup>';
                     _sign["***"] = true;
@@ -256,17 +262,19 @@ var _draw_result_table = function () {
                     _r = _r + '<sup>*</sup>';
                     _sign["*"] = true;
                 }
-                _text.push(_r);
+                
+                //_text.push(_r);
                 if (_display_detail === true) {
                     var _p =  precision_string(_d.p, _precision);
                     //var _p = _d.p;
-                    _text.push(_p);
+                    //_text.push(_p);
                     var _n =  _d.n;
-                    _text.push(_n);
+                    //_text.push(_n);
                 }
                 _td_r.html(_r);
                 if (_display_detail === true) {
                     _td_p.html(_p);
+                    _td_r2.html(_r2);
                     _td_n.html(_n);
                 }
             }
