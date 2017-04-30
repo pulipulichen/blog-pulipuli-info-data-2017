@@ -84,7 +84,9 @@ table td {
 .analyze-result .left-border-none {
     border-left-width: 0 !important;
 }
-.analyze-result .bottom-border-thin {
+.analyze-result .bottom-border-thin,
+.analyze-result tr.bottom-border-thin td,
+.analyze-result tr.bottom-border-thin th {
     border-bottom-width: 1px;
 }
 

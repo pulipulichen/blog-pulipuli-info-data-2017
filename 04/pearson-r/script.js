@@ -162,12 +162,15 @@ var _draw_result_table = function () {
         _colspan = 1;
     }
     
-    var _table = $('<div class="analyze-result"><div class="caption">相關分析</caption>'
+    var _table = $('<div style="display:inline-block;"><div class="caption" style="text-align:center;display:inline-block">相關分析</caption>'
         + '<table border="1" cellpadding="0" cellspacing="0">'
         //+ '<caption>' + "相關分析" + '</caption>'
         + '<thead><tr class="x-attr"><th colspan="' + _colspan + '" class="right-border-bold"></th></tr></thead>'
         + '<tbody></tbody>' 
-        + '</table><div class="note"></div></div>');
+        + '</table><div class="note" style="text-align:left;"></div></div>');
+    if ($("#input_table_style_display:checked").length === 0) {
+        _table.addClass("analyze-result");
+    }
     var _tr_x_attr = _table.find("tr.x-attr");
     
     var _tbody = _table.find("tbody");
@@ -195,27 +198,49 @@ var _draw_result_table = function () {
                 if (_d !== null) {
                     _tr_y_attr_r = $('<tr class="row r" data-attr="' + _y_attr + '"></tr>');
                     _tbody.append(_tr_y_attr_r);
-                    _tr_y_attr_p = $('<tr class="row p" data-attr="' + _y_attr + '"></tr>');
-                    _tbody.append(_tr_y_attr_p);
-                    _tr_y_attr_n = $('<tr class="row n" data-attr="' + _y_attr + '"></tr>');
-                    _tbody.append(_tr_y_attr_n);
+                    if (_display_detail === true) {
+                        _tr_y_attr_p = $('<tr class="row p" data-attr="' + _y_attr + '"></tr>');
+                        _tbody.append(_tr_y_attr_p);
+                        _tr_y_attr_n = $('<tr class="row n" data-attr="' + _y_attr + '"></tr>');
+                        _tbody.append(_tr_y_attr_n);
+                    }
+                    
+                    if (_display_detail === false) {
+                        _tr_y_attr_r.addClass("bottom-border-thin");
+                    }
+                }
+                
+                var _rowspan = 1;
+                if (_display_detail === true) {
+                    _rowspan = 3;
                 }
 
-                _tr_y_attr_r.append('<th class="right-border-none bottom-border-thin" rowspan="3">' + _y_attr + '</th>');
+                _tr_y_attr_r.append('<th class="right-border-none bottom-border-thin" rowspan="' + _rowspan + '" align="left" valign="top">' + _y_attr + '</th>');
                 
                 if (_display_detail === true) {
                     //_tr_y_attr_r.append('<td class="right-border-bold">Pearson相關<br />顯著性(雙尾)<br />個數</td>');
-                    _tr_y_attr_r.append('<th class="right-border-bold left-border-none">Pearson相關</th>');
-                    _tr_y_attr_p.append('<th class="right-border-bold left-border-none">顯著性(雙尾)</th>');
-                    _tr_y_attr_n.append('<th class="right-border-bold left-border-none bottom-border-thin">個數</th>');
+                    _tr_y_attr_r.append('<th class="right-border-bold left-border-none" align="left">Pearson相關</th>');
+                    _tr_y_attr_p.append('<th class="right-border-bold left-border-none" align="left">顯著性(雙尾)</th>');
+                    _tr_y_attr_n.append('<th class="right-border-bold left-border-none bottom-border-thin" align="left">個數</th>');
                 }
             }
             
             //console.log(['y', _y_attr, _d]);
             
-            var _td_r = $('<td></td>').appendTo(_tr_y_attr_r);
-            var _td_p = $('<td></td>').appendTo(_tr_y_attr_p);
-            var _td_n = $('<td></td>').appendTo(_tr_y_attr_n);
+            var _td_r = $('<td align="right"></td>').appendTo(_tr_y_attr_r);
+            
+            if (_display_detail === true) {
+                var _td_p = $('<td align="right"></td>').appendTo(_tr_y_attr_p);
+                var _td_n = $('<td align="right"></td>').appendTo(_tr_y_attr_n);
+            }
+            
+            if (_display_detail === true) {
+                _td_n.addClass("bottom-border-thin");
+            }
+            else {
+                _td_r.addClass("bottom-border-thin");
+            }
+            
             if (_d !== null) {
                 var _text = [];
                 var _r =  precision_string(_d.r, _precision);
@@ -240,8 +265,10 @@ var _draw_result_table = function () {
                     _text.push(_n);
                 }
                 _td_r.html(_r);
-                _td_p.html(_p);
-                _td_n.html(_n);
+                if (_display_detail === true) {
+                    _td_p.html(_p);
+                    _td_n.html(_n);
+                }
             }
         }
     }
@@ -295,11 +322,14 @@ var _draw_descriptive_table = function () {
     var _attr_list = _get_attr_list();
     
     //var _result_div = $('<div></div>');
-    var _table = $('<div class="analyze-result descriptive-table">'
-        + '<div class="caption">樣本敘述統計量</caption>'
-        + '<table cellspacing="0" cellpadding="0">'
+    var _table = $('<div class="descriptive-table">'
+        + '<div style="text-align:center;display:inline-block" class="caption">樣本敘述統計量</caption>'
+        + '<table border="1" cellspacing="0" cellpadding="0">'
         + '<thead><tr><th class="right-border-bold"></th><th>平均數</th><th>標準差</th><th>個數</th></tr></thead>'
         + '<tbody></tbody></table></div>');
+    if ($("#input_table_style_display:checked").length === 0) {
+        _table.addClass("analyze-result");
+    }
     var _tbody = _table.find('tbody');
     
     for (var _i = 0; _i < _attr_list.length; _i++) {
@@ -309,10 +339,10 @@ var _draw_descriptive_table = function () {
         var _stdev = _calc_stdev(_d);
         
         var _tr = $('<tr>'
-            + '<th>' + _attr + '</th>'
-            + '<td>' + _get_fix_precision(_avg) + '</td>'
-            + '<td>' + _get_fix_precision(_stdev) + '</td>'
-            + '<td>' + _d.length + '</td></tr>').appendTo(_tbody);
+            + '<th align="left">' + _attr + '</th>'
+            + '<td align="right">' + _get_fix_precision(_avg) + '</td>'
+            + '<td align="right">' + _get_fix_precision(_stdev) + '</td>'
+            + '<td align="right">' + _d.length + '</td></tr>').appendTo(_tbody);
     } 
     
     return _table;
@@ -717,6 +747,7 @@ $(function () {
     
     _panel.find(".download-file").click(_download_file_button);
     _panel.find(".change-trigger").change(_combine_input);
+    _panel.find(".change-trigger-draw").change(_draw_result_table);
     _panel.find(".key-up-trigger").keyup(_combine_input);
 
     _panel.find(".focus_select").focus(function () {
