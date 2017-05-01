@@ -52,6 +52,10 @@ var _calc_pearson_correlation = function () {
                 _attr_list[_j] = _value;
             }
             else {
+                if (isNaN(_value)) {
+                    //_attr_list.splice(_j, 1);
+                    continue;
+                }
                 _value = eval(_value);
                 _data[(_attr_list[_j])].push(_value);
             }
@@ -65,9 +69,12 @@ var _calc_pearson_correlation = function () {
     _var_container.empty();
     for (var _i = 0; _i < _attr_list.length; _i++) {
         var _attr = _attr_list[_i];
+        if (_data[_attr].length === 0) {
+            continue;
+        }
         var _div = $('<div class="field"><div class="ui checkbox">'
-            + '<input type="checkbox" name="variables" value="' + _attr + '" id="variables_' + _attr + '" checked="checked" /> '
-            + '<label for="variables_' + _attr + '">' 
+            + '<input type="checkbox" name="variables" value="' + _attr + '" id="variables_' + _i + '" checked="checked" /> '
+            + '<label for="variables_' + _i + '">' 
                 + '<i class="resize vertical icon"></i> '
                 + _attr 
                 + '</label>'
@@ -84,7 +91,7 @@ var _calc_pearson_correlation = function () {
 };
 
 var _is_variable_selected = function (_attr) {
-    return ($('#variables_' + _attr + ':checked').length === 1);
+    return ($('[name="variables"][value="' + _attr + '"]:checked').length === 1);
 };
 
 _data = {};
