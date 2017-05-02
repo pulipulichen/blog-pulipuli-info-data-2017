@@ -2,8 +2,8 @@
 var _combine_input = function () {
     // 開頭設定
     _reset_result();
-    var _result = "";
-    var _panel = $(".file-process-framework");
+    //var _result = "";
+    //var _panel = $(".file-process-framework");
     _data = {};
     // ------------------------------------------
     // 資料處理設定
@@ -258,6 +258,7 @@ var _draw_result_table = function () {
             if (_d !== null) {
                 //var _text = [];
                 var _r =  precision_string(_d.r, _precision);
+                var _origin_r = _r;
                 var _r2 = precision_string(_d.r*_d.r, _precision);
                 if (_d.p < 0.001) {
                     _r = _r + '<sup>***</sup>';
@@ -281,6 +282,33 @@ var _draw_result_table = function () {
                     //_text.push(_n);
                 }
                 _td_r.html(_r);
+                
+                if (Math.abs(_origin_r) > 0.7) {
+                    _td_r.attr("correlation", "high");
+                }
+                else if (Math.abs(_origin_r) > 0.4) {
+                    _td_r.attr("correlation", "middle");
+                }
+                else {
+                    _td_r.attr("correlation", "low");
+                }
+                
+                if (_d.p < 0.05) {
+                    _td_r.attr("significant", "true");
+                }
+                else {
+                    _td_r.attr("significant", "false");
+                }
+                
+                _td_r.attr("x_var", _x_attr);
+                _td_r.attr("y_var", _y_attr);
+                _td_r.attr("r", _origin_r);
+                var _dir = "plus";
+                if (_origin_r < 0) {
+                    _dir = "minus";
+                }
+                _td_r.attr("dir", _dir);
+                
                 if (_display_detail === true) {
                     _td_p.html(_p);
                     _td_r2.html(_r2);
@@ -324,6 +352,10 @@ var _draw_result_table = function () {
         }
     }
     
+    // ------------------------
+    
+    _create_conclusion(_result_div).appendTo(_result_div);
+    
     // -------------------------
     
     //return _div.html();
@@ -332,7 +364,202 @@ var _draw_result_table = function () {
     var _input = _panel.find("#preview");
     _input.val(_result);
 
-    _panel.find("#preview_html").html(_result);
+    _panel.find("#preview_html").append(_result_div.children());
+};
+
+var _create_conclusion = function (_result_div) {
+    
+    var _result = [];
+    
+    _result.push("相關分析結果顯示，");
+    
+    
+    _result_div.find('[correlation="high"][significant="true"]').each(function (_i, _td_r) {
+        _td_r = $(_td_r);
+        var _x_var = _td_r.attr("x_var");
+        var _y_var = _td_r.attr("y_var");
+        var _r = _td_r.attr("r");
+        var _dir = _td_r.attr("dir");
+        
+        var _desc = _x_var + "與" + _y_var;
+        
+        if (_dir === "plus") {
+            _desc += "二者具有顯著的高度正相關，表示" + _x_var + "越高者，" + _y_var + "也會越高。";
+        }
+        else {
+            _desc += "二者具有顯著的高度負相關，表示" + _x_var + "越高者，" + _y_var + "就會越低，反之亦然。";
+        }
+        
+        _result.push(_desc);
+    });
+    
+    _result_div.find('[correlation="middle"][significant="true"]').each(function (_i, _td_r) {
+        _td_r = $(_td_r);
+        var _x_var = _td_r.attr("x_var");
+        var _y_var = _td_r.attr("y_var");
+        var _r = _td_r.attr("r");
+        var _dir = _td_r.attr("dir");
+        
+        var _desc = _x_var + "與" + _y_var + "的相關係數為" + _r + "，";
+        
+        if (_dir === "plus") {
+            _desc += "二者具有顯著的中度正相關，表示" + _x_var + "越高者，" + _y_var + "也會越高。";
+        }
+        else {
+            _desc += "二者具有顯著的中度負相關，表示" + _x_var + "越高者，" + _y_var + "就會越低，反之亦然。";
+        }
+        
+        _result.push(_desc);
+    });
+    
+     _result_div.find('[correlation="middle"][significant="true"]').each(function (_i, _td_r) {
+        _td_r = $(_td_r);
+        var _x_var = _td_r.attr("x_var");
+        var _y_var = _td_r.attr("y_var");
+        var _r = _td_r.attr("r");
+        var _dir = _td_r.attr("dir");
+        
+        var _desc = _x_var + "與" + _y_var;
+        
+        if (_dir === "plus") {
+            _desc += "具有顯著的中度正相關，表示" + _x_var + "越高者，" + _y_var + "也會越高。";
+        }
+        else {
+            _desc += "具有顯著的中度負相關，表示" + _x_var + "越高者，" + _y_var + "就會越低，反之亦然。";
+        }
+        
+        _result.push(_desc);
+    });
+    
+    // --------------------------
+    
+    // -------------------------
+    
+    var _middle = [];
+    
+    _result_div.find('[correlation="high"][significant="false"]').each(function (_i, _td_r) {
+        _td_r = $(_td_r);
+        var _x_var = _td_r.attr("x_var");
+        var _y_var = _td_r.attr("y_var");
+        var _r = _td_r.attr("r");
+        var _dir = _td_r.attr("dir");
+        
+        var _desc = _x_var + "與" + _y_var;
+        
+        if (_dir === "plus") {
+            _desc += "具有高度正相關";
+        }
+        else {
+            _desc += "具有高度負相關";
+        }
+        
+        _middle.push(_desc);
+    });
+    
+    _result_div.find('[correlation="middle"][significant="false"]').each(function (_i, _td_r) {
+        _td_r = $(_td_r);
+        var _x_var = _td_r.attr("x_var");
+        var _y_var = _td_r.attr("y_var");
+        var _r = _td_r.attr("r");
+        var _dir = _td_r.attr("dir");
+        
+        var _desc = _x_var + "與" + _y_var;
+        
+        if (_dir === "plus") {
+            _desc += "具有中度正相關";
+        }
+        else {
+            _desc += "具有中度負相關";
+        }
+        
+        _middle.push(_desc);
+    });
+    
+    if (_middle.length > 0) {
+        
+        if (_result.length > 1) {
+            _result.push("此外，");
+        }
+
+        var _middle_desc = _middle.join("；") + "。但以上相關皆無達到顯著水準，僅供參考。";
+
+        _result.push(_middle_desc);
+    }
+    
+    // --------------------------
+    
+    // ------------------------------
+    
+    var _null = [];
+    
+    _result_div.find('[correlation="low"]').each(function (_i, _td_r) {
+        _td_r = $(_td_r);
+        var _x_var = _td_r.attr("x_var");
+        var _y_var = _td_r.attr("y_var");
+        var _r = _td_r.attr("r");
+        var _dir = _td_r.attr("dir");
+        
+        var _desc = _x_var + "與" + _y_var;
+        
+        _null.push(_desc);
+    });
+    
+    if (_null.length > 0) {
+
+        if (_result.length > 1) {
+            if (_middle.length === 0) {
+                _result.push("此外，");
+            }
+            else {
+                _result.push("最後，");
+            }
+        }
+        
+        var _desc = _null.join("、");
+        _desc += "之間的線性關係";
+        
+        if (_null.length > 1) {
+            _desc += "皆";
+        }
+        else {
+            _desc += "並";
+        }
+        
+        _desc += "不明顯。";
+        
+        
+
+        _result.push(_desc);
+    }
+    
+    if (_result.length === 1) {
+        _result = [];
+    }
+    else {
+        _result.push("相關分析到此結束。");
+    }
+    
+    var _return_div = $('<div class="conclusion"></div>').html(_result.join(""));
+    
+    var _button = $('<button type="button" class="ui icon button tiny teal speak"><i class="talk icon"></i></button>').prependTo(_return_div);
+    _button.click(function () {
+        //console.log(0);
+        var _loop = function (_i) {
+            if (_i < _result.length) {
+                var _t = _result[_i];
+                //console.log(_t);
+                responsiveVoice.speak(_t, 'Chinese Female', {
+                    onend: function () {
+                        _i++;
+                        _loop(_i);
+                    }
+                });
+            }
+        };
+        _loop(0);
+    });
+    
+    return _return_div;
 };
 
 var _draw_descriptive_table = function () {

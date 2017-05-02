@@ -7,7 +7,7 @@ and open the template in the editor.
 <html>
     <head>
         <title>
-            Pearson Correlation
+            Chi-squared test
         </title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,15 +25,15 @@ and open the template in the editor.
 
 <script src="statistics-distributions.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="contigency-table.js"></script>
 <script src="script.js"></script>
 
-<script src='https://code.responsivevoice.org/responsivevoice.js'></script>
 
 <!-- ------------------------------------------------------------ -->
 
 <form class="file-process-framework ui form">
 
-  <div class="ui two column stackable grid">
+  <div class="ui ">
     <div class="column">
 	<div class="ui segment">
 	
@@ -67,7 +67,7 @@ and open the template in the editor.
         <div class="field">
             <label for="input_file">
                 請上傳CSV檔案： 
-                (<a href="https://docs.google.com/spreadsheets/d/1KL07qS2txPpnZSvLt0gBWJ2_lGsVTr51s5JkE4bg2tY/export?format=csv">範例檔案下載</a>)
+                (<a href="https://docs.google.com/spreadsheets/d/1DdtDGbZPUCjZj_ZLNca3vpsFeTSHQ1T7Grw-ZhiBudQ/export?format=csv">範例檔案下載</a>)
             </label>
             <input type="file" id="input_file" class="file-change-trigger" data-file-to-textarea="#input_data" />
         </div>
@@ -81,7 +81,7 @@ and open the template in the editor.
             <input type="text" id="input_url" class="google-spreadsheet-trigger focus_select" 
                    data-sheet-selector="#input_url_sheet"
                    data-file-to-textarea="#input_data"
-                   value="https://docs.google.com/spreadsheets/d/1zwOPqpkcX2YRDEXLQEd2eM8OVz24FEXT5WT5eFP6ZsA/pubhtml" />
+                   value="https://docs.google.com/spreadsheets/d/1DdtDGbZPUCjZj_ZLNca3vpsFeTSHQ1T7Grw-ZhiBudQ/pubhtml?gid=1050192646&single=true" />
         </div> 
         <!--
         <div class="field">
@@ -105,9 +105,86 @@ and open the template in the editor.
 	
     
 <h1 class="ui horizontal divider header">
-  Variables
+  Contingency Table
 </h1>
-        <div class="ui segment sortable" id="variables_container">
+        <div class="ui segment" id="contingency_table">
+            <div class="contingency-table-col-plus">
+                <button type="button" class="ui button teal tiny">
+                    <i class="add square icon"></i>
+                    增加X變項
+                </button>
+            </div>
+            <table class="ui table">
+                <thead>
+                    <tr>
+                        <th rowspan="2" colspan="2"></th>
+                        <th colspan="2" class="variable_x_th">
+                            <input type="text" value="類別變項X" id="variable_x_name" />
+                        </th>
+                    </tr>
+                    <tr class="variable_x_tr">
+                        <th class="variable_th">
+                            <div class="ui action input">
+                                <input type="text" value="X1" class="variable_x" />
+                                <button class="ui icon button" type="button">
+                                <i class="minus square icon remove_attr"></i>
+                                </button>
+                            </div>
+                        </th>
+                        <th class="variable_th">
+                            <div class="ui action input">
+                                <input type="text" value="X2" class="variable_x" />
+                                <button class="ui icon button" type="button">
+                                <i class="minus square icon remove_attr"></i>
+                                </button>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th rowspan="2" class="variable_y_th">
+                            <input type="text" value="類別變項Y" id="variable_y_name" />
+                        </th>
+                        <th class="variable_th">
+                            <div class="ui action input">
+                                <input type="text" value="Y1" class="variable_y" />
+                                <button class="ui icon button" type="button">
+                                <i class="minus square icon remove_attr"></i>
+                                </button>
+                            </div>
+                        </th>
+                        <td class="cell_td">
+                            <input type="text" value="35" class="vairable_cell" />
+                        </td>
+                        <td class="cell_td">
+                            <input type="text" value="20" class="vairable_cell" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="variable_th">
+                            <div class="ui action input">
+                                <input type="text" value="Y2" class="variable_y" />
+                                <button class="ui icon button" type="button">
+                                <i class="minus square icon remove_attr"></i>
+                                </button>
+                            </div>
+                        </th>
+                        <td class="cell_td">
+                            <input type="text" value="45" class="vairable_cell" />
+                        </td>
+                        <td class="cell_td">
+                            <input type="text" value="40" class="vairable_cell" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="contingency-table-row-plus">
+                <button type="button" class="ui button teal tiny">
+                    <i class="add square icon"></i>
+                    增加Y變項
+                </button>
+            </div>
         </div>
             
         </div><!-- <div class="ui segment"> -->                
@@ -119,10 +196,7 @@ and open the template in the editor.
     
 <h1 class="ui horizontal divider header">
   Display
-</h1>
-        <div class="ui segment sortable" id="variables_container">
-        </div>
-            
+</h1>     
     <div class="inline field">
         <label for="input_precise">小數點位數</label>
         <input type="text" class="change-trigger-draw focus_select" 
