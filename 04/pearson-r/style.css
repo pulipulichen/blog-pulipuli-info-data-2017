@@ -168,3 +168,8 @@ table td {
     border-top: 0px solid black;
     border-bottom: 0px solid black;
 }
+
+#variables_container .field label img {
+    height: 1em;
+    /*float:left;*/
+}

@@ -4,7 +4,7 @@ var _combine_input = function () {
     _reset_result();
     var _result = "";
     var _panel = $(".file-process-framework");
-
+    _data = {};
     // ------------------------------------------
     // 資料處理設定
     
@@ -75,7 +75,9 @@ var _calc_pearson_correlation = function () {
         var _div = $('<div class="field"><div class="ui checkbox">'
             + '<input type="checkbox" name="variables" value="' + _attr + '" id="variables_' + _i + '" checked="checked" /> '
             + '<label for="variables_' + _i + '">' 
-                + '<i class="resize vertical icon"></i> '
+                //+ '<i class="resize vertical icon"></i> '
+                + '<i class="sort icon"></i>'
+                //+ '<img src="drag_reorder1.png" />'
                 + _attr 
                 + '</label>'
             + '</div></div>');
