@@ -32,7 +32,12 @@ and open the template in the editor.
 <!-- ------------------------------------------------------------ -->
 
 <form class="file-process-framework ui form">
-
+    
+    
+    
+<div class="mode-report">
+    <button type="button" class="mode" onclick="$('.mode-report').hide();$('.mode-ai').show();">切換到人工智慧模式</button>
+    
   <div class="ui two column stackable grid">
     <div class="column">
 	<div class="ui segment">
@@ -191,6 +196,24 @@ and open the template in the editor.
   </div>
     </div> <!-- <div class="column"> -->
   </div> <!-- <div class="ui two column doubling grid"> -->
+</div> <!-- <div class="mode-report"> -->
+  
+<div class="mode-ai">
+    <button type="button" class="mode" onclick="$('.mode-ai').hide();$('.mode-report').show();">切換到詳細報表模式</button>
+    <div style="text-align:center">
+        <img src="1-1412060R620.png" />
+    </div>
+    
+    <div class="ai-conclusion"></div>
+    <div class="ui bottom attached active tab segment" >
+        <div class="field">
+            <label for="input_file">
+                請上傳CSV檔案：
+            </label>
+            <input type="file" class="file-change-trigger" data-file-to-textarea="#input_data" />
+        </div>
+    </div>
+</div>
 </form>
 
 <!-- ------------------------------------------------------------ -->

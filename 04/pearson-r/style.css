@@ -177,3 +177,19 @@ table td {
 .conclusion .speak {
     float:left !important;
 }
+
+.mode-ai {
+    display: none;
+}
+
+.ai-conclusion {
+    text-align: center;
+    font-size: 2em;
+    line-height: 2em;
+}
+
+.mode-ai .ai-conclusion button.speak {
+    float: none !important;
+    display: block;
+    margin: 0 auto;
+}

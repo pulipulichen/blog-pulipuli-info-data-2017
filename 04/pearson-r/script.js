@@ -539,7 +539,7 @@ var _create_conclusion = function (_result_div) {
         _result.push("相關分析到此結束。");
     }
     
-    var _return_div = $('<div class="conclusion"></div>').html(_result.join(""));
+    var _return_div = $('<div class="conclusion"></div>').html(_result.join("<br />"));
     
     var _button = $('<button type="button" class="ui icon button tiny teal speak"><i class="talk icon"></i></button>').prependTo(_return_div);
     _button.click(function () {
@@ -549,6 +549,7 @@ var _create_conclusion = function (_result_div) {
                 var _t = _result[_i];
                 //console.log(_t);
                 responsiveVoice.speak(_t, 'Chinese Female', {
+                    rate: 1.2,
                     onend: function () {
                         _i++;
                         _loop(_i);
@@ -558,6 +559,12 @@ var _create_conclusion = function (_result_div) {
         };
         _loop(0);
     });
+    
+    var _ai = $(".ai-conclusion:visible");
+    if (_ai.length > 0) {
+        _ai.empty().append(_return_div.clone(true));
+        //_ai.find("button").click();
+    }
     
     return _return_div;
 };
