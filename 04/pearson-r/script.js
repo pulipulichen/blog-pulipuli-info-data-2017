@@ -1013,7 +1013,13 @@ $(function () {
 
     //$('.menu .item').tab();
     
-    _load_data("#input_data", "data.csv", _combine_input);
+    if (location.href.indexOf("?ai=t") === -1) {
+        _load_data("#input_data", "data.csv", _combine_input);
+    }
+    else {
+        $("button.mode:first").click();
+        _load_data("#input_data", "data2.csv", _combine_input);
+    }
 
 
     $('#copy_source_code').click(function () {
