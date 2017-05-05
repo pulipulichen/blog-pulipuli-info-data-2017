@@ -544,6 +544,7 @@ var _create_conclusion = function (_result_div) {
     var _button = $('<button type="button" class="ui icon button tiny teal speak"><i class="talk icon"></i></button>').prependTo(_return_div);
     _button.click(function () {
         //console.log(0);
+        /*
         var _loop = function (_i) {
             if (_i < _result.length) {
                 var _t = _result[_i];
@@ -558,6 +559,10 @@ var _create_conclusion = function (_result_div) {
             }
         };
         _loop(0);
+        */
+        responsiveVoice.speak(_result.join(), 'Chinese Female', {
+                    rate: 1.2
+                });
     });
     
     var _ai = $(".ai-conclusion:visible");
