@@ -186,3 +186,12 @@ table td {
 #contingency_table .variable_th input {
     width: calc(100% - 3em);
 }
+
+.cross-table td.sig {
+    background-color: yellow;
+}
+
+#preview_html {
+    /*max-height: 300px !important;*/
+    max-height: inherit !important;
+}

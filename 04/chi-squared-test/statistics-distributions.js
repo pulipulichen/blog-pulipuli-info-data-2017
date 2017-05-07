@@ -495,6 +495,25 @@ function precision_string ($x, sign) {
             throw "錯誤";
             _result = 0;
         }
+        
+        // 要計算小數點後面幾位
+        var _s = Math.pow(10, sign);
+        _result = _result*_s;
+        _result = Math.ceil(_result);
+        _result = _result / _s;
+        _result = (_result + "").split(".");
+        
+        var _a = _result[0];
+        var _b = "0";
+        if (_result.length > 1) {
+            _b = _result[1];
+        }
+        
+        while (_b.length < sign) {
+            _b = _b + "0";
+        }
+        _result = _a + "." + _b;
+        
         /*
         if (_result !== 0) {
             if (typeof(_result) !== "string") {
@@ -509,7 +528,7 @@ function precision_string ($x, sign) {
         //if (_result < 0) {
         //    _i++;
         //}
-        
+        /*
         if ((_result+"").indexOf("e") > - 1) {
             _result = 0;
         }
@@ -521,15 +540,19 @@ function precision_string ($x, sign) {
             var _b = _parts[1];
             
             if ( (_b.length > sign) ) {
-                _b = _b.substr(0, sign+1);
-                var _last = _b.substr(_b.length-1, 1);
-                _b = _b.substr(0, sign);
+                var _b1 = _b.substr(0, sign-1);
+                var _b2 = _b.substr(sign-1, 1);
+                var _last = _b.substr(sign, 1);
+                //_b = _b.substr(0, sign-1);
                 //console.log(['b',_b]);
-                _b = eval(_b);
+                //_b = eval(_b);
                 if (_last > 4) {
-                    _b++;
+                    _b2 = eval(_b2);
+                    _b2++;
                 }
-                _b = "" + _b;
+                
+                //_b = "" + _b;
+                _b = _b1 + "" + _b2;
             }
             
             while (_b.length < sign) {
@@ -544,7 +567,7 @@ function precision_string ($x, sign) {
                 _result += "0";
             }
         }
-        
+        */
         //console.log([$x, _result]);
         return _result;
     } else {

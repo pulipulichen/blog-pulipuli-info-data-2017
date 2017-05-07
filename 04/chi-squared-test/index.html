@@ -196,21 +196,23 @@ and open the template in the editor.
     
 <h1 class="ui horizontal divider header">
   Display
-</h1>     
-    <div class="inline field">
-        <label for="input_precise">小數點位數</label>
-        <input type="text" class="change-trigger-draw focus_select" 
-               id="input_precise" 
-               value="3" 
-               placeholder="請輸入小數點位數" />
-    </div>
+</h1> 
     <div class="field">
         <div class="ui checkbox">
             <input type="checkbox" class="change-trigger-draw" 
-                   name="input_display_detail"
-                   id="input_display_detail" 
-                   value="input_display_detail" checked="checked"  />
-            <label for="input_display_detail">顯示「顯著性」、「關聯強度」跟「個數」等細節資料</label>
+                   name="input_enable_yates"
+                   id="input_enable_yates" 
+                   value="input_enable_yates" checked="checked"  />
+            <label for="input_enable_yates">在符合以下的情況時，使用葉氏連續性校正：1. 2x2列聯表；2. 有細格期望值小於5個；3. 樣本總數超過20個。</label>
+        </div>
+    </div>
+      <div class="field">
+        <div class="ui checkbox">
+            <input type="checkbox" class="change-trigger-draw" 
+                   name="input_enable_fisher"
+                   id="input_enable_fisher" 
+                   value="input_enable_fisher" checked="checked"  />
+            <label for="input_enable_fisher">在符合以下的情況時，使用費雪爾正確概率檢定：1. 2x2列聯表；2. 有細格期望值小於5個；3. 各類別行列總數皆小於20個。</label>
         </div>
     </div>
     <div class="field">

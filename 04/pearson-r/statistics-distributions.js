@@ -510,40 +510,23 @@ function precision_string ($x, sign) {
         //    _i++;
         //}
         
-        if ((_result+"").indexOf("e") > - 1) {
-            _result = 0;
-        }
-        //_result = eval(_result);
+        // 要計算小數點後面幾位
+        var _s = Math.pow(10, sign);
+        _result = _result*_s;
+        _result = Math.ceil(_result);
+        _result = _result / _s;
+        _result = (_result + "").split(".");
         
-        var _parts = (_result+"").split(".");
-        if (_parts.length > 1) {
-            var _a = _parts[0];
-            var _b = _parts[1];
-            
-            if ( (_b.length > sign) ) {
-                _b = _b.substr(0, sign+1);
-                var _last = _b.substr(_b.length-1, 1);
-                _b = _b.substr(0, sign);
-                //console.log(['b',_b]);
-                _b = eval(_b);
-                if (_last > 4) {
-                    _b++;
-                }
-                _b = "" + _b;
-            }
-            
-            while (_b.length < sign) {
-                _b += "0";
-            }
-            _result = _a + "." + _b;
+        var _a = _result[0];
+        var _b = "0";
+        if (_result.length > 1) {
+            _b = _result[1];
         }
         
-        if (_result === 0 || _result === "0") {
-            _result = "0.";
-            for (var _i = 0; _i < sign; _i++) {
-                _result += "0";
-            }
+        while (_b.length < sign) {
+            _b = _b + "0";
         }
+        _result = _a + "." + _b;
         
         //console.log([$x, _result]);
         return _result;
