@@ -1,5 +1,7 @@
 var _DEBUG = {
-    force_fisher: false
+    force_fisher: false,
+    force_yates: false,
+    force_sig_pass: true
 };
 
 _ct_json = {};
@@ -330,7 +332,10 @@ var _create_cell_td = function (_cell) {
 
 // --------------------------------------
 
-var _cramer_v_k;
+var _is_display_percent = function () {
+    return ($("#input_display_percent:checked").length === 1);
+};
+
 var _x_var_count;
 var _y_var_count;
 var _draw_result_table = function () {
@@ -352,11 +357,16 @@ var _draw_result_table = function () {
         + '<tfoot>'
             + '<tr class="x-sum num-tr"><th rowspan="5" colspan="2" align="left" valign="top">' + '總合' + '</th><th align="left" valign="top">' + '個數' + '</th></tr>'
             + '<tr class="x-sum exp-tr"><th align="left" valign="top">' + '期望個數' + '</th></tr>' 
-            + '<tr class="x-sum y-per-tr"><th align="left" valign="top">' + '(<span class="y-var-name"></span>)列之內的百分比' + '</th></tr>'
-            + '<tr class="x-sum x-per-tr"><th align="left" valign="top">' + '(<span class="x-var-name"></span>)欄之內的百分比' + '</th></tr>'
-            + '<tr class="x-sum per-tr"><th align="left" valign="top">' + '整體百分比' + '</th></tr>'
+            + '<tr class="x-sum per y-per-tr"><th align="left" valign="top">' + '(<span class="y-var-name"></span>)列之內的百分比' + '</th></tr>'
+            + '<tr class="x-sum per x-per-tr"><th align="left" valign="top">' + '(<span class="x-var-name"></span>)欄之內的百分比' + '</th></tr>'
+            + '<tr class="x-sum per per-tr"><th align="left" valign="top">' + '整體百分比' + '</th></tr>'
         + '</tfoot>'
         + '</table></div>');
+
+    if (_is_display_percent() === false) {
+        _cross_table.find('tfoot tr.per').remove();
+        _cross_table.find('tfoot tr.num-tr th:first').attr('rowspan', 2);
+    }
 
     if ($("#input_table_style_display:checked").length === 0) {
         _cross_table.addClass("analyze-result");
@@ -391,6 +401,10 @@ var _draw_result_table = function () {
     var _y_var_name;
     _y_vars_count = 0;
     var _y_name = $("#variable_y_name").val().trim();
+    var _rowspan = 8;
+    if (_is_display_percent() === false) {
+        _rowspan = 5;
+    }
     $("#contingency_table input.variable_y").each(function (_i, _input) {
         var _name = _input.value.trim();
         if (_name === "") {
@@ -399,12 +413,15 @@ var _draw_result_table = function () {
         
         // -----------
         
-        var _tr_num = $('<tr y_var="' + _name + '" class="num-tr"><th rowspan="8" class="bottom-border-thin" valign="top" align="left">' + _name + '</th>'
+        
+        var _tr_num = $('<tr y_var="' + _name + '" class="num-tr"><th rowspan="' + _rowspan + '" class="bottom-border-thin" valign="top" align="left">' + _name + '</th>'
                 + '<th valign="top" align="left">' + '個數' + '</th></tr>').appendTo(_tbody);
         var _tr_exp = $('<tr y_var="' + _name + '" class="exp-tr"><th valign="top" align="left">' + '期望個數' + '</th></tr>').appendTo(_tbody);
-        var _tr_y_per = $('<tr y_var="' + _name + '" class="y-per-tr"><th valign="top" align="left">' + '(<span class="y-var-name"></span>)列之內的百分比' + '</th></tr>').appendTo(_tbody);
-        var _tr_x_per = $('<tr y_var="' + _name + '" class="x-per-tr"><th valign="top" align="left">' + '(<span class="x-var-name"></span>)欄之內的百分比' + '</th></tr>').appendTo(_tbody);
-        var _tr_global = $('<tr y_var="' + _name + '" class="global-tr"><th valign="top" align="left">' + '整體百分比' + '</th></tr>').appendTo(_tbody);
+        if (_is_display_percent()) {
+            var _tr_y_per = $('<tr y_var="' + _name + '" class="y-per-tr"><th valign="top" align="left">' + '(<span class="y-var-name"></span>)列之內的百分比' + '</th></tr>').appendTo(_tbody);
+            var _tr_x_per = $('<tr y_var="' + _name + '" class="x-per-tr"><th valign="top" align="left">' + '(<span class="x-var-name"></span>)欄之內的百分比' + '</th></tr>').appendTo(_tbody);
+            var _tr_global = $('<tr y_var="' + _name + '" class="global-tr"><th valign="top" align="left">' + '整體百分比' + '</th></tr>').appendTo(_tbody);
+        }
         var _tr_residual = $('<tr y_var="' + _name + '" class="residual-tr"><th valign="top" align="left">' + '殘差' + '</th></tr>').appendTo(_tbody);
         var _tr_std_residual = $('<tr y_var="' + _name + '" class="std-residual-tr"><th valign="top" align="left">' + '標準化殘差' + '</th></tr>').appendTo(_tbody);
         var _tr_adj_residual = $('<tr y_var="' + _name + '" class="adj-residual-tr bottom-border-thin"><th valign="top" align="left">' + '調整後殘差' + '</th></tr>').appendTo(_tbody);
@@ -413,7 +430,7 @@ var _draw_result_table = function () {
         
         if (_y_vars_count === 0) {
             // 插入y變數的名字
-            _y_var_name = $('<th class="y-var-name" valign="top" align="left"></th>')
+            _y_var_name = $('<th class="y-var-name bottom-border-thin" valign="top" align="left"></th>')
                     .prependTo(_tr_num);
             _y_var_name.html(_name);
         }
@@ -431,9 +448,11 @@ var _draw_result_table = function () {
             }
             _td.clone().appendTo(_tr_num);
             _td.clone().appendTo(_tr_exp);
-            _td.clone().appendTo(_tr_y_per);
-            _td.clone().appendTo(_tr_x_per);
-            _td.clone().appendTo(_tr_global);
+            if (_is_display_percent()) {
+                _td.clone().appendTo(_tr_y_per);
+                _td.clone().appendTo(_tr_x_per);
+                _td.clone().appendTo(_tr_global);
+            }
             _td.clone().appendTo(_tr_residual);
             _td.clone().appendTo(_tr_std_residual);
             _td.clone().appendTo(_tr_adj_residual);
@@ -443,7 +462,7 @@ var _draw_result_table = function () {
         
     }); // $("#contingency_table input.variable_y").each(function (_i, _input) {
     
-    _y_var_name.attr('rowspan', _y_vars_count * 8);
+    _y_var_name.attr('rowspan', _y_vars_count * _rowspan);
     _cross_table.find('.x-var-name').html(_x_name);
     _cross_table.find('.y-var-name').html(_y_name);
     
@@ -475,10 +494,6 @@ var _draw_result_table = function () {
     
     //_result.html("1");
     
-    _cramer_v_k = _x_vars_count;
-    if (_y_vars_count < _x_vars_count) {
-        _cramer_v_k = _y_vars_count;
-    }
     
     _draw_num_cell();
 };
@@ -489,6 +504,7 @@ var _total_sum;
 
 var _is_sum_too_small;
 var _is_zero_cell_existed;
+var _is_sum_zero_cell_existed;
 
 var _draw_num_cell = function () {
     _x_sum_list = {};
@@ -523,6 +539,7 @@ var _draw_num_cell = function () {
         }
     }
     
+    _is_sum_zero_cell_existed = false;
     for (var _x_var_name in _x_sum_list) {
         var _sum = _x_sum_list[_x_var_name];
         if (_sum >= 20) {
@@ -530,6 +547,11 @@ var _draw_num_cell = function () {
         }
         _cross_table.find('.x-sum.num-tr [x_var="' + _x_var_name + '"]').html(_sum);
         _cross_table.find('.x-sum.exp-tr [x_var="' + _x_var_name + '"]').html(_sum);
+        
+        if (_sum === 0) {
+            _is_sum_zero_cell_existed = true;
+            _cross_table.find('.x-sum.num-tr [x_var="' + _x_var_name + '"]').addClass('zero-sum');
+        }
     }
     
     _cross_table.find('tbody .y-per-tr .y-sum').html(precision_string(100, 1) + '%');
@@ -542,6 +564,11 @@ var _draw_num_cell = function () {
         
         _cross_table.find('.num-tr[y_var="' + _y_var_name + '"] .y-sum').html(_sum);
         _cross_table.find('.exp-tr[y_var="' + _y_var_name + '"] .y-sum').html(_sum);
+        
+        if (_sum === 0) {
+            _is_sum_zero_cell_existed = true;
+            _cross_table.find('.num-tr[y_var="' + _y_var_name + '"] .y-sum').addClass('zero-sum');
+        }
     }
     
     _cross_table.find('.x-sum.x-per-tr td[x_var]').html(precision_string(100, 1) + '%');
@@ -551,6 +578,25 @@ var _draw_num_cell = function () {
     _cross_table.find('.x-sum.y-per-tr .total-sum').html(precision_string(100, 1) + '%');
     _cross_table.find('.x-sum.x-per-tr .total-sum').html(precision_string(100, 1) + '%');
     _cross_table.find('.x-sum.per-tr .total-sum').html(precision_string(100, 1) + '%');
+    
+    var _panel = $(".file-process-framework");
+    var _result = _panel.find("#preview_html");
+    if (_is_sum_zero_cell_existed === true) {
+        var _zero_var_list = [];
+        _cross_table.find('.zero-sum').each(function (_i, _td) {
+            _td = $(_td);
+            if (_td.hasClass('y-sum')) {
+                _zero_var_list.push(_td.parent().attr('y_var'));
+            }
+            else {
+                _zero_var_list.push(_td.attr('x_var'));
+            }
+        });
+        
+        $('<div>因為「' + _zero_var_list.join("」、「") + '」的總合個數為0，無法進行列聯表分析，建議刪除上述變項再進行分析。</div>').appendTo(_result);
+        _cross_table.hide();
+        return;
+    }
     
     _draw_x_percent_cell();
     _draw_y_percent_cell();
@@ -617,14 +663,14 @@ var _draw_cell_percent_cell = function () {
             
             var _exp = (_x_sum_list[_x_var_name] * _y_sum_list[_y_var_name]) / _total_sum;
             _tbody.find('tr.exp-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_exp, 1));
-            if (_num === 5) {
-                console.log({
-                    "exp": _exp,
-                    "x": _x_sum_list[_x_var_name],
-                    "y": _y_sum_list[_y_var_name],
-                    "n": _total_sum
-                });
-            }
+//            if (_num === 5) {
+//                console.log({
+//                    "exp": _exp,
+//                    "x": _x_sum_list[_x_var_name],
+//                    "y": _y_sum_list[_y_var_name],
+//                    "n": _total_sum
+//                });
+//            }
             
             if (_exp < 5) {
                 _is_cell_exp_too_small = true;
@@ -645,16 +691,74 @@ var _draw_cell_percent_cell = function () {
             }
             
             _chi_squared += (_std_residual * _std_residual);
-            _yates_chi_squared += ( Math.pow((Math.abs(_num - _exp) - 0.5), 2) / _exp );
+            var _y = ( Math.pow((Math.abs(_residual) - 0.5), 2) / _exp );
+            
+            _yates_chi_squared += _y;
+            //console.log([_yates_chi_squared, _y]);
         }
     }
+    
+    _draw_contingency_table_analyze_result(_chi_squared, _yates_chi_squared);
+};
+
+var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_squared) {
+    //console.log([_yates_chi_squared]);
     
     // ------------------------
     
     var _panel = $(".file-process-framework");
     var _result = _panel.find("#preview_html");
+    
+    
     //console.log(_chi_squared);
+    var _title_container = $('<div>列聯表分析結果：</div>').appendTo(_result);
+    
+    var _button = $('<button type="button" class="ui icon button tiny teal speak skip"><i class="talk icon"></i></button>').prependTo(_title_container);
+    _button.click(function () {
+        /*
+        var _text = _result.find('.chi-squared-container:first').clone();
+        _text.find('.skip').each(function(_i, _span) {
+            _span = $(_span);
+            var _alt = "";
+            if (typeof(_span.attr("alt")) === 'string') {
+                _alt = _span.attr("alt");
+            }
+            _span.html(_alt);
+        });
+        _text = _text.text();
+        _text = "列聯表分析結果顯示：" + _text + "列聯表分析結束。";
+        console.log(_text);
+        responsiveVoice.speak(_text, 'Chinese Female', {
+                    rate: 1.2
+                });
+        */
+        var _text = "";
+        _result.find('.chi-squared-container:first .speak').each(function(_i, _span) {
+            _text += $(_span).text();
+        });
+        _text = "列聯表分析結果顯示。" + _text + "列聯表分析結束。";
+        //console.log(_text);
+        var _speak_list = _text.split("。");
+        
+        var _loop = function (_i) {
+            if (_i < _speak_list.length) {
+                responsiveVoice.speak(_speak_list[_i], 'Chinese Female', {
+                    rate: 1.2,
+                    onend: function () {
+                        _i++;
+                        _loop(_i);
+                    }
+                });
+            }
+        };
+        _loop(0);
+        
+    });
+    
+    // -------------------
+    
     var _chi_squared_container = $('<ul class="chi-squared-container"></ul>').appendTo(_result);
+    
     if ($("#input_table_style_display:checked").length === 0) {
         _chi_squared_container.addClass("analyze-result");
     }
@@ -672,55 +776,141 @@ var _draw_cell_percent_cell = function () {
         _fisher_mode = true;
     }
     
-    if (_fisher_mode) {
-        var _p;
-        if (_is_zero_cell_existed === false) {
-            _p = _calc_fisher_exact_test();
-        }
-        else {
-            //console.log(1);
-            _p = _calc_fisher_exact_test_with_zero();
-        }
-        if (Math.abs(_p) < 0.05) {
-            _chi_squared_container.append('<li>Fisher x2: ' + precision_string(_p, 10) + '，顯著</li>');
-        }
-        else {
-            _chi_squared_container.append('<li>Fisher x2: ' + precision_string(_p, 10) + '，不顯著</li>');
-        }
-    }
-    else if ($("#input_enable_yates:checked").length === 1 
+    // ------------.
+    var _yates_mode = false;
+    if ($("#input_enable_yates:checked").length === 1 
             && _is_cell_exp_too_small === true
             && _total_sum >= 20
             && _x_vars_count === 2
             && _y_vars_count === 2) {
-        if (Math.abs(_yates_chi_squared) > 1.96) {
-            _chi_squared_container.append('<li>Yates x2: ' + precision_string(_yates_chi_squared, 3) + '，顯著</li>');
+        _yates_mode = true;
+    }
+    if (_DEBUG.force_yates === true) {
+        _yates_mode = true;
+    }
+    
+    // ------------
+    
+    var _df = (_x_vars_count-1) * (_y_vars_count-1);
+    
+    var _p;
+    var _has_sig = false;
+    var _x_var_name = $("#variable_x_name").val().trim();
+    var _y_var_name = $("#variable_y_name").val().trim();
+    
+    var _sig_pass = '，達到顯著水準<span class="skip">α = </span> 0.05 ，因此拒絕虛無假設，接受對立假設。'
+                    + '表示<span class="speak">「' + _x_var_name + '」的不同對「' + _y_var_name + '」有顯著的影響。</span></li>';
+    var _sig_not_pass = '，未達顯著水準<span class="skip">α = </span> 0.05 ，因此無法拒絕虛無假設。'
+                    + '表示<span class="speak">「' + _x_var_name + '」的不同對「' + _y_var_name + '」並沒有顯著的影響。</span></li>';
+    
+    if (_fisher_mode) {
+        _p = _calc_fisher_exact_test();
+//        if (_is_zero_cell_existed === false) {
+//            _p = _calc_fisher_exact_test();
+//        }
+//        else {
+//            //console.log(1);
+//            _p = _calc_fisher_exact_test_with_zero();
+//        }
+        
+        var _text = '費雪爾正確概率檢定之雙尾機率值<span class="skip" alt="為"> p = </span> ' + precision_string(_p, 3) + ' 。';
+        if (Math.abs(_p) < 0.05) {
+            _chi_squared_container.append('<li>' + _text + _sig_pass + '</li>');
+            _has_sig = true;
         }
         else {
-            _chi_squared_container.append('<li>Yates x2: ' + precision_string(_yates_chi_squared, 3) + '，不顯著</li>');
+            _chi_squared_container.append('<li>' + _text + _sig_not_pass + '</li>');
+        }
+    }
+    else if (_yates_mode) {
+        //console.log([_yates_chi_squared, precision_string(_yates_chi_squared, 3)]);
+        _p = chisqrprob(_df, _yates_chi_squared);
+        var _text = '使用葉氏連續性校正之後的卡方檢定統計量<span class="skip" alt="為">χ<sup>2</sup> = </span>' + precision_string(_chi_squared, 3) 
+                    + ' ，機率值<span class="skip" alt="為">p = </span>' + precision_string(_p, 3) + ' ';
+        if (Math.abs(_p) < 0.05) {
+            _chi_squared_container.append('<li>' + _text + _sig_pass + '</li>');
+            _has_sig = true;
+        }
+        else {
+            _chi_squared_container.append('<li>' + _text + _sig_not_pass + '</li>');
         }
     }
     else {
-        if (Math.abs(_chi_squared) > 1.96) {
-            _chi_squared_container.append('<li>x2: ' + precision_string(_chi_squared, 3) + '，顯著</li>');
+        _p = chisqrprob(_df, _chi_squared);
+        var _text = '卡方檢定統計量<span class="skip" alt="為">χ<sup>2</sup> = </span> ' + precision_string(_chi_squared, 3) 
+                    + ' ，機率值<span class="skip" alt="為">p = </span>' + precision_string(_p, 3) + ' ';
+        if (Math.abs(_p) < 0.05) {
+            _chi_squared_container.append('<li>' + _text + _sig_pass + '</li>');
+            _has_sig = true;
         }
         else {
-            _chi_squared_container.append('<li>x2: ' + precision_string(_chi_squared, 3) + '，不顯著</li>');
+            _chi_squared_container.append('<li>' + _text + _sig_not_pass + '</li>');
         }
+        
     }
     
-    var _cramer_v = Math.sqrt(_chi_squared / (_total_sum * (_cramer_v_k - 1)) );
-    _chi_squared_container.append('<li>Cramer\'s V coefficient: ' + precision_string(_cramer_v, 3) + '</li>');
-    
-    // ---------------------------
-    // x tau
-    
-    _chi_squared_container.append('<li>X->Y tau: ' + precision_string(_calc_x2y_tau(), 3) + '</li>');
-    
-    // ---------------------------
-    // y tau
-    
-    _chi_squared_container.append('<li>Y->X tau: ' + precision_string(_calc_y2x_tau(), 3) + '</li>');
+    if (_has_sig === true || _DEBUG.force_sig_pass) {
+        
+        var _cramer_v_k = _x_vars_count;
+        if (_y_vars_count < _x_vars_count) {
+            _cramer_v_k = _y_vars_count;
+        }
+        var _cramer_v = Math.sqrt(_chi_squared / (_total_sum * (_cramer_v_k - 1)) );
+        var _cramer_v_desc = "，<span class='speak'>屬於低度相關。</span>";
+        if (_cramer_v > 0.7) {
+            _cramer_v_desc = "，<span class='speak'>屬於高度相關。</span>";
+        }
+        else if (_cramer_v > 0.4) {
+            _cramer_v_desc = "，<span class='speak'>屬於中度相關。</span>";
+        }
+        var _cramer_v_li = $('<li><span class="speak">「' + _x_var_name + '」跟「' + _y_var_name + '」'
+            + '</span>之關聯係數Cramer\'s V值<span class="skip" alt="為">(介於0~1之間)</span>為 ' + precision_string(_cramer_v, 3) + ' ' + _cramer_v_desc + '</li>')
+            .appendTo(_chi_squared_container);
+        
+        // -----------------------------------
+        var _tau_container = $('<li><span class="skip" alt="接著進行"></span>Goodman與Kruskal的Tau係數的預測力分析：<ul></ul></li>')
+                .appendTo(_chi_squared_container);
+        var _tau_container_ul = _tau_container.find('ul');
+
+        // ---------------------------
+        // x tau
+
+        $('<li>以「' + _x_var_name + '」來預測「' + _y_var_name + '」的正確比例為' 
+                + precision_string(_calc_x2y_tau()*100, 3) + '%。</li>')
+                .appendTo(_tau_container_ul);
+
+        // ---------------------------
+        // y tau
+
+        $('<li>以「' + _y_var_name + '」來預測「' + _x_var_name + '」的正確比例為' 
+                + precision_string(_calc_y2x_tau()*100, 3) + '%。</li>')
+                .appendTo(_tau_container_ul);
+
+        // ---------------------------
+        
+        var _sig_cell = $('.cross-table tbody tr.adj-residual-tr td.sig');
+        if (_sig_cell.length > 0) {
+            var _cell_container = $('<li><span class="skip" alt="最後進行"></span>細格之調整後殘差分析：<ul></ul></li>');
+            var _cell_ul = _cell_container.find('ul');
+            _sig_cell.each(function (_i, _td) {
+                var _td = $(_td);
+                var _adj_residual = eval(_td.text());
+                var _x_var = _td.attr('x_var');
+                var _y_var = _td.parent().attr('y_var');
+
+                var _text = '「' + _x_var + '」中「' + _y_var +'」的觀察個數顯著';
+                if (_adj_residual > 0) {
+                    _text += "高於期望個數。";
+                }
+                else {
+                    _text += "低於期望個數。";
+                }
+                $('<li><span class="speak">' + _text + '</span></li>').appendTo(_cell_ul);
+            });
+            _cell_container.appendTo(_chi_squared_container);
+        }
+        
+    }
 };
 
 var _calc_fisher_exact_test = function () {
@@ -730,7 +920,6 @@ var _calc_fisher_exact_test = function () {
     
     // 先找出最小的那個值
     var _min; 
-    var _max;
     var _min_pos = 0;
     var _i = 0;
     var _origin_first;
@@ -748,12 +937,6 @@ var _calc_fisher_exact_test = function () {
             _min_pos = _i;
         }
         
-        if (_max === undefined) {
-            _max = _num;
-        }
-        else if (_num > _max) {
-            _max = _num;
-        }
         
         _ext_ary.push(_num);
         _i++;
@@ -767,23 +950,35 @@ var _calc_fisher_exact_test = function () {
     // ---------------------
     
     // 調整成極端值
+    
+    var _max;
     for (var _i = 0; _i < _ext_ary.length; _i++) {
+        var _num = _ext_ary[_i];
         if (_min_pos === 1 || _min_pos === 2) {
             if (_i === 0 || _i === 3 ) {
-                _ext_ary[_i] = _ext_ary[_i]+_min;
+                _num = _num+_min;
             }
             else {
-                _ext_ary[_i] = _ext_ary[_i]-_min;
+                _num = _num-_min;
             }
         }
         else {
             if (_i === 0 || _i === 3 ) {
-                _ext_ary[_i] = _ext_ary[_i]-_min;
+                _num = _num-_min;
             }
             else {
-                _ext_ary[_i] = _ext_ary[_i]+_min;
+                _num = _num+_min;
             }
         }
+        
+        
+        if (_max === undefined) {
+            _max = _num;
+        }
+        else if (_num > _max) {
+            _max = _num;
+        }
+        _ext_ary[_i] = _num;
     }
     
     //console.log(_ext_ary);
@@ -863,6 +1058,8 @@ var _calc_fisher_exact_test = function () {
             //console.log(['p4', _p4]);
         //    _p += _p4;
         //}
+        //console.log(_ext_ary2);
+        //console.log(_p4);
         _p4_list.push(_p4);
 
         //if (_over_original_flag === true) {

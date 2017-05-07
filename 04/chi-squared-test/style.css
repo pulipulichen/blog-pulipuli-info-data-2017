@@ -164,7 +164,9 @@ table td {
 }
 
 .analyze-result tbody tr td,
-.analyze-result tbody tr th {
+.analyze-result tbody tr th,
+.analyze-result tfoot tr td,
+.analyze-result tfoot tr th {
     border-top: 0px solid black;
     border-bottom: 0px solid black;
 }
@@ -194,4 +196,8 @@ table td {
 #preview_html {
     /*max-height: 300px !important;*/
     max-height: inherit !important;
+}
+
+.skip {
+    /*color: red;*/
 }

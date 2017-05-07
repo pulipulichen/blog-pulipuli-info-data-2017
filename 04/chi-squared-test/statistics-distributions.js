@@ -135,7 +135,7 @@ function uprob ($x) {
 
 function chisqrprob ($n,$x) {
 	if (($n <= 0) || ((Math.abs($n) - (Math.abs(integer($n)))) != 0)) {
-		throw("Invalid n: $n\n"); /* degree of freedom */
+		throw("Invalid n: " + $n + "\n"); /* degree of freedom */
 	}
 	return _subchisqrprob($n-0, $x-0);
 }

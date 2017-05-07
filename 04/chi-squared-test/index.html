@@ -28,6 +28,7 @@ and open the template in the editor.
 <script src="contigency-table.js"></script>
 <script src="script.js"></script>
 
+<script src='https://code.responsivevoice.org/responsivevoice.js'></script>
 
 <!-- ------------------------------------------------------------ -->
 
@@ -200,10 +201,19 @@ and open the template in the editor.
     <div class="field">
         <div class="ui checkbox">
             <input type="checkbox" class="change-trigger-draw" 
+                   name="input_display_percent"
+                   id="input_display_percent" 
+                   value="input_display_percent"  />
+            <label for="input_display_percent">顯示百分比資訊。</label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="ui checkbox">
+            <input type="checkbox" class="change-trigger-draw" 
                    name="input_enable_yates"
                    id="input_enable_yates" 
                    value="input_enable_yates" checked="checked"  />
-            <label for="input_enable_yates">在符合以下的情況時，使用葉氏連續性校正：1. 2x2列聯表；2. 有細格期望值小於5個；3. 樣本總數超過20個。</label>
+            <label for="input_enable_yates">在符合以下的情況時，使用葉氏連續性校正 (Yate's continuity correction)：1. 2x2列聯表；2. 有細格期望值小於5個；3. 樣本總數超過20個。</label>
         </div>
     </div>
       <div class="field">
@@ -212,7 +222,7 @@ and open the template in the editor.
                    name="input_enable_fisher"
                    id="input_enable_fisher" 
                    value="input_enable_fisher" checked="checked"  />
-            <label for="input_enable_fisher">在符合以下的情況時，使用費雪爾正確概率檢定：1. 2x2列聯表；2. 有細格期望值小於5個；3. 各類別行列總數皆小於20個。</label>
+            <label for="input_enable_fisher">在符合以下的情況時，使用費雪爾正確概率檢定 (Fisher’s Exact Test)：1. 2x2列聯表；2. 有細格期望值小於5個；3. 各類別行列總數皆小於20個。</label>
         </div>
     </div>
     <div class="field">
