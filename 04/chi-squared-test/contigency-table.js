@@ -1,7 +1,7 @@
 var _DEBUG = {
     force_fisher: false,
     force_yates: false,
-    force_sig_pass: true
+    force_sig_pass: false
 };
 
 _ct_json = {};
@@ -734,11 +734,16 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
         */
         var _text = "";
         _result.find('.chi-squared-container:first .speak').each(function(_i, _span) {
-            _text += $(_span).text();
+            if ($(_span).attr("alt") === undefined) {
+                _text += $(_span).text();
+            }
+            else {
+                _text += $(_span).attr("alt");
+            }
         });
         _text = "列聯表分析結果顯示。" + _text + "列聯表分析結束。";
         _text = _text.replace(/「|」/g, '');
-        //console.log(_text);
+        console.log(_text);
         var _speak_list = _text.split("。");
         if (navigator.userAgent.match(/Android/)) {
             _speak_list = [_text];
@@ -748,7 +753,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
 //            _i++;
 //            _loop(_i);
 //        };
-        var _timer;
+        //var _timer;
         var _loop = function (_i) {
             if (_i < _speak_list.length) {
                 responsiveVoice.speak(_speak_list[_i], 'Chinese Female', {
@@ -757,6 +762,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
                         //clearTimeout(_timer);
                         _i++;
                         _loop(_i);
+                        console.log(_i);
                     }
                 });
                 
@@ -914,14 +920,14 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
                 var _x_var = _td.attr('x_var');
                 var _y_var = _td.parent().attr('y_var');
 
-                var _text = '「' + _x_var + '」中「' + _y_var +'」的觀察個數顯著';
+                var _text = '<span class="speak">「' + _x_var + '」中「' + _y_var +'」</span><span class="speak" alt="的"></span>之調整後殘差為' + _adj_residual + '，表示<span class="speak">觀察個數顯著';
                 if (_adj_residual > 0) {
-                    _text += "高於期望個數。";
+                    _text += "高於期望個數。</span>";
                 }
                 else {
-                    _text += "低於期望個數。";
+                    _text += "低於期望個數。</span>";
                 }
-                $('<li><span class="speak">' + _text + '</span></li>').appendTo(_cell_ul);
+                $('<li>' + _text + '</li>').appendTo(_cell_ul);
             });
             _cell_container.appendTo(_chi_squared_container);
         }
