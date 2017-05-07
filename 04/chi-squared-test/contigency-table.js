@@ -737,13 +737,17 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
             _text += $(_span).text();
         });
         _text = "列聯表分析結果顯示。" + _text + "列聯表分析結束。";
+        _text = _text.replace(/「|」/g, '');
         //console.log(_text);
         var _speak_list = _text.split("。");
+        if (navigator.userAgent.match(/Android/)) {
+            _speak_list = [_text];
+        }
         
-        var _next = function (_i) {
-            _i++;
-            _loop(_i);
-        };
+//        var _next = function (_i) {
+//            _i++;
+//            _loop(_i);
+//        };
         var _timer;
         var _loop = function (_i) {
             if (_i < _speak_list.length) {
@@ -751,15 +755,16 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
                     rate: 1.2,
                     onend: function () {
                         //clearTimeout(_timer);
-                        //_next(_i);
+                        _i++;
+                        _loop(_i);
                     }
                 });
                 
-                console.log(_speak_list[_i].length * 1000 * 0.3 );
-                _timer = setTimeout(function () {
-                    console.log(_i);
-                    _next(_i);
-                }, _speak_list[_i].length * 1000 * 0.3 );
+//                console.log(_speak_list[_i].length * 1000 * 0.3 );
+//                _timer = setTimeout(function () {
+//                    console.log(_i);
+//                    _next(_i);
+//                }, _speak_list[_i].length * 1000 * 0.3 );
             }
         };
         _loop(0);
