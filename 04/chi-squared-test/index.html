@@ -7,7 +7,7 @@ and open the template in the editor.
 <html>
     <head>
         <title>
-            Chi-squared test
+            卡方檢定計算器 Chi-squared test Calculator
         </title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -210,19 +210,19 @@ and open the template in the editor.
     <div class="field">
         <div class="ui checkbox">
             <input type="checkbox" class="change-trigger-draw" 
-                   name="input_enable_yates"
-                   id="input_enable_yates" 
-                   value="input_enable_yates" checked="checked"  />
-            <label for="input_enable_yates">在符合以下的情況時，使用葉氏連續性校正 (Yate's continuity correction)：1. 2x2列聯表；2. 有細格期望值小於5個；3. 樣本總數超過20個。</label>
-        </div>
-    </div>
-      <div class="field">
-        <div class="ui checkbox">
-            <input type="checkbox" class="change-trigger-draw" 
                    name="input_enable_fisher"
                    id="input_enable_fisher" 
                    value="input_enable_fisher" checked="checked"  />
             <label for="input_enable_fisher">在符合以下的情況時，使用費雪爾正確概率檢定 (Fisher’s Exact Probability Test)：1. 2x2列聯表；2. 有細格期望值小於5個；3. 各類別行列總數皆小於20個。</label>
+        </div>
+    </div>
+    <div class="field">
+        <div class="ui checkbox">
+            <input type="checkbox" class="change-trigger-draw" 
+                   name="input_enable_yates"
+                   id="input_enable_yates" 
+                   value="input_enable_yates" checked="checked"  />
+            <label for="input_enable_yates">在符合以下的情況時，使用葉氏連續性校正 (Yate's continuity correction)：1. 2x2列聯表；2. 有細格期望值小於5個；3. 樣本總數超過20個。</label>
         </div>
     </div>
     <div class="field">
