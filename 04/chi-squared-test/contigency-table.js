@@ -711,7 +711,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     
     
     //console.log(_chi_squared);
-    var _title_container = $('<div>列聯表分析結果：</div>').appendTo(_result);
+    var _title_container = $('<div>卡方檢定結果：</div>').appendTo(_result);
     
     var _button = $('<button type="button" class="ui icon button tiny teal speak skip"><i class="talk icon"></i></button>').prependTo(_title_container);
     _button.click(function () {
@@ -741,7 +741,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
                 _text += $(_span).attr("alt");
             }
         });
-        _text = "列聯表分析結果顯示。" + _text + "列聯表分析結束。";
+        _text = "卡方檢定結果顯示。" + _text + "卡方檢定結束。";
         _text = _text.replace(/「|」/g, '');
         console.log(_text);
         var _speak_list = _text.split("。");
