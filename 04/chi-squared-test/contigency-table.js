@@ -1,7 +1,7 @@
 var _DEBUG = {
     force_fisher: false,
     force_yates: false,
-    force_sig_pass: false
+    force_sig_pass: true
 };
 
 _ct_json = {};
@@ -24,7 +24,7 @@ var _load_csv_to_ct_json = function (_csv) {
     // x var
     var _x_vars = _lines[0].trim().split(",");
     var _var_x_list = [];
-    var _x_name = "X";
+    var _x_name = "行變項";
     for (var _i = 1; _i < _x_vars.length; _i++) {
         var _name = _x_vars[_i].trim();
         var _pos = _name.indexOf(":");
@@ -39,7 +39,7 @@ var _load_csv_to_ct_json = function (_csv) {
     // --------------------
     
     // y var
-    var _y_name = "Y";
+    var _y_name = "列變項";
     var _var_y_list = [];
     for (var _i = 1; _i < _lines.length; _i++) {
         var _fields = _lines[_i].trim().split(",");
@@ -351,11 +351,11 @@ var _draw_result_table = function () {
     
     var _cross_table = $('<div class="cross-table"><table border="1" cellpadding="0" cellspacing="0">'
         + '<thead>'
-            + '<tr class="x-var-tr"><th colspan="3" rowspan="2"></th><th class="x-var-name"></th><th rowspan="2" valign="bottom">' + '總合' + '</th></tr>'
+            + '<tr class="x-var-tr"><th colspan="3" rowspan="2"></th><th class="x-var-name"></th><th rowspan="2" valign="bottom">' + '列總合' + '</th></tr>'
             + '<tr class="x-vars-tr"></tr></thead>'
         + '<tbody></tbody>'
         + '<tfoot>'
-            + '<tr class="x-sum num-tr"><th rowspan="5" colspan="2" align="left" valign="top">' + '總合' + '</th><th align="left" valign="top">' + '個數' + '</th></tr>'
+            + '<tr class="x-sum num-tr"><th rowspan="5" colspan="2" align="left" valign="top">' + '行總合' + '</th><th align="left" valign="top">' + '個數' + '</th></tr>'
             + '<tr class="x-sum exp-tr"><th align="left" valign="top">' + '期望個數' + '</th></tr>' 
             + '<tr class="x-sum per y-per-tr"><th align="left" valign="top">' + '(<span class="y-var-name"></span>)列之內的百分比' + '</th></tr>'
             + '<tr class="x-sum per x-per-tr"><th align="left" valign="top">' + '(<span class="x-var-name"></span>)欄之內的百分比' + '</th></tr>'
@@ -890,7 +890,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
             .appendTo(_chi_squared_container);
         
         // -----------------------------------
-        var _tau_container = $('<li><span class="skip" alt="接著進行"></span>Goodman與Kruskal的Tau係數的預測力分析：<ul></ul></li>')
+        var _tau_container = $('<li><span class="skip" alt="接著進行"></span>Goodman與Kruskal的預測係數Tau值的分析：<ul></ul></li>')
                 .appendTo(_chi_squared_container);
         var _tau_container_ul = _tau_container.find('ul');
 
