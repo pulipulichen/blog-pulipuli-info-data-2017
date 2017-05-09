@@ -1,7 +1,7 @@
 var _DEBUG = {
     force_fisher: false,
     force_yates: false,
-    force_sig_pass: true
+    force_sig_pass: false
 };
 
 _ct_json = {};
@@ -820,9 +820,9 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     var _x_var_name = $("#variable_x_name").val().trim();
     var _y_var_name = $("#variable_y_name").val().trim();
     
-    var _sig_pass = '，達到顯著水準<span class="skip">α = </span> 0.05 ，因此拒絕虛無假設，接受對立假設。'
+    var _sig_pass = '，達到<span class="skip">α = </span> 0.05的顯著水準 ，因此拒絕虛無假設，接受對立假設。'
                     + '表示<span class="speak">「' + _x_var_name + '」的不同對「' + _y_var_name + '」有顯著的影響。</span></li>';
-    var _sig_not_pass = '，未達顯著水準<span class="skip">α = </span> 0.05 ，因此無法拒絕虛無假設。'
+    var _sig_not_pass = '，未達<span class="skip">α = </span> 0.05的顯著水準，因此無法拒絕虛無假設。'
                     + '表示<span class="speak">「' + _x_var_name + '」的不同對「' + _y_var_name + '」並沒有顯著的影響。</span></li>';
     
     if (_fisher_mode) {
@@ -835,7 +835,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
 //            _p = _calc_fisher_exact_test_with_zero();
 //        }
         
-        var _text = '費雪爾正確概率檢定之雙尾機率值<span class="skip" alt="為"> p = </span> ' + precision_string(_p, 3) + ' 。';
+        var _text = '費雪爾正確概率檢定之雙尾機率值<span class="skip" alt="為"> p值 = </span> ' + precision_string(_p, 3) + ' 。';
         if (Math.abs(_p) < 0.05) {
             _chi_squared_container.append('<li>' + _text + _sig_pass + '</li>');
             _has_sig = true;
@@ -848,7 +848,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
         //console.log([_yates_chi_squared, precision_string(_yates_chi_squared, 3)]);
         _p = chisqrprob(_df, _yates_chi_squared);
         var _text = '使用葉氏連續性校正之後的卡方檢定統計量<span class="skip" alt="為">χ<sup>2</sup> = </span>' + precision_string(_chi_squared, 3) 
-                    + ' ，機率值<span class="skip" alt="為">p = </span>' + precision_string(_p, 3) + ' ';
+                    + ' ，<span class="skip" alt="機率值為">p值 = </span>' + precision_string(_p, 3) + ' ';
         if (Math.abs(_p) < 0.05) {
             _chi_squared_container.append('<li>' + _text + _sig_pass + '</li>');
             _has_sig = true;
@@ -860,7 +860,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     else {
         _p = chisqrprob(_df, _chi_squared);
         var _text = '卡方檢定統計量<span class="skip" alt="為">χ<sup>2</sup> = </span> ' + precision_string(_chi_squared, 3) 
-                    + ' ，機率值<span class="skip" alt="為">p = </span>' + precision_string(_p, 3) + ' ';
+                    + ' ，<span class="skip" alt="機率值為">p值 = </span>' + precision_string(_p, 3) + ' ';
         if (Math.abs(_p) < 0.05) {
             _chi_squared_container.append('<li>' + _text + _sig_pass + '</li>');
             _has_sig = true;
@@ -878,12 +878,18 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
             _cramer_v_k = _y_vars_count;
         }
         var _cramer_v = Math.sqrt(_chi_squared / (_total_sum * (_cramer_v_k - 1)) );
-        var _cramer_v_desc = "，<span class='speak'>屬於低度相關。</span>";
-        if (_cramer_v > 0.7) {
+        var _cramer_v_desc = "，<span class='speak'>屬於無相關。</span>";
+        if (_cramer_v === 1) {
+            _cramer_v_desc = "，<span class='speak'>屬於完全相關。</span>";
+        }
+        else if (_cramer_v > 0.7) {
             _cramer_v_desc = "，<span class='speak'>屬於高度相關。</span>";
         }
         else if (_cramer_v > 0.4) {
             _cramer_v_desc = "，<span class='speak'>屬於中度相關。</span>";
+        }
+        else if (_cramer_v > 0.1) {
+            _cramer_v_desc = "，<span class='speak'>屬於低度相關。</span>";
         }
         var _cramer_v_li = $('<li><span class="speak">「' + _x_var_name + '」跟「' + _y_var_name + '」'
             + '</span>之相關係數Cramer\'s V值<span class="skip" alt="為">(介於0~1之間)</span>為 ' + precision_string(_cramer_v, 3) + ' ' + _cramer_v_desc + '</li>')
