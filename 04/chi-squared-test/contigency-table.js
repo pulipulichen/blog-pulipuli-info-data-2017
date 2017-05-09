@@ -886,7 +886,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
             _cramer_v_desc = "，<span class='speak'>屬於中度相關。</span>";
         }
         var _cramer_v_li = $('<li><span class="speak">「' + _x_var_name + '」跟「' + _y_var_name + '」'
-            + '</span>之關聯係數Cramer\'s V值<span class="skip" alt="為">(介於0~1之間)</span>為 ' + precision_string(_cramer_v, 3) + ' ' + _cramer_v_desc + '</li>')
+            + '</span>之相關係數Cramer\'s V值<span class="skip" alt="為">(介於0~1之間)</span>為 ' + precision_string(_cramer_v, 3) + ' ' + _cramer_v_desc + '</li>')
             .appendTo(_chi_squared_container);
         
         // -----------------------------------
@@ -912,7 +912,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
         
         var _sig_cell = $('.cross-table tbody tr.adj-residual-tr td.sig');
         if (_sig_cell.length > 0) {
-            var _cell_container = $('<li><span class="skip" alt="最後進行"></span>細格之調整後殘差分析：<ul></ul></li>');
+            var _cell_container = $('<li><span class="skip" alt="最後進行"></span>細格統計檢定分析：<ul></ul></li>');
             var _cell_ul = _cell_container.find('ul');
             _sig_cell.each(function (_i, _td) {
                 var _td = $(_td);
