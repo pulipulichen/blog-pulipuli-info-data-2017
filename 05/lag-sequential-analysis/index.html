@@ -7,7 +7,7 @@ and open the template in the editor.
 <html>
     <head>
         <title>
-            卡方檢定計算器 Chi-squared test Calculator
+            序列分析計算器 Lag Sequential Analysis
         </title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,7 +25,6 @@ and open the template in the editor.
 
 <script src="statistics-distributions.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="contigency-table.js"></script>
 <script src="script.js"></script>
 
 <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
@@ -68,7 +67,7 @@ and open the template in the editor.
         <div class="field">
             <label for="input_file">
                 請上傳CSV檔案： 
-                (<a href="https://docs.google.com/spreadsheets/d/1DdtDGbZPUCjZj_ZLNca3vpsFeTSHQ1T7Grw-ZhiBudQ/export?format=csv">範例檔案下載</a>)
+                (<a href="https://docs.google.com/spreadsheets/d/1Xf7HwjEDlslZpNF0yp7LXGl927HdjFQbAT0PLOrIuD8/export?format=csv">範例檔案下載</a>)
             </label>
             <input type="file" id="input_file" class="file-change-trigger" data-file-to-textarea="#input_data" />
         </div>
@@ -84,16 +83,6 @@ and open the template in the editor.
                    data-file-to-textarea="#input_data"
                    value="https://docs.google.com/spreadsheets/d/1DdtDGbZPUCjZj_ZLNca3vpsFeTSHQ1T7Grw-ZhiBudQ/pubhtml?gid=1050192646&single=true" />
         </div> 
-        <!--
-        <div class="field">
-            <label for="input_url_sheet">
-                請輸入工作表名稱： 
-            </label>
-            <input type="text" id="input_url_sheet" class="change-trigger-input focus_select" 
-                   data-trigger-selector="#input_url"
-                   value="data" />
-        </div>
-        -->
     </div>
     
 </div>
@@ -109,18 +98,12 @@ and open the template in the editor.
   Contingency Table
 </h1>
         <div class="ui segment" id="contingency_table">
-            <div class="contingency-table-col-plus">
-                <button type="button" class="ui button teal tiny">
-                    <i class="add square icon"></i>
-                    增加列變項
-                </button>
-            </div>
             <table class="ui table">
                 <thead>
                     <tr>
                         <th rowspan="2" colspan="2"></th>
                         <th colspan="2" class="variable_x_th">
-                            <input type="text" value="類別列變項" id="variable_x_name" />
+                            第二步
                         </th>
                     </tr>
                     <tr class="variable_x_tr">
@@ -145,7 +128,7 @@ and open the template in the editor.
                 <tbody>
                     <tr>
                         <th rowspan="2" class="variable_y_th">
-                            <input type="text" value="類別行變項" id="variable_y_name" />
+                            第一步
                         </th>
                         <th class="variable_th">
                             <div class="ui action input">
@@ -183,7 +166,7 @@ and open the template in the editor.
             <div class="contingency-table-row-plus">
                 <button type="button" class="ui button teal tiny">
                     <i class="add square icon"></i>
-                    增加列變項
+                    增加Y變項
                 </button>
             </div>
         </div>
