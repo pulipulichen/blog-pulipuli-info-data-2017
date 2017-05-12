@@ -5,6 +5,7 @@ var _DEBUG = {
 };
 
 _ct_json = {};
+_event_list = [];
 
 var _load_csv_to_ct_json = function (_csv) {
     if (_csv === undefined || _csv.trim() === "") {
@@ -21,73 +22,136 @@ var _load_csv_to_ct_json = function (_csv) {
     
     var _lines = _csv.trim().split("\n");
     
-    // x var
-    var _x_vars = _lines[0].trim().split(",");
-    var _var_x_list = [];
-    var _x_name = "行變項";
-    for (var _i = 1; _i < _x_vars.length; _i++) {
-        var _name = _x_vars[_i].trim();
-        var _pos = _name.indexOf(":");
-        if (_pos > -1) {
-            _x_name = _name.substr(0, _pos).trim();
-            _name = _name.substring(_pos+1, _name.length).trim();
-        }
-        _var_x_list.push(_name);
-    };
-    $("#variable_x_name").val(_x_name);
+    var _users_seq = {};
     
-    // --------------------
-    
-    // y var
-    var _y_name = "列變項";
-    var _var_y_list = [];
-    for (var _i = 1; _i < _lines.length; _i++) {
-        var _fields = _lines[_i].trim().split(",");
+    for (var _l = 1; _l < _lines.length; _l++) {
+        var _fields = _lines[_l].trim().split(",");
         
-        var _name = _fields[0];
-        var _pos = _name.indexOf(":");
-        if (_pos > -1) {
-            _y_name = _name.substr(0, _pos).trim();
-            _name = _name.substring(_pos+1, _name.length ).trim();
+        var _user = _fields[0].trim();
+        var _seq_id = eval(_fields[1].trim());
+        var _events = _fields[2].trim().split(";");
+        for (var _e = 0; _e < _events.length; _e++) {
+            _events[_e] = _events[_e].trim();
         }
-        _var_y_list.push(_name);
+        
+        if (typeof(_users_seq[_user]) === "undefined") {
+            _users_seq[_user] = [];
+        }
+        _users_seq[_user].push([_seq_id, _events]);
     }
-    $("#variable_y_name").val(_y_name);
     
-    // --------------------
-    for (var _i = 1; _i < _lines.length; _i++) {
-        var _fields = _lines[_i].trim().split(",");
-        var _y = _i-1;
-        for (var _j = 1; _j < _fields.length; _j++) {
-            var _x = _j-1;
-            
-            var _x_name = _var_x_list[_x];
-            var _y_name = _var_y_list[_y];
-            
-            // ----------
-            
-            var _cell = _fields[_j].trim();
-            if (isNaN(_cell)) {
-                _cell = 0;
+    // --------------------------
+    
+    for (var _u in _users_seq) {
+        var _seq = _users_seq[_u];
+        
+        _seq.sort(function(_a,_b) {
+           return _a[0] - _b[0]; 
+        });
+        
+        var _last_events = _seq[0][1];
+        for (var _s = 1; _s < _seq.length; _s++) {
+            var _events = _seq[_s][1];
+            for (var _e0 = 0; _e0 < _last_events.length; _e0++) {
+                var _event_name0 = _last_events[_e0];
+                if ($.inArray(_event_name0, _event_list) === -1) {
+                    _event_list.push(_event_name0);
+                } 
+                for (var _e1 = 0; _e1 < _events.length; _e1++) {
+                    var _event_name1 = _events[_e1];
+                    if (typeof(_ct_json[_event_name1]) === "undefined") {
+                        _ct_json[_event_name1] = {};
+                    }
+                    
+                    if (typeof(_ct_json[_event_name1][_event_name0]) === "undefined") {
+                        _ct_json[_event_name1][_event_name0] = 0;
+                    }
+                    _ct_json[_event_name1][_event_name0]++;
+                }
             }
-            _cell = eval(_cell);
-            
-            // ----------
-            
-            if (typeof(_ct_json[_x_name]) !== "object") {
-                _ct_json[_x_name] = {};
-            }
-            _ct_json[_x_name][_y_name] = _cell;
+            _last_events = _events;
         }
+        
+        //console.log(_seq);
     }
+    
+    //console.log(_users_seq);
+    
+    //return console.log(_ct_json);
     
     _draw_contingency_table_from_ct_json();
 };
 
+// -------------------------
+
+var _draw_contingency_table_from_ct_json = function () {
+    //console.log(_ct_json);
+    
+    _reset_contingency_table();
+    
+    // -------------------------------
+    
+    
+    var _table = $("#contingency_table");
+    var _tbody = _table.find("tbody");
+    var _x_tr = _table.find(".variable_x_tr");
+    var _event_count = _event_list.length;
+    var _c = 0;
+    
+    for (var _e0 = 0; _e0 < _event_list.length; _e0++) {
+        var _x_name = _event_list[_e0];
+        
+        _x_tr.append(_create_vairable_th("x",_x_name));
+        
+        for (var _e1 = 0; _e1 < _event_list.length; _e1++) {
+            var _y_name = _event_list[_e1];
+            
+            if (_tbody.find('.variable_y[value="' + _y_name + '"]').length === 0) {
+                var _y_th = _create_vairable_th("y",_y_name);
+                
+                var _tr = _tbody.find('tr:first');
+                if (_tr.find("th").length > 1) {
+                    // 表示第一列已經有資料
+                    _tr = $('<tr></tr>').appendTo(_tbody);
+                }
+                
+                _tr.append(_y_th);
+                
+                // ---------------------------
+            }
+            
+            // -------------------------------
+            
+            var _count = 0;
+            if (typeof(_ct_json[_x_name]) !== "undefined" 
+                    && typeof(_ct_json[_x_name][_y_name]) !== "undefined") {
+                _count = _ct_json[_x_name][_y_name];
+            }
+            
+            var _cell_td = _create_cell_td(_count);
+            _tbody.find('tr:eq(' + _e1 + ')').append(_cell_td);
+            
+            _c += _count;
+        }
+    }
+    console.log(_c);
+    
+    // ------------------------------
+    // 設定span
+    $(".variable_x_th").attr("colspan", _event_count);
+    $(".variable_y_th").attr("rowspan", _event_count);
+    
+    _draw_result_table();
+};
+
+// -------------------------
+
 var _get_ct_json_from_ui = function () {
+    
     _ct_json = {};
     var _table = $("#contingency_table");
     
+    /*
     var _var_x_name = _table.find("#variable_x_name").val().trim();
     if (_var_x_name === "") {
         _var_x_name = "X";
@@ -96,6 +160,7 @@ var _get_ct_json_from_ui = function () {
     if (_var_y_name === "") {
         _var_y_name = "Y";
     }
+    */
     
     // --------------------------
     
@@ -107,6 +172,7 @@ var _get_ct_json_from_ui = function () {
         }
         _var_x_list.push(_name);
     });
+    _event_list = _var_x_list;
     
     var _var_y_list = [];
     _table.find(".variable_y").each(function (_i, _input) {
@@ -130,10 +196,17 @@ var _get_ct_json_from_ui = function () {
             var _x_attr = _var_x_list[_x];
             var _y_attr = _var_y_list[_y];
             
-            if (typeof(_ct_json[_x_attr]) === "undefined") {
-                _ct_json[_x_attr] = {};
+            if (typeof(_ct_json[_y_attr]) === "undefined") {
+                _ct_json[_y_attr] = {};
             }
-            _ct_json[_x_attr][_y_attr] = _cell_value;
+            
+            if (_y_attr === _x_attr 
+                    && $("#input_only_count_different_adjacent_event:checked").length === 1) {
+                _ct_json[_y_attr][_x_attr] = 0;
+            }
+            else {
+                _ct_json[_y_attr][_x_attr] = _cell_value;
+            }
         });
     });
     
@@ -191,7 +264,6 @@ var _add_ct_json_attr = function (_dimension) {
         }
     }
     
-    
     _draw_contingency_table_from_ct_json();
 };
 
@@ -231,63 +303,6 @@ var _get_attr = function (_dimension) {
     return _attr_list;
 };
 
-var _draw_contingency_table_from_ct_json = function () {
-    //console.log(_ct_json);
-    
-    _reset_contingency_table();
-    
-    // -------------------------------
-    
-    var _x_count = 0;
-    var _y_count;
-    
-    var _table = $("#contingency_table");
-    var _tbody = _table.find("tbody");
-    var _x_tr = _table.find(".variable_x_tr");
-    for (var _x_name in _ct_json) {
-        _x_tr.append(_create_vairable_th("x",_x_name));
-        _x_count++;
-        
-        _y_count = 0;
-        for (var _y_name in _ct_json[_x_name]) {
-            
-            
-            if (_tbody.find('.variable_y[value="' + _y_name + '"]').length === 0) {
-                var _y_th = _create_vairable_th("y",_y_name);
-                
-                var _tr = _tbody.find('tr:first');
-                if (_tr.find("th").length > 1) {
-                    // 表示第一列已經有資料
-                    _tr = $('<tr></tr>').appendTo(_tbody);
-                }
-                
-                _tr.append(_y_th);
-                
-                // ---------------------------
-            }
-            
-            // -------------------------------
-            
-            var _cell_td = _create_cell_td(_ct_json[_x_name][_y_name]);
-            _tbody.find('tr:eq(' + _y_count + ')').append(_cell_td);
-            
-            _y_count++;
-        }
-    }
-    
-    // ------------------------------
-    // 設定span
-    if (_x_count < 1) {
-        _x_count = 1;
-    }
-    if (_y_count < 1) {
-        _y_count = 1;
-    }
-    $(".variable_x_th").attr("colspan", _x_count);
-    $(".variable_y_th").attr("rowspan", _y_count);
-    
-    _draw_result_table();
-};
 
 var _reset_contingency_table = function () {
     var _table = $("#contingency_table");
@@ -312,11 +327,18 @@ var _create_remove_attr_button = function (_dimension, _name) {
 var _create_vairable_th = function (_dimension, _name) {
     var _ele = $('<th class="variable_th">'
             + '<div class="ui action input">'
-            + '<input type="text" value="' + _name + '" class="variable_' + _dimension + '" />'
+            + '<input type="text" value="' + _name + '" class="variable variable_' + _dimension + '" ori-value="' + _name + '" />'
             + '</div>'
             + '</th>');
     _ele.find("div").append(_create_remove_attr_button(_dimension, _name));
     _ele.find('.variable_' + _dimension).change(function () {
+        // 先改自己對面的編碼
+        var _this = $(this);
+        var _val = _this.val().trim();
+        var _ori_value = $(this).attr("ori-value");
+        $('.variable[ori-value="' + _ori_value + '"]').val(_val).attr("ori-value", _val);
+        _this.attr("ori-value", _val);
+        
         _draw_result_table();
     });
     return _ele;
@@ -338,8 +360,12 @@ var _is_display_percent = function () {
 
 var _x_var_count;
 var _y_var_count;
+
 var _draw_result_table = function () {
     _ct_json = _get_ct_json_from_ui();
+    console.log(_ct_json);
+    return;
+    
     _reset_result();
     
     //var _n = 0.07215074898001728;

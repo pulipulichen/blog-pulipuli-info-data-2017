@@ -25,6 +25,7 @@ and open the template in the editor.
 
 <script src="statistics-distributions.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="contigency-table.js"></script>
 <script src="script.js"></script>
 
 <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
@@ -95,7 +96,7 @@ and open the template in the editor.
 	
     
 <h1 class="ui horizontal divider header">
-  Contingency Table
+  編碼轉換頻率表
 </h1>
         <div class="ui segment" id="contingency_table">
             <table class="ui table">
@@ -103,7 +104,7 @@ and open the template in the editor.
                     <tr>
                         <th rowspan="2" colspan="2"></th>
                         <th colspan="2" class="variable_x_th">
-                            第二步
+                            Lag 1
                         </th>
                     </tr>
                     <tr class="variable_x_tr">
@@ -128,7 +129,7 @@ and open the template in the editor.
                 <tbody>
                     <tr>
                         <th rowspan="2" class="variable_y_th">
-                            第一步
+                            Lag 0
                         </th>
                         <th class="variable_th">
                             <div class="ui action input">
@@ -166,7 +167,7 @@ and open the template in the editor.
             <div class="contingency-table-row-plus">
                 <button type="button" class="ui button teal tiny">
                     <i class="add square icon"></i>
-                    增加Y變項
+                    增加事件編碼
                 </button>
             </div>
         </div>
@@ -179,7 +180,7 @@ and open the template in the editor.
 	
     
 <h1 class="ui horizontal divider header">
-  Display
+  Setting
 </h1> 
     <div class="field">
         <div class="ui checkbox">
@@ -193,12 +194,13 @@ and open the template in the editor.
     <div class="field">
         <div class="ui checkbox">
             <input type="checkbox" class="change-trigger-draw" 
-                   name="input_enable_fisher"
-                   id="input_enable_fisher" 
-                   value="input_enable_fisher" checked="checked"  />
-            <label for="input_enable_fisher">在符合以下的情況時，使用費雪爾正確概率檢定 (Fisher’s Exact Probability Test)：1. 2x2列聯表；2. 有細格期望值小於5個；3. 各類別行列總數皆小於20個。</label>
+                   name="input_only_count_different_adjacent_event"
+                   id="input_only_count_different_adjacent_event" 
+                   value="input_only_count_different_adjacent_event" checked="checked"  />
+            <label for="input_only_count_different_adjacent_event">不計算相鄰編碼</label>
         </div>
     </div>
+    <!--
     <div class="field">
         <div class="ui checkbox">
             <input type="checkbox" class="change-trigger-draw" 
@@ -208,6 +210,7 @@ and open the template in the editor.
             <label for="input_enable_yates">在符合以下的情況時，使用葉氏連續性校正 (Yate's continuity correction)：1. 2x2列聯表；2. 有細格期望值小於5個；3. 樣本總數超過20個。</label>
         </div>
     </div>
+    -->
     <div class="field">
         <div class="ui checkbox">
             <input type="checkbox" class="change-trigger-draw" 

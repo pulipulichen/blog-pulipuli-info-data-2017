@@ -201,3 +201,8 @@ table td {
 .skip {
     /*color: red;*/
 }
+
+
+.contingency-table-row-plus {
+    text-align: center;
+}
