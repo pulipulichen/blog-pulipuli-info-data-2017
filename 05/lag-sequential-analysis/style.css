@@ -33,8 +33,8 @@ body {
 
 
 .file-process-framework #preview_html {
-  max-height: calc(100vh - 141px); 
-  overflow-y: auto;
+  /*max-height: calc(100vh - 141px); 
+  overflow-y: auto;*/
 }
 
 .input-field-container {

@@ -833,69 +833,15 @@ var _speak_analyze_result = function () {
 };
 
 var _draw_diagram = function (_result, _sig_seq) {
-    $('<div id="myDiagramDiv" style="border: solid 1px black; width: 100%; height: 400px"></div>').appendTo(_result);
+    $('<div class="jtk-demo-canvas canvas-wide statemachine-demo jtk-surface jtk-surface-nopan" id="js_plumb_canvas"></div>').appendTo(_result);
     
-    var _json = {
-        "nodeKeyProperty": "id",
-        "nodeDataArray": [],
-        "linkDataArray": []
-    };
-    
-    var _id_list = [];
-    for (var _i = 0; _i < _sig_seq.length; _i++) {
-        if ($.inArray(_sig_seq[_i].g, _id_list) === -1) {
-            _id_list.push(_sig_seq[_i].g);
-        }
-        if ($.inArray(_sig_seq[_i].t, _id_list) === -1) {
-            _id_list.push(_sig_seq[_i].t);
-        }
-    }
-    
-    // nodeDataArray
-    for (var _i = 0; _i < _id_list.length; _i++) {
-        _json.nodeDataArray.push({
-            "id": _i,
-            // "loc": "? ?", // 要加入嗎？
-            "text": _id_list[_i]
-        });
-    }
-    
-    
-    // linkDataArray curviness
-    var _curviness_list = {};
-    for (var _i = 0; _i < _sig_seq.length; _i++) {
-        var _g1 = _sig_seq[_i].g;
-        for (var _j = _i+1; _j < _sig_seq.length; _j++) {
-            var _g2 = _sig_seq[_j].g;
-            if (_g1 === _g2) {
-                _curviness_list[_i] = -20;
-                _curviness_list[_j] = 20;
-                break;
-            }
-        }
-    }
-    
-    // linkDataArray
-    for (var _i = 0; _i < _sig_seq.length; _i++) {
-        var _from = $.inArray(_sig_seq[_i].g, _id_list);
-        var _to = $.inArray(_sig_seq[_i].t, _id_list);
-        var _text = _sig_seq[_i].z;
-        
-        var _item = {
-            "from": _from,
-            "to": _to,
-            "text": _text
-        };
-        
-        if (typeof(_curviness_list[_i]) !== "undefined") {
-            _item.curviness = _curviness_list[_i];
-        }
-        
-        _json.linkDataArray.push(_item);
-    }
-    
-    console.log(_json.linkDataArray);
-    
-    // ---------------------------------------------
-    _init_go_state_chart("myDiagramDiv", _json);
+    var _seq_list = [
+        {from: "BEGIN", to: "PHONE INTERVIEW 1", label: "text1"},
+        {from: "PHONE INTERVIEW 1", to: "BEGIN", label: "text2"},
+        {from: "PHONE INTERVIEW 1", to: "PHONE INTERVIEW 1", label: "text3"},
+        {from: "PHONE INTERVIEW 1", to: "IN PERSON", label: "text4"},
+        {from: "PHONE INTERVIEW 2", to: "REJECTED", label: "text5"},
+    ];
+
+    _init_state_machine("js_plumb_canvas", _seq_list);
 }; 
