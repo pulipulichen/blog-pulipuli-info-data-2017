@@ -80,6 +80,15 @@ var _load_csv_to_ct_json = function (_csv) {
     _draw_contingency_table_from_ct_json();
 };
 
+
+var _traverse_ct_json = function (_callback) {
+    for (var _x_var_name in _ct_json) {
+        for (var _y_var_name in _ct_json[_x_var_name]) {
+            _callback(_x_var_name, _y_var_name, _ct_json[_y_var_name][_x_var_name]);
+        }
+    }
+};
+
 // -------------------------
 
 var _draw_contingency_table_from_ct_json = function () {
@@ -747,7 +756,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
         $('<div class="speak">沒有序列達到顯著轉移。</div>').appendTo(_result);
     }
     
-    
+    _draw_diagram(_result, _sig_seq);
 };
 
 var _get_sig_seq = function () {
@@ -823,209 +832,70 @@ var _speak_analyze_result = function () {
 
 };
 
-var _calc_fisher_exact_test = function () {
-    var _p = 0;
+var _draw_diagram = function (_result, _sig_seq) {
+    $('<div id="myDiagramDiv" style="border: solid 1px black; width: 100%; height: 400px"></div>').appendTo(_result);
     
-    var _ext_ary = [];
-    
-    // 先找出最小的那個值
-    var _min; 
-    var _min_pos = 0;
-    var _i = 0;
-    var _origin_first;
-    
-    _traverse_ct_json(function (_x, _y, _num) {
-        if (_i === 0) {
-            _origin_first = _num;
-        }
-        
-        if (_min === undefined) {
-            _min = _num;
-        }
-        else if (_num < _min) {
-            _min = _num;
-            _min_pos = _i;
-        }
-        
-        
-        _ext_ary.push(_num);
-        _i++;
-    });
-    
-    var _adj_pos = _min + 1;
-    if (_min_pos % 2 === 1) {
-        _adj_pos = _min - 1;
-    }
-    
-    // ---------------------
-    
-    // 調整成極端值
-    
-    var _max;
-    for (var _i = 0; _i < _ext_ary.length; _i++) {
-        var _num = _ext_ary[_i];
-        if (_min_pos === 1 || _min_pos === 2) {
-            if (_i === 0 || _i === 3 ) {
-                _num = _num+_min;
-            }
-            else {
-                _num = _num-_min;
-            }
-        }
-        else {
-            if (_i === 0 || _i === 3 ) {
-                _num = _num-_min;
-            }
-            else {
-                _num = _num+_min;
-            }
-        }
-        
-        
-        if (_max === undefined) {
-            _max = _num;
-        }
-        else if (_num > _max) {
-            _max = _num;
-        }
-        _ext_ary[_i] = _num;
-    }
-    
-    //console.log(_ext_ary);
-    
-    // ---------------------
-    // p1跟p2都是固定的，先算p1跟p2
-    
-    var _p1 = 1;
-    for (var _x in _x_sum_list) {
-        var _sum = _x_sum_list[_x];
-        _p1 = _p1 * _calc_factorial(_sum);
-    }
-    for (var _y in _y_sum_list) {
-        var _sum = _y_sum_list[_y];
-        _p1 = _p1 * _calc_factorial(_sum);
-    }
-    
-    var _p2 = _calc_factorial(_total_sum);
-    
-    var _calc_p3 = function (_ary) {
-        var _p = 1;
-        for (var _i = 0; _i < _ary.length; _i++) {
-            _p = _p * _calc_factorial(_ary[_i]);
-        }
-        return _p;
+    var _json = {
+        "nodeKeyProperty": "id",
+        "nodeDataArray": [],
+        "linkDataArray": []
     };
     
-    // --------------------------------
-    var _p4;
-    var _original_p4;
-    var _p4_list = [];
+    var _id_list = [];
+    for (var _i = 0; _i < _sig_seq.length; _i++) {
+        if ($.inArray(_sig_seq[_i].g, _id_list) === -1) {
+            _id_list.push(_sig_seq[_i].g);
+        }
+        if ($.inArray(_sig_seq[_i].t, _id_list) === -1) {
+            _id_list.push(_sig_seq[_i].t);
+        }
+    }
     
-    for (var _i = 0; _i < _max+1; _i++) {
-        var _ext_ary2 = [];
-        var _has_zero = false;
-        var _over_original_flag = false;
-        for (var _e = 0; _e < _ext_ary.length; _e++) {
-            var _n;
-            if (_e === 0 || _e === 3) {
-                if (_min_pos === 1 || _min_pos === 2) {
-                    _n = _ext_ary[_e]-_i;
-                }
-                else {
-                    _n = _ext_ary[_e]+_i;
-                }
-                _ext_ary2.push(_n);
-            }
-            else {
-                if (_min_pos === 1 || _min_pos === 2) {
-                    _n = _ext_ary[_e]+_i;
-                }
-                else {
-                    _n = _ext_ary[_e]-_i;
-                }
-                _ext_ary2.push(_n);
-            }
-
-            if (_i > 0 && _n === 0) {
-                _has_zero = true;
-            }
-
-            if (_e === 0 && _n === _origin_first) {
-                _over_original_flag = true;
+    // nodeDataArray
+    for (var _i = 0; _i < _id_list.length; _i++) {
+        _json.nodeDataArray.push({
+            "id": _i,
+            // "loc": "? ?", // 要加入嗎？
+            "text": _id_list[_i]
+        });
+    }
+    
+    
+    // linkDataArray curviness
+    var _curviness_list = {};
+    for (var _i = 0; _i < _sig_seq.length; _i++) {
+        var _g1 = _sig_seq[_i].g;
+        for (var _j = _i+1; _j < _sig_seq.length; _j++) {
+            var _g2 = _sig_seq[_j].g;
+            if (_g1 === _g2) {
+                _curviness_list[_i] = -20;
+                _curviness_list[_j] = 20;
+                break;
             }
         }
-
-        _p4 = (_p1 / (_p2 * _calc_p3(_ext_ary2)) );
-        if (_over_original_flag === true) {
-            _original_p4 = _p4;
-        }
-
-        //console.log(_ext_ary2);
-        //console.log((_p1 / (_p2 * _calc_p3(_ext_ary2)) ));
-
-
-        //if (_over_original === false) {
-            //console.log(['p4', _p4]);
-        //    _p += _p4;
-        //}
-        //console.log(_ext_ary2);
-        //console.log(_p4);
-        _p4_list.push(_p4);
-
-        //if (_over_original_flag === true) {
-        //    _over_original = true;
-        //}
+    }
+    
+    // linkDataArray
+    for (var _i = 0; _i < _sig_seq.length; _i++) {
+        var _from = $.inArray(_sig_seq[_i].g, _id_list);
+        var _to = $.inArray(_sig_seq[_i].t, _id_list);
+        var _text = _sig_seq[_i].z;
         
-        if (_has_zero === true) {
-            //console.log(['last p4', _last_p4]);
-            //console.log(['p4', _p4]);
-            //_p += _p4 + _last_p4;
-            break;
+        var _item = {
+            "from": _from,
+            "to": _to,
+            "text": _text
+        };
+        
+        if (typeof(_curviness_list[_i]) !== "undefined") {
+            _item.curviness = _curviness_list[_i];
         }
-        //_last_p4 = _p4;
+        
+        _json.linkDataArray.push(_item);
     }
     
-    for (var _i = 0; _i < _p4_list.length; _i++) {
-        if (_p4_list[_i] <= _original_p4) {
-            _p += _p4_list[_i];
-        }
-    }
+    console.log(_json.linkDataArray);
     
-    return _p;
-};
-
-var _calc_fisher_exact_test_with_zero = function () {
-    
-    var _p1 = 1;
-    for (var _x in _x_sum_list) {
-        var _sum = _x_sum_list[_x];
-        _p1 = _p1 * _calc_factorial(_sum);
-    }
-    for (var _y in _y_sum_list) {
-        var _sum = _y_sum_list[_y];
-        _p1 = _p1 * _calc_factorial(_sum);
-    }
-
-    var _i = 0;
-    var _tmp_num;
-    var _p2 = _calc_factorial(_total_sum);
-    
-    _traverse_ct_json(function (_x, _y, _num) {
-        _p2 = _p2 * _calc_factorial(_num);
-    });
-
-    var _p = _p1 / _p2;
-    return _p;
-};
-
-
-
-//console.log(_calc_factorial(24));
-
-var _traverse_ct_json = function (_callback) {
-    for (var _x_var_name in _ct_json) {
-        for (var _y_var_name in _ct_json[_x_var_name]) {
-            _callback(_x_var_name, _y_var_name, _ct_json[_y_var_name][_x_var_name]);
-        }
-    }
-};
+    // ---------------------------------------------
+    _init_go_state_chart("myDiagramDiv", _json);
+}; 
