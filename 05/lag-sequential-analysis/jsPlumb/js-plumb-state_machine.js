@@ -26,6 +26,7 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
         window.jsp = instance;
 
         var windows = jsPlumb.getSelector("#" + _canvas_id + " .w");
+        console.log(windows.length);
 
         var canvas = jsPlumb.getSelector("#" + _canvas_id);
         
@@ -139,6 +140,7 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
             }
 
             //console.log(_pos);
+            instance.draggable(_div);
         });
 
 
@@ -153,7 +155,7 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
         // just the new connection - see the documentation for a full list of what is included in 'info'.
         // this listener sets the connection's internal
         // id as the label overlay's text.
-        
+        /*
         instance.bind("connection", function (info) {
             if (info.connection.id === "con_1") {
                 console.log(info);
@@ -165,6 +167,7 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
             }
             //info.connection.getOverlay("label").setLabel(_label);
         });
+        */
 
         // bind a double click listener to "canvas"; add new node when this occurs.
         //jsPlumb.on(canvas, "dblclick", function(e) {
@@ -226,6 +229,7 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
             for (var i = 0; i < windows.length; i++) {
                 initNode(windows[i], true);
             }
+            
             // and finally, make a few connections
             /*
             instance.connect({ source: "opened", target: "phone1", type:"basic"

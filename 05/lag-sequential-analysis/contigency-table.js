@@ -751,7 +751,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     
     if (_sig_seq.length > 0) {
         $('<div class="speak">以上序列出現顯著轉移。</div>').appendTo(_result);
-        $('<div>事件轉移圖：</div>').appendTo(_result);
+        $('<div style="margin-top: 1em;">事件轉移圖：</div>').appendTo(_result);
         _draw_diagram(_result, _sig_seq);
     }
     else {

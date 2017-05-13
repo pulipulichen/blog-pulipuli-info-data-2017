@@ -55,6 +55,8 @@
 #js_plumb_canvas .jtk-overlay {
     background-color: white;
     padding: 3px;
+    cursor: pointer;
+    user-select: none;
 }
 
 #js_plumb_canvas .aLabel {
