@@ -52,10 +52,12 @@ var _load_csv_to_ct_json = function (_csv) {
         var _last_events = _seq[0][1];
         
         for (var _s = 1; _s < _seq.length; _s++) {
-            var _events = _seq[_s][1];            
+            var _events = _seq[_s][1];
+            //if (_u === "2") {
+            //    console.log(_events);
+            //}
             for (var _e0 = 0; _e0 < _last_events.length; _e0++) {
                 var _event_name0 = _last_events[_e0];
-                //console.log(_event_name0);
                 
                 for (var _e1 = 0; _e1 < _events.length; _e1++) {
                     var _event_name1 = _events[_e1];
@@ -67,17 +69,23 @@ var _load_csv_to_ct_json = function (_csv) {
                         _ct_json[_event_name0][_event_name1] = 0;
                     }
                     _ct_json[_event_name0][_event_name1]++;
+                    
+                    //console.log([_event_name0, _event_name1, _ct_json[_event_name0][_event_name1]]);
                 }
             }
             _last_events = _events;
         }
         
-        //console.log(_seq);
+        //if (_u === "2") {
+        //    console.log(_seq);
+        //}
+        //console.log("下一人");
     }
     
     //console.log(_users_seq);
     
     //return console.log(_ct_json);
+    //console.log(_ct_json);
     
     _draw_contingency_table_from_ct_json();
 };
@@ -98,6 +106,7 @@ var _draw_contingency_table_from_ct_json = function () {
     
     _reset_contingency_table();
     _event_list = _get_attr();
+    
     
     // -------------------------------
     
@@ -251,10 +260,7 @@ var _remove_ct_json_attr = function (_dimension, _name) {
 };
 
 $(function () {
-    $('.contingency-table-col-plus button').click(function () {
-        _add_ct_json_attr('x');
-    });
-    $('.contingency-table-row-plus button').click(function () {
+    $('.contingency-table-row-plus button.add-button').click(function () {
         _add_ct_json_attr('y');
     });
 });
@@ -302,6 +308,15 @@ var _get_attr = function () {
     for (var _i in _ct_json) {
         _event_list.push(_i);
     }
+    
+    for (var _i in _ct_json) {
+        for (var _j in _ct_json[_i]) {
+            if ($.inArray(_j, _event_list) === -1) {
+                _event_list.push(_j);
+            }
+        }
+    }
+    
     _event_list.sort();
     //_event_list = ['U', 'S', 'P', 'T', 'G'];
     /*
@@ -707,6 +722,7 @@ var _draw_cell_percent_cell = function () {
                 _adj_residual = _z1 / Math.sqrt(_z2 * _z3 * _z4);
                 // -1.5 / Math.sqrt(2*0.75*0.25*0.67)
                 
+                /*
                 if (_y_var_name === "C" && _x_var_name === "B") {
                     console.log({
                         "f(g,t)": _num,
@@ -715,6 +731,7 @@ var _draw_cell_percent_cell = function () {
                         "p(g)": _y_per_list[_y_var_name],
                     });
                 }
+                */
             }
             //console.log([_residual, _exp, _x_per_list[_x_var_name], _y_per_list[_y_var_name]]);
             _tbody.find('tr.adj-residual-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_adj_residual, 3));

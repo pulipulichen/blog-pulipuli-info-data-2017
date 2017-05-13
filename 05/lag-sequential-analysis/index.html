@@ -33,6 +33,7 @@ and open the template in the editor.
 <script src="statistics-distributions.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="contigency-table.js"></script>
+<script src="dynamic-classification.js"></script>
 <script src="script.js"></script>
 
 <!-- ------------------------------------------------------------ -->
@@ -96,6 +97,24 @@ and open the template in the editor.
 <!-- -------------------------------------- -->
 
 		</div> <!-- <div class="ui segment"> -->
+
+<div class="ui segment">
+    <h1 class="ui horizontal divider header">
+        動態分類資料下載
+    </h1>
+    <div class="inline field" style="text-align: center;">
+        <label for="input_dynamic_lag">Event lag: </label>
+        <input id="input_dynamic_lag" type="text" value="3" placeholder="Event lag">
+        
+        <button type="button" class="ui button teal tiny dynamic-classification-button">
+            <i class="download icon"></i> 
+            下載動態分類器檔案
+        </button>
+    </div>
+        
+        
+    
+</div> <!-- <div class="ui segment"> -->
                 
         <div class="ui segment">
 	
@@ -172,11 +191,12 @@ and open the template in the editor.
                 </tbody>
             </table>
             <div class="contingency-table-row-plus">
-                <button type="button" class="ui button teal tiny">
+                <button type="button" class="ui button teal tiny add-button">
                     <i class="add square icon"></i>
                     增加事件編碼
                 </button>
             </div>
+            
         </div>
             
         </div><!-- <div class="ui segment"> -->                
