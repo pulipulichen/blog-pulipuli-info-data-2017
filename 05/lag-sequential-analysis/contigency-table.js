@@ -658,7 +658,12 @@ var _draw_cell_percent_cell = function () {
             
             //var _exp = (_x_sum_list[_x_var_name] * _y_sum_list[_y_var_name]) / _total_sum;
             //console.log([_num, _y_sum_list[_y_var_name], _x_sum_list[_x_var_name], _total_sum]);
-            var _exp = (_y_sum_list[_y_var_name] * _x_per_list[_x_var_name]);
+            var _pt = _x_per_list[_x_var_name];
+            if ($("#input_only_count_different_adjacent_event:checked").length === 1) {
+                // 編碼不可重複的情況
+                _pt = (_x_sum_list[_x_var_name]) / (_total_sum - _y_sum_list[_y_var_name]);
+            }
+            var _exp = (_y_sum_list[_y_var_name] * _pt);
             _tbody.find('tr.exp-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_exp, 3));
 
             var _residual = _num - _exp;
@@ -674,19 +679,25 @@ var _draw_cell_percent_cell = function () {
             if (_exp !== 0) {
                 //_adj_residual = _residual / Math.sqrt( _exp * (1 - _x_per_list[_x_var_name]) * (1 - _y_per_list[_y_var_name]) );
                 var _z1 = _residual;
-                var _z2 = _y_sum_list[_y_var_name] * _x_per_list[_x_var_name];
+                var _z2 = _exp;
                 var _z3 = 1 - _y_per_list[_y_var_name];
-                var _z4 = 1 - _x_per_list[_x_var_name];
+                var _z4 = 1 - _pt;
                 _adj_residual = _z1 / Math.sqrt(_z2 * _z3 * _z4);
+                // -1.5 / Math.sqrt(2*0.75*0.25*0.67)
                 
-                if (_x_var_name === "C" && _y_var_name === "B" ) {
-                    console.log([_num, _y_sum_list[_y_var_name], _x_per_list[_x_var_name], _z1, _z2, _z3, _z4, _adj_residual] );
+                if (_y_var_name === "C" && _x_var_name === "B") {
+                    console.log({
+                        "f(g,t)": _num,
+                        "f(g)": _y_sum_list[_y_var_name],
+                        "p(t)": _pt,    // 3 / (6-2) = 3/4
+                        "p(g)": _y_per_list[_y_var_name],
+                    });
                 }
             }
             //console.log([_residual, _exp, _x_per_list[_x_var_name], _y_per_list[_y_var_name]]);
             _tbody.find('tr.adj-residual-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_adj_residual, 3));
             
-            if (_adj_residual > 1.95) {   // @TODO這邊要再確認一下
+            if (_adj_residual >= 1.96) {
                 _tbody.find('tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').addClass("sig");
             }
         }
