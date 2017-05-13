@@ -218,3 +218,7 @@ table td {
 .contingency-table-row-plus {
     text-align: center;
 }
+
+#preview_html button.speak {
+    display: block;
+}

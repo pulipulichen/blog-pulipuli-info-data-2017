@@ -708,8 +708,6 @@ var _draw_cell_percent_cell = function () {
 
 var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_squared) {
     
-    return;
-    
     //console.log([_yates_chi_squared]);
     
     // ------------------------
@@ -719,71 +717,10 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     
     
     //console.log(_chi_squared);
-    var _title_container = $('<div>卡方檢定結果：</div>').appendTo(_result);
+    var _title_container = $('<div>序列分析結果：</div>').appendTo(_result);
     
     var _button = $('<button type="button" class="ui icon button tiny teal speak skip"><i class="talk icon"></i></button>').prependTo(_title_container);
-    _button.click(function () {
-        /*
-        var _text = _result.find('.chi-squared-container:first').clone();
-        _text.find('.skip').each(function(_i, _span) {
-            _span = $(_span);
-            var _alt = "";
-            if (typeof(_span.attr("alt")) === 'string') {
-                _alt = _span.attr("alt");
-            }
-            _span.html(_alt);
-        });
-        _text = _text.text();
-        _text = "列聯表分析結果顯示：" + _text + "列聯表分析結束。";
-        console.log(_text);
-        responsiveVoice.speak(_text, 'Chinese Female', {
-                    rate: 1.2
-                });
-        */
-        var _text = "";
-        _result.find('.chi-squared-container:first .speak').each(function(_i, _span) {
-            if ($(_span).attr("alt") === undefined) {
-                _text += $(_span).text();
-            }
-            else {
-                _text += $(_span).attr("alt");
-            }
-        });
-        _text = "卡方檢定結果顯示。" + _text + "卡方檢定結束。";
-        _text = _text.replace(/「|」/g, '');
-        console.log(_text);
-        var _speak_list = _text.split("。");
-        if (navigator.userAgent.match(/Android/)) {
-            _speak_list = [_text];
-        }
-        
-//        var _next = function (_i) {
-//            _i++;
-//            _loop(_i);
-//        };
-        //var _timer;
-        var _loop = function (_i) {
-            if (_i < _speak_list.length) {
-                responsiveVoice.speak(_speak_list[_i], 'Chinese Female', {
-                    rate: 1.2,
-                    onend: function () {
-                        //clearTimeout(_timer);
-                        _i++;
-                        _loop(_i);
-                        console.log(_i);
-                    }
-                });
-                
-//                console.log(_speak_list[_i].length * 1000 * 0.3 );
-//                _timer = setTimeout(function () {
-//                    console.log(_i);
-//                    _next(_i);
-//                }, _speak_list[_i].length * 1000 * 0.3 );
-            }
-        };
-        _loop(0);
-        
-    });
+    _button.click(_speak_analyze_result);
     
     // -------------------
     
@@ -793,160 +730,97 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
         _chi_squared_container.addClass("analyze-result");
     }
     
-    //console.log([_x_var_count, _y_var_count]);
-    var _fisher_mode = false;
-    if ($("#input_enable_fisher:checked").length === 1 
-            && _is_cell_exp_too_small === true
-            && _is_sum_too_small === true
-            && _x_vars_count === 2
-            && _y_vars_count === 2) {
-        _fisher_mode = true;
-    }
-    if (_DEBUG.force_fisher === true) {
-        _fisher_mode = true;
+    // 找出有顯著轉移的序列
+    var _sig_seq = _get_sig_seq();
+    
+    
+    for (var _i = 0; _i < _sig_seq.length; _i++) {
+        var _seq = _sig_seq[_i];
+        $('<li><span class="speak">編碼「' + _seq.g + '」到編碼「' + _seq.t + '」</span>，調整後殘差為' + _seq.z + '<span class="speak">。</span></li>')
+                .appendTo(_chi_squared_container);
     }
     
-    // ------------.
-    var _yates_mode = false;
-    if ($("#input_enable_yates:checked").length === 1 
-            && _is_cell_exp_too_small === true
-            && _total_sum >= 20
-            && _x_vars_count === 2
-            && _y_vars_count === 2) {
-        _yates_mode = true;
-    }
-    if (_DEBUG.force_yates === true) {
-        _yates_mode = true;
-    }
-    
-    // ------------
-    
-    var _df = (_x_vars_count-1) * (_y_vars_count-1);
-    
-    var _p;
-    var _has_sig = false;
-    var _x_var_name = $("#variable_x_name").val().trim();
-    var _y_var_name = $("#variable_y_name").val().trim();
-    
-    var _sig_pass = '，達到<span class="skip">α = </span> 0.05的顯著水準 ，因此拒絕虛無假設，接受對立假設。'
-                    + '表示<span class="speak">「' + _x_var_name + '」的不同對「' + _y_var_name + '」有顯著的影響。</span></li>';
-    var _sig_not_pass = '，未達<span class="skip">α = </span> 0.05的顯著水準，因此無法拒絕虛無假設。'
-                    + '表示<span class="speak">「' + _x_var_name + '」的不同對「' + _y_var_name + '」並沒有顯著的影響。</span></li>';
-    
-    if (_fisher_mode) {
-        _p = _calc_fisher_exact_test();
-//        if (_is_zero_cell_existed === false) {
-//            _p = _calc_fisher_exact_test();
-//        }
-//        else {
-//            //console.log(1);
-//            _p = _calc_fisher_exact_test_with_zero();
-//        }
-        
-        var _text = '費雪爾正確概率檢定之雙尾機率值<span class="skip" alt="為"> p值 = </span> ' + precision_string(_p, 3) + ' 。';
-        if (Math.abs(_p) < 0.05) {
-            _chi_squared_container.append('<li>' + _text + _sig_pass + '</li>');
-            _has_sig = true;
-        }
-        else {
-            _chi_squared_container.append('<li>' + _text + _sig_not_pass + '</li>');
-        }
-    }
-    else if (_yates_mode) {
-        //console.log([_yates_chi_squared, precision_string(_yates_chi_squared, 3)]);
-        _p = chisqrprob(_df, _yates_chi_squared);
-        var _text = '使用葉氏連續性校正之後的卡方檢定統計量<span class="skip" alt="為">χ<sup>2</sup> = </span>' + precision_string(_chi_squared, 3) 
-                    + ' ，<span class="skip" alt="機率值為">p值 = </span>' + precision_string(_p, 3) + ' ';
-        if (Math.abs(_p) < 0.05) {
-            _chi_squared_container.append('<li>' + _text + _sig_pass + '</li>');
-            _has_sig = true;
-        }
-        else {
-            _chi_squared_container.append('<li>' + _text + _sig_not_pass + '</li>');
-        }
+    if (_sig_seq.length > 0) {
+        $('<div class="speak">以上序列出現顯著轉移。</div>').appendTo(_result);
     }
     else {
-        _p = chisqrprob(_df, _chi_squared);
-        var _text = '卡方檢定統計量<span class="skip" alt="為">χ<sup>2</sup> = </span> ' + precision_string(_chi_squared, 3) 
-                    + ' ，<span class="skip" alt="機率值為">p值 = </span>' + precision_string(_p, 3) + ' ';
-        if (Math.abs(_p) < 0.05) {
-            _chi_squared_container.append('<li>' + _text + _sig_pass + '</li>');
-            _has_sig = true;
-        }
-        else {
-            _chi_squared_container.append('<li>' + _text + _sig_not_pass + '</li>');
-        }
-        
+        $('<div class="speak">沒有序列達到顯著轉移。</div>').appendTo(_result);
     }
     
-    if (_has_sig === true || _DEBUG.force_sig_pass) {
+    
+};
+
+var _get_sig_seq = function () {
+    var _sig_seq = [];
+    $("#preview_html .cross-table .adj-residual-tr .sig").each(function (_i, _td) {
+        _td = $(_td);
+        var _z = eval(_td.text().trim());
+        var _g = _td.parent().attr("y_var");
+        var _t = _td.attr("x_var");
         
-        var _cramer_v_k = _x_vars_count;
-        if (_y_vars_count < _x_vars_count) {
-            _cramer_v_k = _y_vars_count;
-        }
-        var _cramer_v = Math.sqrt(_chi_squared / (_total_sum * (_cramer_v_k - 1)) );
-        var _cramer_v_desc = "，<span class='speak'>屬於無相關。</span>";
-        if (_cramer_v === 1) {
-            _cramer_v_desc = "，<span class='speak'>屬於完全相關。</span>";
-        }
-        else if (_cramer_v > 0.7) {
-            _cramer_v_desc = "，<span class='speak'>屬於高度相關。</span>";
-        }
-        else if (_cramer_v > 0.4) {
-            _cramer_v_desc = "，<span class='speak'>屬於中度相關。</span>";
-        }
-        else if (_cramer_v > 0.1) {
-            _cramer_v_desc = "，<span class='speak'>屬於低度相關。</span>";
-        }
-        var _cramer_v_li = $('<li><span class="speak">「' + _x_var_name + '」跟「' + _y_var_name + '」'
-            + '</span>之相關係數Cramer\'s V值<span class="skip" alt="為">(介於0~1之間)</span>為 ' + precision_string(_cramer_v, 3) + ' ' + _cramer_v_desc + '</li>')
-            .appendTo(_chi_squared_container);
-        
-        // -----------------------------------
-        var _tau_container = $('<li><span class="skip" alt="接著進行"></span>Goodman與Kruskal的預測係數Tau值的分析：<ul></ul></li>')
-                .appendTo(_chi_squared_container);
-        var _tau_container_ul = _tau_container.find('ul');
+        _sig_seq.push({
+            g: _g,
+            t: _t,
+            z: _z
+        });
+    });
+    
+    // 排序
+    _sig_seq.sort(function(_a, _b) {
+        return (_b.z - _a.z);
+    });
+    
+    return _sig_seq;
+};
 
-        // ---------------------------
-        // x tau
 
-        $('<li>以「' + _x_var_name + '」來預測「' + _y_var_name + '」的正確比例為' 
-                + precision_string(_calc_x2y_tau()*100, 3) + '%。</li>')
-                .appendTo(_tau_container_ul);
-
-        // ---------------------------
-        // y tau
-
-        $('<li>以「' + _y_var_name + '」來預測「' + _x_var_name + '」的正確比例為' 
-                + precision_string(_calc_y2x_tau()*100, 3) + '%。</li>')
-                .appendTo(_tau_container_ul);
-
-        // ---------------------------
-        
-        var _sig_cell = $('.cross-table tbody tr.adj-residual-tr td.sig');
-        if (_sig_cell.length > 0) {
-            var _cell_container = $('<li><span class="skip" alt="最後進行"></span>細格統計檢定分析：<ul></ul></li>');
-            var _cell_ul = _cell_container.find('ul');
-            _sig_cell.each(function (_i, _td) {
-                var _td = $(_td);
-                var _adj_residual = eval(_td.text());
-                var _x_var = _td.attr('x_var');
-                var _y_var = _td.parent().attr('y_var');
-
-                var _text = '<span class="speak">「' + _x_var + '」中「' + _y_var +'」</span><span class="speak" alt="的"></span>之調整後殘差為' + _adj_residual + '，表示<span class="speak">觀察個數顯著';
-                if (_adj_residual > 0) {
-                    _text += "高於期望個數。</span>";
-                }
-                else {
-                    _text += "低於期望個數。</span>";
-                }
-                $('<li>' + _text + '</li>').appendTo(_cell_ul);
-            });
-            _cell_container.appendTo(_chi_squared_container);
+var _speak_analyze_result = function () {
+    var _panel = $(".file-process-framework");
+    var _result = _panel.find("#preview_html");
+    
+    var _text = "";
+    _result.find('.speak').each(function(_i, _span) {
+        if ($(_span).attr("alt") === undefined) {
+            _text += $(_span).text();
         }
-        
+        else {
+            _text += $(_span).attr("alt");
+        }
+    });
+    _text = "序列分析結果顯示。" + _text + "序列分析結束。";
+    _text = _text.replace(/「|」/g, '');
+    console.log(_text);
+    var _speak_list = _text.split("。");
+    if (navigator.userAgent.match(/Android/)) {
+        _speak_list = [_text];
     }
+
+//        var _next = function (_i) {
+//            _i++;
+//            _loop(_i);
+//        };
+    //var _timer;
+    var _loop = function (_i) {
+        if (_i < _speak_list.length) {
+            responsiveVoice.speak(_speak_list[_i], 'Chinese Female', {
+                rate: 1.2,
+                onend: function () {
+                    //clearTimeout(_timer);
+                    _i++;
+                    _loop(_i);
+                    console.log(_i);
+                }
+            });
+
+//                console.log(_speak_list[_i].length * 1000 * 0.3 );
+//                _timer = setTimeout(function () {
+//                    console.log(_i);
+//                    _next(_i);
+//                }, _speak_list[_i].length * 1000 * 0.3 );
+        }
+    };
+    _loop(0);
+
 };
 
 var _calc_fisher_exact_test = function () {
