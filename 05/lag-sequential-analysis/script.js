@@ -4,6 +4,7 @@ var _combine_input = function () {
     _reset_result();
     // ------------------------------------------
     // 資料處理設定
+    _download_dynamic_classification_file();
     
     var _csv = $("#input_data").val();
     _load_csv_to_ct_json(_csv);
@@ -293,7 +294,7 @@ $(function () {
     //$('.menu .item').tab();
     
     _load_data_from_filepath("#input_data", "data.csv", _combine_input);
-
+    
 
     $('#copy_source_code').click(function () {
         PULI_UTIL.clipboard.copy($("#preview").val());
