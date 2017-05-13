@@ -90,6 +90,18 @@ table td {
     border-bottom-width: 1px;
 }
 
+.analyze-result .bottom-border-medium,
+.analyze-result tr.bottom-border-medium td,
+.analyze-result tr.bottom-border-medium th {
+    border-bottom-width: 2px;
+}
+
+.analyze-result .top-border-medium,
+.analyze-result tr.top-border-medium td,
+.analyze-result tr.top-border-medium th {
+    border-top-width: 2px;
+}
+
 .analyze-result tbody tr.row:last-of-type th,
 .analyze-result tbody tr.row:last-of-type td {
     border-bottom-width: 0;

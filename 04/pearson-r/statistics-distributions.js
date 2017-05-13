@@ -513,7 +513,7 @@ function precision_string ($x, sign) {
         // 要計算小數點後面幾位
         var _s = Math.pow(10, sign);
         _result = _result*_s;
-        _result = Math.ceil(_result);
+        _result = Math.round(_result);
         _result = _result / _s;
         _result = (_result + "").split(".");
         

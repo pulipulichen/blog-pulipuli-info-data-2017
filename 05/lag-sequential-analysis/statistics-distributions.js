@@ -488,6 +488,10 @@ function precision ($x, sign) {
 }
 
 function precision_string ($x, sign) {
+    if (isNaN($x)) {
+        $x = 0;
+    }
+    
     //var _min = Math.pow(0.1, sign+1);
     if ($x !== undefined) {
         var _result = $x;
@@ -499,7 +503,7 @@ function precision_string ($x, sign) {
         // 要計算小數點後面幾位
         var _s = Math.pow(10, sign);
         _result = _result*_s;
-        _result = Math.ceil(_result);
+        _result = Math.round(_result);
         _result = _result / _s;
         _result = (_result + "").split(".");
         

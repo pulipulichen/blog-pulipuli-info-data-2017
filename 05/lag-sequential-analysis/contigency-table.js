@@ -54,9 +54,7 @@ var _load_csv_to_ct_json = function (_csv) {
             var _events = _seq[_s][1];
             for (var _e0 = 0; _e0 < _last_events.length; _e0++) {
                 var _event_name0 = _last_events[_e0];
-                if ($.inArray(_event_name0, _event_list) === -1) {
-                    _event_list.push(_event_name0);
-                } 
+                
                 for (var _e1 = 0; _e1 < _events.length; _e1++) {
                     var _event_name1 = _events[_e1];
                     if (typeof(_ct_json[_event_name1]) === "undefined") {
@@ -88,6 +86,7 @@ var _draw_contingency_table_from_ct_json = function () {
     //console.log(_ct_json);
     
     _reset_contingency_table();
+    _event_list = _get_attr();
     
     // -------------------------------
     
@@ -134,7 +133,7 @@ var _draw_contingency_table_from_ct_json = function () {
             _c += _count;
         }
     }
-    console.log(_c);
+    //console.log(_c);
     
     // ------------------------------
     // 設定span
@@ -172,7 +171,6 @@ var _get_ct_json_from_ui = function () {
         }
         _var_x_list.push(_name);
     });
-    _event_list = _var_x_list;
     
     var _var_y_list = [];
     _table.find(".variable_y").each(function (_i, _input) {
@@ -210,8 +208,11 @@ var _get_ct_json_from_ui = function () {
         });
     });
     
+    _get_attr();
+    
     return _ct_json;
 };
+
 
 /**
  * 
@@ -225,14 +226,13 @@ var _remove_ct_json_attr = function (_dimension, _name) {
     }
     
     _ct_json = _get_ct_json_from_ui();
-    if (_dimension === "x" && typeof(_ct_json[_name]) === "object") {
+    if (typeof(_ct_json[_name]) === "object") {
         delete _ct_json[_name];
     }
-    else if (_dimension === "y") {
-        for (var _x_name in _ct_json) {
-            if (typeof(_ct_json[_x_name][_name]) !== "undefined") {
-                delete _ct_json[_x_name][_name];
-            }
+    
+    for (var _x_name in _ct_json) {
+        if (typeof(_ct_json[_x_name][_name]) !== "undefined") {
+            delete _ct_json[_x_name][_name];
         }
     }
     
@@ -250,19 +250,20 @@ $(function () {
 
 var _add_ct_json_attr = function (_dimension) {
     _ct_json = _get_ct_json_from_ui();
-    var _id = _dimension.toUpperCase() + (_count_attr(_dimension) + 1);
-    if (_dimension === "x") {
-        _ct_json[_id] = {};
-        var _y_list = _get_attr('y');
-        for (var _i = 0; _i < _y_list.length; _i++) {
-            _ct_json[_id][_y_list[_i]] = 0;
-        }
+    //var _id = _dimension.toUpperCase() + (_count_attr(_dimension) + 1);
+    var _id  = "E" + (_event_list.length+1);
+    
+    _ct_json[_id] = {};
+    var _y_list = _event_list;
+    for (var _i = 0; _i < _y_list.length; _i++) {
+        _ct_json[_id][_y_list[_i]] = 0;
     }
-    else {
-        for (var _x in _ct_json) {
-            _ct_json[_x][_id] = 0;
-        }
+    
+    for (var _x in _ct_json) {
+        _ct_json[_x][_id] = 0;
     }
+    
+    _ct_json[_id][_id] = 0;
     
     _draw_contingency_table_from_ct_json();
 };
@@ -285,8 +286,14 @@ var _count_attr = function (_dimension) {
     return _count;
 };
 
-var _get_attr = function (_dimension) {
-    var _attr_list = [];
+var _get_attr = function () {
+    _event_list = [];
+    for (var _i in _ct_json) {
+        _event_list.push(_i);
+    }
+    _event_list.sort();
+    //_event_list = ['U', 'S', 'P', 'T', 'G'];
+    /*
     if (_dimension === 'x') {
         for (var _x in _ct_json) {
             _attr_list.push(_x);
@@ -300,7 +307,8 @@ var _get_attr = function (_dimension) {
             break;
         }
     }
-    return _attr_list;
+    */
+    return _event_list;
 };
 
 
@@ -354,17 +362,13 @@ var _create_cell_td = function (_cell) {
 
 // --------------------------------------
 
-var _is_display_percent = function () {
-    return ($("#input_display_percent:checked").length === 1);
-};
-
 var _x_var_count;
 var _y_var_count;
 
 var _draw_result_table = function () {
     _ct_json = _get_ct_json_from_ui();
     console.log(_ct_json);
-    return;
+    
     
     _reset_result();
     
@@ -377,22 +381,20 @@ var _draw_result_table = function () {
     
     var _cross_table = $('<div class="cross-table"><table border="1" cellpadding="0" cellspacing="0">'
         + '<thead>'
-            + '<tr class="x-var-tr"><th colspan="3" rowspan="2"></th><th class="x-var-name"></th><th rowspan="2" valign="bottom">' + '列總合' + '</th></tr>'
-            + '<tr class="x-vars-tr"></tr></thead>'
+            + '<tr class="x-var-tr"><th colspan="3" rowspan="2"></th><th class="x-var-name"></th>'
+                +'<th rowspan="2" valign="bottom">' + 'Lag 0 (g)<br />總合' + '</th></tr>'
+            + '<tr class="x-vars-tr">'
+                //+'<th valign="bottom">' + 'Lag 0 出現機率 p(g)' + '</th>'
+            + '</tr></thead>'
         + '<tbody></tbody>'
         + '<tfoot>'
-            + '<tr class="x-sum num-tr"><th rowspan="5" colspan="2" align="left" valign="top">' + '行總合' + '</th><th align="left" valign="top">' + '個數' + '</th></tr>'
-            + '<tr class="x-sum exp-tr"><th align="left" valign="top">' + '期望個數' + '</th></tr>' 
-            + '<tr class="x-sum per y-per-tr"><th align="left" valign="top">' + '(<span class="y-var-name"></span>)列之內的百分比' + '</th></tr>'
-            + '<tr class="x-sum per x-per-tr"><th align="left" valign="top">' + '(<span class="x-var-name"></span>)欄之內的百分比' + '</th></tr>'
-            + '<tr class="x-sum per per-tr"><th align="left" valign="top">' + '整體百分比' + '</th></tr>'
+            + '<tr class="row x-sum num-tr top-border-medium">'
+                + '<th rowspan="5" colspan="2" align="left" valign="top">' + 'Lag 1 (t)<br />總合' + '</th>'
+                + '<th align="left" valign="top" class="right-border-medium">' + '出現頻率 f(t)' + '</th></tr>'
+            + '<tr class="row x-sum per per-tr"><th align="left" valign="top">' + '出現機率 p(t)' + '</th></tr>'
+            + '<tr class="row x-sum exp-tr bottom-border-medium"><th align="left" valign="top">' + '期望個數 exp(t)' + '</th></tr>' 
         + '</tfoot>'
         + '</table></div>');
-
-    if (_is_display_percent() === false) {
-        _cross_table.find('tfoot tr.per').remove();
-        _cross_table.find('tfoot tr.num-tr th:first').attr('rowspan', 2);
-    }
 
     if ($("#input_table_style_display:checked").length === 0) {
         _cross_table.addClass("analyze-result");
@@ -412,6 +414,7 @@ var _draw_result_table = function () {
     $("#contingency_table input.variable_x").each(function (_i, _input) {
         var _name = _input.value.trim();
         if (_name !== "") {
+            //$('<th>' + _name + '</th>').insertBefore(_x_vars_tr.find("th:last"));
             $('<th>' + _name + '</th>').appendTo(_x_vars_tr);
             _x_vars_list.push(_name);
             _x_vars_count++;
@@ -427,10 +430,7 @@ var _draw_result_table = function () {
     var _y_var_name;
     _y_vars_count = 0;
     var _y_name = $("#variable_y_name").val().trim();
-    var _rowspan = 8;
-    if (_is_display_percent() === false) {
-        _rowspan = 5;
-    }
+    var _rowspan = 5;
     $("#contingency_table input.variable_y").each(function (_i, _input) {
         var _name = _input.value.trim();
         if (_name === "") {
@@ -440,16 +440,11 @@ var _draw_result_table = function () {
         // -----------
         
         
-        var _tr_num = $('<tr y_var="' + _name + '" class="num-tr"><th rowspan="' + _rowspan + '" class="bottom-border-thin" valign="top" align="left">' + _name + '</th>'
-                + '<th valign="top" align="left">' + '個數' + '</th></tr>').appendTo(_tbody);
-        var _tr_exp = $('<tr y_var="' + _name + '" class="exp-tr"><th valign="top" align="left">' + '期望個數' + '</th></tr>').appendTo(_tbody);
-        if (_is_display_percent()) {
-            var _tr_y_per = $('<tr y_var="' + _name + '" class="y-per-tr"><th valign="top" align="left">' + '(<span class="y-var-name"></span>)列之內的百分比' + '</th></tr>').appendTo(_tbody);
-            var _tr_x_per = $('<tr y_var="' + _name + '" class="x-per-tr"><th valign="top" align="left">' + '(<span class="x-var-name"></span>)欄之內的百分比' + '</th></tr>').appendTo(_tbody);
-            var _tr_global = $('<tr y_var="' + _name + '" class="global-tr"><th valign="top" align="left">' + '整體百分比' + '</th></tr>').appendTo(_tbody);
-        }
+        var _tr_num = $('<tr y_var="' + _name + '" class="num-tr row"><th rowspan="' + _rowspan + '" class="bottom-border-thin" valign="top" align="left">' + _name + '</th>'
+                + '<th valign="top" align="left">' + '出現頻率 f(g,t)' + '</th></tr>').appendTo(_tbody);
+        var _tr_global = $('<tr y_var="' + _name + '" class="global-tr"><th valign="top" align="left">' + '出現機率 p(g,t)' + '</th></tr>').appendTo(_tbody);
+        var _tr_exp = $('<tr y_var="' + _name + '" class="exp-tr"><th valign="top" align="left">' + '期望個數 exp(g,t)' + '</th></tr>').appendTo(_tbody);
         var _tr_residual = $('<tr y_var="' + _name + '" class="residual-tr"><th valign="top" align="left">' + '殘差' + '</th></tr>').appendTo(_tbody);
-        var _tr_std_residual = $('<tr y_var="' + _name + '" class="std-residual-tr"><th valign="top" align="left">' + '標準化殘差' + '</th></tr>').appendTo(_tbody);
         var _tr_adj_residual = $('<tr y_var="' + _name + '" class="adj-residual-tr bottom-border-thin"><th valign="top" align="left">' + '調整後殘差' + '</th></tr>').appendTo(_tbody);
         
         // -----------
@@ -474,13 +469,10 @@ var _draw_result_table = function () {
             }
             _td.clone().appendTo(_tr_num);
             _td.clone().appendTo(_tr_exp);
-            if (_is_display_percent()) {
-                _td.clone().appendTo(_tr_y_per);
-                _td.clone().appendTo(_tr_x_per);
-                _td.clone().appendTo(_tr_global);
-            }
+            
+            _td.clone().appendTo(_tr_global);
+            
             _td.clone().appendTo(_tr_residual);
-            _td.clone().appendTo(_tr_std_residual);
             _td.clone().appendTo(_tr_adj_residual);
         }
         
@@ -543,7 +535,7 @@ var _draw_num_cell = function () {
     
     for (var _x_var_name in _ct_json) {
         for (var _y_var_name in _ct_json[_x_var_name]) {
-            var _num = _ct_json[_x_var_name][_y_var_name];
+            var _num = _ct_json[_y_var_name][_x_var_name];
             
             if (_num === 0) {
                 _is_zero_cell_existed = true;
@@ -597,32 +589,13 @@ var _draw_num_cell = function () {
         }
     }
     
-    _cross_table.find('.x-sum.x-per-tr td[x_var]').html(precision_string(100, 1) + '%');
+    //_cross_table.find('.x-sum.x-per-tr td[x_var]').html(precision_string(1, 3));
     
     _cross_table.find('.x-sum.num-tr .total-sum').html(_total_sum);
     _cross_table.find('.x-sum.exp-tr .total-sum').html(_total_sum);
-    _cross_table.find('.x-sum.y-per-tr .total-sum').html(precision_string(100, 1) + '%');
-    _cross_table.find('.x-sum.x-per-tr .total-sum').html(precision_string(100, 1) + '%');
-    _cross_table.find('.x-sum.per-tr .total-sum').html(precision_string(100, 1) + '%');
-    
-    var _panel = $(".file-process-framework");
-    var _result = _panel.find("#preview_html");
-    if (_is_sum_zero_cell_existed === true) {
-        var _zero_var_list = [];
-        _cross_table.find('.zero-sum').each(function (_i, _td) {
-            _td = $(_td);
-            if (_td.hasClass('y-sum')) {
-                _zero_var_list.push(_td.parent().attr('y_var'));
-            }
-            else {
-                _zero_var_list.push(_td.attr('x_var'));
-            }
-        });
-        
-        $('<div>因為「' + _zero_var_list.join("」、「") + '」的總合個數為0，無法進行列聯表分析，建議刪除上述變項再進行分析。</div>').appendTo(_result);
-        _cross_table.hide();
-        return;
-    }
+    //_cross_table.find('.x-sum.y-per-tr .total-sum').html(precision_string(100, 1) + '%');
+    //_cross_table.find('.x-sum.x-per-tr .total-sum').html(precision_string(100, 1) + '%');
+    _cross_table.find('.x-sum.per-tr .total-sum').html(_get_percent_text(1));
     
     _draw_x_percent_cell();
     _draw_y_percent_cell();
@@ -634,10 +607,9 @@ var _draw_x_percent_cell = function () {
     var _cross_table = $("#preview_html .cross-table");
     for (var _x_var_name in _x_sum_list) {
         var _num = _x_sum_list[_x_var_name];
-        var _per = (_num) / _total_sum * 100;
-        _x_per_list[_x_var_name] = _per / 100;
-        var _per_text = precision_string(_per, 1) + '%';
-        //console.log([_x_var_name, _num, _per]);
+        var _per = (_num) / _total_sum ;
+        _x_per_list[_x_var_name] = _per;
+        var _per_text = _get_percent_text(_per);
         
         _cross_table.find('.x-sum.y-per-tr [x_var="' + _x_var_name + '"]').html(_per_text);
         _cross_table.find('.x-sum.per-tr [x_var="' + _x_var_name + '"]').html(_per_text);
@@ -649,9 +621,10 @@ var _draw_y_percent_cell = function () {
     var _cross_table = $("#preview_html .cross-table");
     for (var _y_var_name in _y_sum_list) {
         var _num = _y_sum_list[_y_var_name];
-        var _per = (_num) / _total_sum * 100;
-        _y_per_list[_y_var_name] = _per / 100;
-        var _per_text = precision_string(_per, 1) + '%';
+        var _per = (_num) / _total_sum;
+        _y_per_list[_y_var_name] = _per;
+        //var _per_text = precision_string(_per, 1) + '%';
+        var _per_text = _get_percent_text(_per);
         //console.log([_x_var_name, _num, _per]);
         
         _cross_table.find('.x-per-tr[y_var="' + _y_var_name + '"] .y-sum').html(_per_text);
@@ -660,8 +633,9 @@ var _draw_y_percent_cell = function () {
 };
 
 var _get_percent_text = function (_per) {
-    _per = _per*100;
-    return precision_string(_per, 1) + '%';
+    return precision_string(_per, 2);
+    //_per = _per*100;
+    //return precision_string(_per, 1) + '%';
 };
 
 var _is_cell_exp_too_small;
@@ -676,51 +650,45 @@ var _draw_cell_percent_cell = function () {
     var _tbody = _cross_table.find("tbody");
     for (var _x_var_name in _ct_json) {
         for (var _y_var_name in _ct_json[_x_var_name]) {
-            var _num = _ct_json[_x_var_name][_y_var_name];
+            var _num = _ct_json[_y_var_name][_x_var_name];
             
             var _total_per = _num / _total_sum;
             _tbody.find('tr.global-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(_get_percent_text(_total_per));
             
-            var _y_per = _num / _y_sum_list[_y_var_name];
-            _tbody.find('tr.y-per-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(_get_percent_text(_y_per));
             
-            var _x_per = _num / _x_sum_list[_x_var_name];
-            _tbody.find('tr.x-per-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(_get_percent_text(_x_per));
-            
-            var _exp = (_x_sum_list[_x_var_name] * _y_sum_list[_y_var_name]) / _total_sum;
-            _tbody.find('tr.exp-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_exp, 1));
-//            if (_num === 5) {
-//                console.log({
-//                    "exp": _exp,
-//                    "x": _x_sum_list[_x_var_name],
-//                    "y": _y_sum_list[_y_var_name],
-//                    "n": _total_sum
-//                });
-//            }
-            
-            if (_exp < 5) {
-                _is_cell_exp_too_small = true;
-            }
-            
+            //var _exp = (_x_sum_list[_x_var_name] * _y_sum_list[_y_var_name]) / _total_sum;
+            //console.log([_num, _y_sum_list[_y_var_name], _x_sum_list[_x_var_name], _total_sum]);
+            var _exp = (_y_sum_list[_y_var_name] * _x_per_list[_x_var_name]);
+            _tbody.find('tr.exp-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_exp, 3));
+
             var _residual = _num - _exp;
-            _tbody.find('tr.residual-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_residual, 1));
+            _tbody.find('tr.residual-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_residual, 3));
             
-            var _std_residual = _residual / Math.sqrt(_exp);
-            _tbody.find('tr.std-residual-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_std_residual, 1));
+            //var _std_residual = _residual / Math.sqrt(_exp);
+            //_tbody.find('tr.std-residual-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_std_residual, 1));
             
-            var _adj_residual = _residual / Math.sqrt( _exp * (1 - _x_per_list[_x_var_name]) * (1 - _y_per_list[_y_var_name]) );
+            // 這邊要換成另一隻種算法
+            // https://docs.google.com/presentation/d/1uPTNQAXXSw9pxsy7-Q1RyHBb4XwB9JyTm_nBp38Cqcc/edit#slide=id.p65
+            // (2-(4*0.33)) / Math.sqrt((4*0.33)*(1-0.33)*(1-0.44))
+            var _adj_residual = 0;
+            if (_exp !== 0) {
+                //_adj_residual = _residual / Math.sqrt( _exp * (1 - _x_per_list[_x_var_name]) * (1 - _y_per_list[_y_var_name]) );
+                var _z1 = _residual;
+                var _z2 = _y_sum_list[_y_var_name] * _x_per_list[_x_var_name];
+                var _z3 = 1 - _y_per_list[_y_var_name];
+                var _z4 = 1 - _x_per_list[_x_var_name];
+                _adj_residual = _z1 / Math.sqrt(_z2 * _z3 * _z4);
+                
+                if (_x_var_name === "C" && _y_var_name === "B" ) {
+                    console.log([_num, _y_sum_list[_y_var_name], _x_per_list[_x_var_name], _z1, _z2, _z3, _z4, _adj_residual] );
+                }
+            }
             //console.log([_residual, _exp, _x_per_list[_x_var_name], _y_per_list[_y_var_name]]);
-            _tbody.find('tr.adj-residual-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_adj_residual, 1));
+            _tbody.find('tr.adj-residual-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_adj_residual, 3));
             
-            if (Math.abs(_adj_residual) > 1.96) {
+            if (_adj_residual > 1.95) {   // @TODO這邊要再確認一下
                 _tbody.find('tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').addClass("sig");
             }
-            
-            _chi_squared += (_std_residual * _std_residual);
-            var _y = ( Math.pow((Math.abs(_residual) - 0.5), 2) / _exp );
-            
-            _yates_chi_squared += _y;
-            //console.log([_yates_chi_squared, _y]);
         }
     }
     
@@ -728,6 +696,9 @@ var _draw_cell_percent_cell = function () {
 };
 
 var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_squared) {
+    
+    return;
+    
     //console.log([_yates_chi_squared]);
     
     // ------------------------
@@ -1162,87 +1133,14 @@ var _calc_fisher_exact_test_with_zero = function () {
     return _p;
 };
 
-var _calc_x2y_tau = function () {
-    var _n = _total_sum;
-    
-    var _e1 = 0;
-    for (var _y_var_name in _y_sum_list) {
-        var _f = _y_sum_list[_y_var_name];
-        
-        _e1 += (( _f * (_n - _f) ) / _n);
-    }
-    
-    var _e2 = 0;
-    for (var _x_var_name in _ct_json) {
-        var _e = 0;
-        var _sum = _x_sum_list[_x_var_name];
-        for (var _y_var_name in _ct_json[_x_var_name]) {
-            var _f = _ct_json[_x_var_name][_y_var_name];
-            
-            _e += (_f * (_sum - _f) );
-        }
-        _e2 += (_e / _sum);
-    }
-    
-    var _tau = 1 - (_e2 / _e1);
-    //console.log([_tau, _e2, _e1]);
-    //_tau = _tau * 100;
-    return _tau;
-};
 
-var _calc_y2x_tau = function () {
-    var _n = _total_sum;
-    var _e1 = 0;
-    for (var _x_var_name in _x_sum_list) {
-        var _f = _x_sum_list[_x_var_name];
-        
-        _e1 += (( _f * (_n - _f) ) / _n);
-    }
-    
-    var _e2 = 0;
-    var _e_y = {};
-    for (var _x_var_name in _ct_json) {
-        for (var _y_var_name in _ct_json[_x_var_name]) {
-            
-            var _sum = _y_sum_list[_y_var_name];
-            var _f = _ct_json[_x_var_name][_y_var_name];
-            
-            if (typeof(_e_y[_y_var_name]) === "undefined") {
-                _e_y[_y_var_name] = 0;
-            }
-            _e_y[_y_var_name] += (_f * (_sum - _f) );
-        }
-        //_e2 += (_e / _sum);
-    }
-    
-    for (var _y_var_name in _e_y) {
-        _e2 += (_e_y[_y_var_name] / _y_sum_list[_y_var_name] );
-    }
-    
-    var _tau = 1 - (_e2 / _e1);
-    return _tau;
-};
-
-var _calc_factorial = function (num) {
-    //num = Math.ceil(num);
-    if (num < 0) {
-        throw "Error num: " + num;
-    }
-    
-    if (num === 0) { 
-        return 1; 
-    }
-    else { 
-        return num * _calc_factorial( num - 1 ); 
-    }
-};
 
 //console.log(_calc_factorial(24));
 
 var _traverse_ct_json = function (_callback) {
     for (var _x_var_name in _ct_json) {
         for (var _y_var_name in _ct_json[_x_var_name]) {
-            _callback(_x_var_name, _y_var_name, _ct_json[_x_var_name][_y_var_name]);
+            _callback(_x_var_name, _y_var_name, _ct_json[_y_var_name][_x_var_name]);
         }
     }
 };
