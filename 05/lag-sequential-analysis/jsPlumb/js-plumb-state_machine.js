@@ -26,7 +26,7 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
         window.jsp = instance;
 
         var windows = jsPlumb.getSelector("#" + _canvas_id + " .w");
-        console.log(windows.length);
+        //console.log(windows.length);
 
         var canvas = jsPlumb.getSelector("#" + _canvas_id);
         
