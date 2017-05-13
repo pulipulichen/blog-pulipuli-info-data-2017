@@ -74,7 +74,9 @@ and open the template in the editor.
         <div class="field">
             <label for="input_file">
                 請上傳CSV檔案： 
-                (<a href="https://docs.google.com/spreadsheets/d/1Xf7HwjEDlslZpNF0yp7LXGl927HdjFQbAT0PLOrIuD8/export?format=csv">範例檔案下載</a>)
+                (<a href="https://docs.google.com/spreadsheets/d/1Xf7HwjEDlslZpNF0yp7LXGl927HdjFQbAT0PLOrIuD8/export?format=csv">範例檔案1下載</a>
+                    , 
+                    <a href="https://docs.google.com/spreadsheets/d/1UTooTGvePmVCtRxKUYTfcUpt4kDjA_FtuoiKIHkRnuE/export?format=csv">範例檔案2下載</a>)
             </label>
             <input type="file" id="input_file" class="file-change-trigger" data-file-to-textarea="#input_data" />
         </div>
@@ -102,8 +104,8 @@ and open the template in the editor.
     <h1 class="ui horizontal divider header">
         動態分類資料下載
     </h1>
-    <div class="inline field" style="text-align: center;">
-        <label for="input_dynamic_lag">Event lag: </label>
+    <div class="inline field">
+        <label for="input_dynamic_lag">滯後序列長度: </label>
         <input id="input_dynamic_lag" type="text" value="3" placeholder="Event lag">
         
         <button type="button" class="ui button teal tiny download-dynamic-classification-button">
@@ -114,6 +116,15 @@ and open the template in the editor.
             <i class="download icon"></i> 
             下載貝氏網路配置檔
         </button>
+    </div>
+    <div class="inline field">
+        <label>循序樣式探勘:</label>
+        <a href="arulesSequences.r" target="_blank" download>
+        <button type="button" class="ui button teal tiny download-bayes-net-xml-button">
+            <i class="download icon"></i> 
+            下載R腳本檔案: arulesSequences.r
+        </button>
+        </a>
     </div>
         
         

@@ -5,7 +5,7 @@ var _combine_input = function () {
     // ------------------------------------------
     // 資料處理設定
     //_download_dynamic_classification_file();
-    _download_bayes_net_xml_file();
+    //_download_bayes_net_xml_file();
     
     var _csv = $("#input_data").val();
     _load_csv_to_ct_json(_csv);
