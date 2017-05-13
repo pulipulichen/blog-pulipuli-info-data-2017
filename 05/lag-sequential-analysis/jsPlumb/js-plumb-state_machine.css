@@ -57,6 +57,13 @@
     padding: 3px;
     cursor: pointer;
     user-select: none;
+    border-radius: 2px;
+}
+
+#js_plumb_canvas .jtk-overlay.jtk-hover {
+    z-index: 999;
+    /*font-size: 14px !important;*/
+    color: #1e8151 !important;
 }
 
 #js_plumb_canvas .aLabel {

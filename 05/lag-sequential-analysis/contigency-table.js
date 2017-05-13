@@ -737,6 +737,25 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     var _panel = $(".file-process-framework");
     var _result = _panel.find("#preview_html");
     
+    // -------------------
+    
+    // 找出有顯著轉移的序列
+    var _sig_seq = _get_sig_seq();
+    
+    if ($("#input_display_full_transfer_diagram:checked").length === 0) {
+        if (_sig_seq.length > 0) {
+            $('<div style="margin-top: 1em;">事件轉移圖：</div>').appendTo(_result);
+            _draw_diagram(_result, _sig_seq);
+        }
+    }
+    else {
+        var _full_seq = _get_full_seq();
+        $('<div style="margin-top: 1em;">事件轉移圖：</div>').appendTo(_result);
+        _draw_diagram(_result, _full_seq);
+    }
+    
+    // ------------------
+    
     
     //console.log(_chi_squared);
     var _title_container = $('<div>序列分析結果：</div>').appendTo(_result);
@@ -744,17 +763,11 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     var _button = $('<button type="button" class="ui icon button tiny teal speak skip"><i class="talk icon"></i></button>').prependTo(_title_container);
     _button.click(_speak_analyze_result);
     
-    // -------------------
-    
     var _chi_squared_container = $('<ul class="chi-squared-container"></ul>').appendTo(_result);
     
     if ($("#input_table_style_display:checked").length === 0) {
         _chi_squared_container.addClass("analyze-result");
     }
-    
-    // 找出有顯著轉移的序列
-    var _sig_seq = _get_sig_seq();
-    
     
     for (var _i = 0; _i < _sig_seq.length; _i++) {
         var _seq = _sig_seq[_i];
@@ -764,17 +777,18 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     
     if (_sig_seq.length > 0) {
         $('<div class="speak">以上序列出現顯著轉移。</div>').appendTo(_result);
-        $('<div style="margin-top: 1em;">事件轉移圖：</div>').appendTo(_result);
-        _draw_diagram(_result, _sig_seq);
     }
     else {
         $('<div class="speak">沒有序列達到顯著轉移。</div>').appendTo(_result);
     }
+    
+    // ----------------------
+    
 };
 
 var _get_sig_seq = function () {
     var _sig_seq = [];
-    $("#preview_html .cross-table .adj-residual-tr .sig").each(function (_i, _td) {
+    $("#preview_html .cross-table .adj-residual-tr td.sig").each(function (_i, _td) {
         _td = $(_td);
         var _z = eval(_td.text().trim());
         var _g = _td.parent().attr("y_var");
@@ -791,6 +805,35 @@ var _get_sig_seq = function () {
     _sig_seq.sort(function(_a, _b) {
         return (_b.z - _a.z);
     });
+    
+    return _sig_seq;
+};
+
+var _get_full_seq = function () {
+    var _sig_seq = [];
+    $("#preview_html .cross-table .adj-residual-tr td:not(.y-sum)").each(function (_i, _td) {
+        _td = $(_td);
+        var _z = eval(_td.text().trim());
+        if (_z < 0) {
+            return;
+        }
+        
+        var _g = _td.parent().attr("y_var");
+        var _t = _td.attr("x_var");
+        
+        _sig_seq.push({
+            g: _g,
+            t: _t,
+            z: _z
+        });
+    });
+    
+    // 排序
+    //_sig_seq.sort(function(_a, _b) {
+    //    return (_b.z - _a.z);
+    //});
+    
+    
     
     return _sig_seq;
 };
@@ -883,8 +926,15 @@ var _draw_diagram = function (_result, _sig_seq) {
     var _seq_list = [];
     for (var _i = 0; _i < _sig_seq.length; _i++) {
         var _s = _sig_seq[_i];
+        
         var _width = (_s.z - _min_z) * _ratio;
         _width = _width + 1;
+        
+        var _color = "#526173";
+        if (_s.z > 1.96 
+                && $("#input_display_full_transfer_diagram:checked").length === 1) {
+            _color = "red";
+        }
         //console.log([_s.z, _width]);
         _seq_list.push({
             "from": _s.g,
@@ -892,7 +942,7 @@ var _draw_diagram = function (_result, _sig_seq) {
             "label": _s.z,
             "paintStyle": {
                 strokeWidth: _width, 
-                stroke:'#526173'
+                stroke: _color
             }
         });
     }

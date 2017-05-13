@@ -6,7 +6,7 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
         var instance = jsPlumb.getInstance({
             Endpoint: ["Dot", {radius: 2}],
             Connector:"StateMachine",
-            HoverPaintStyle: {stroke: "#1e8151", strokeWidth: 1 },
+            HoverPaintStyle: {stroke: "#1e8151" },
             ConnectionOverlays: [
                 [ "Arrow", {
                     location: 1,
