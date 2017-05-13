@@ -6,7 +6,7 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
         var instance = jsPlumb.getInstance({
             Endpoint: ["Dot", {radius: 2}],
             Connector:"StateMachine",
-            HoverPaintStyle: {stroke: "#1e8151", strokeWidth: 2 },
+            HoverPaintStyle: {stroke: "#1e8151", strokeWidth: 1 },
             ConnectionOverlays: [
                 [ "Arrow", {
                     location: 1,
@@ -74,27 +74,39 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
             }
         });
         
+        //console.log(_padding);
+        
         // 決定margin
-        var _margin = 10;
+        var _margin = "";
         for (var _i = 0; _i < _seq_list.length; _i++) {
             if (typeof(_seq_list[_i].label) === "string") {
-                var _m = _seq_list[_i].label.length * 20;
-                if (_m > _margin) {
+                var _m = _seq_list[_i].label;
+                if (_m.length > _margin.length) {
                     _margin = _m;
                 }
             }
         }
-        console.log(_margin);
+        var _span = $('<span class="margin-test">' + _margin  + "</span>")
+                .appendTo($(canvas));
+        _margin = _span.width() + 50;
+        _span.remove();
+        
+        var _min_margin = 100;
+        if (_margin < _min_margin) {
+            _margin = _min_margin;
+        }
+        
+        //console.log(_margin);
         
         _padding = _padding + _margin;
         var _base = _margin;
         var _left_base = _margin / 2;
         //console.log(_padding);
         
-        var _height = (_padding * (_node_width-2));
-        _height = _height + (_base);
+        var _height = (_w.eq(0).height() + (_margin*1.3))  * (_node_width-1);
+        _height = _height + (_margin*1);
+        //console.log(_w.eq(0).height());
         $(canvas).css("height", _height + "px");
-
 
         _w.each(function (_i, _div) {
             _div = $(_div);
@@ -104,8 +116,8 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
             var _y = (_i-_x) / _node_width; // 
 
             var _pos = {
-                "top": _padding,
-                "left": _padding
+                "top": _margin,
+                "left": _left_base
             };
 
             if (_i === 0) {
@@ -113,15 +125,15 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
                 _div.css("left", _left_base + "px");
             }
 
-            var _prev_div = _w.eq(_i-1);
+            //var _prev_div = _w.eq(_i-1);
             if (_i > 0) {
-                var _left = _padding * (_x);
-                console.log(["left", _left, _x, _padding]);
+                var _left = _padding * 1.2 * (_x);
+                //console.log(["left", _left, _i, _x, _padding]);
                 _div.css("left", (_left_base + _left) + "px");
             }
 
             if (_i > 0) {
-                var _top = (_padding * 0.5) * (_y);
+                var _top = (_margin*1.3) * (_y);
                 _div.css("top", (_base + _top) + "px");
                _pos.top = _top;
             }
@@ -141,16 +153,18 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
         // just the new connection - see the documentation for a full list of what is included in 'info'.
         // this listener sets the connection's internal
         // id as the label overlay's text.
-        /*
+        
         instance.bind("connection", function (info) {
-            var _label = info.connection.id;
-            if (typeof(info.connection.label) === "string") {
-                _label = info.connection.label;
+            if (info.connection.id === "con_1") {
+                console.log(info);
+            }
+            if (typeof(info.connection.label) !== "undefined") {
+                var _label = info.connection.label;
+                console.log(_label);
                 //delete info.connection.label;
             }
             //info.connection.getOverlay("label").setLabel(_label);
         });
-        */
 
         // bind a double click listener to "canvas"; add new node when this occurs.
         //jsPlumb.on(canvas, "dblclick", function(e) {
@@ -228,15 +242,22 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
             */
             for (var _i = 0; _i < _seq_list.length; _i++) {
                 var _s = _seq_list[_i];
-                var _json = { source: "node"+ _s.from_id, target: "node"+_s.to_id, type:"basic"};
-                if (typeof(_s.label) === "string") {
-                    _json.label = _s.label;
+                var _json = { source: "node"+ _s.from_id
+                    , target: "node"+_s.to_id
+                    , type:"basic"
+                    //, paintStyle: {strokeWidth: 3, stroke:'#526173'}
+                };
+                if (typeof(_s.label) !== "undefined") {
+                    _json.label = _s.label + "";
+                }
+                if (typeof(_s.paintStyle) !== "undefined") {
+                    _json.paintStyle = _s.paintStyle;
                 }
                 instance.connect(_json);
             }
         });
 
-        jsPlumb.fire("jsPlumbDemoLoaded", instance);
+        //jsPlumb.fire("jsPlumbDemoLoaded", instance);
 
     }); // jsPlumb.ready(function () {
 };

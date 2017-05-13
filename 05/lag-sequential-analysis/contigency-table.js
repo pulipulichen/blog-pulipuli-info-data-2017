@@ -751,12 +751,12 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     
     if (_sig_seq.length > 0) {
         $('<div class="speak">以上序列出現顯著轉移。</div>').appendTo(_result);
+        $('<div>事件轉移圖：</div>').appendTo(_result);
+        _draw_diagram(_result, _sig_seq);
     }
     else {
         $('<div class="speak">沒有序列達到顯著轉移。</div>').appendTo(_result);
     }
-    
-    _draw_diagram(_result, _sig_seq);
 };
 
 var _get_sig_seq = function () {
@@ -835,6 +835,7 @@ var _speak_analyze_result = function () {
 var _draw_diagram = function (_result, _sig_seq) {
     $('<div class="jtk-demo-canvas canvas-wide statemachine-demo jtk-surface jtk-surface-nopan" id="js_plumb_canvas"></div>').appendTo(_result);
     
+    /*
     var _seq_list = [
         {from: "BEGIN", to: "PHONE INTERVIEW 1", label: "text1"},
         {from: "PHONE INTERVIEW 1", to: "BEGIN", label: "text2"},
@@ -842,6 +843,64 @@ var _draw_diagram = function (_result, _sig_seq) {
         {from: "PHONE INTERVIEW 1", to: "IN PERSON", label: "text4"},
         {from: "PHONE INTERVIEW 2", to: "REJECTED", label: "text5"},
     ];
+    */
+    //console.log(_sig_seq);
+    var _min_z;
+    var _max_z;
+    for (var _i = 0; _i < _sig_seq.length; _i++) {
+        var _s = _sig_seq[_i];
+        if (_min_z === undefined) {
+            _min_z = _s.z;
+        }
+        else if (_s.z < _min_z) {
+            _min_z = _s.z;
+        }
+        
+        if (_max_z === undefined) {
+            _max_z = _s.z;
+        }
+        else if (_s.z > _max_z) {
+            _max_z = _s.z;
+        }
+    }
+    
+    var _ratio = 4 / (_max_z - _min_z);
+    
+    
+    var _seq_list = [];
+    for (var _i = 0; _i < _sig_seq.length; _i++) {
+        var _s = _sig_seq[_i];
+        var _width = (_s.z - _min_z) * _ratio;
+        _width = _width + 1;
+        //console.log([_s.z, _width]);
+        _seq_list.push({
+            "from": _s.g,
+            "to": _s.t,
+            "label": _s.z,
+            "paintStyle": {
+                strokeWidth: _width, 
+                stroke:'#526173'
+            }
+        });
+    }
+    
+    /*
+    _seq_list.push({
+            "from": "T",
+            "to": "T",
+            "label": "1234",
+        });
+    _seq_list.push({
+            "from": "U",
+            "to": "U",
+            "label": "1234",
+        });        
+    _seq_list.push({
+            "from": "P",
+            "to": "P",
+            "label": "1234",
+        });
+    */
 
     _init_state_machine("js_plumb_canvas", _seq_list);
 }; 

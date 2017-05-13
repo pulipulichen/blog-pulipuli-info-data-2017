@@ -4,7 +4,7 @@
 }
 
 #js_plumb_canvas {
-    border: 3px solid gray;
+    border: 1px solid gray;
     position: relative;
     height: 400px;
     overflow: auto;
@@ -12,7 +12,7 @@
 
 #js_plumb_canvas .w {
     padding: 16px;
-    position: relative;
+    position: absolute;
     z-index: 999;
     border: 1px solid #2e6f9a;
     box-shadow: 2px 2px 19px #e0e0e0;
@@ -22,7 +22,7 @@
     -moz-border-radius: 8px;
     border-radius: 8px;
     opacity: 0.8;
-    /*cursor: move;*/
+    cursor: move;
     user-select: none;
     background-color: white;
     font-size: 11px;
@@ -54,6 +54,7 @@
 
 #js_plumb_canvas .jtk-overlay {
     background-color: white;
+    padding: 3px;
 }
 
 #js_plumb_canvas .aLabel {
@@ -77,3 +78,8 @@
 #js_plumb_canvas .jtk-endpoint { cursor:pointer; }
 
 #js_plumb_canvas .jtk-overlay.aLabel {display: none;}
+
+#js_plumb_canvas .margin-test {
+    position: absolute;
+    left: -1000px;
+}
