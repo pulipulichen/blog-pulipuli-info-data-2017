@@ -1,6 +1,9 @@
 $(function () {
-    $('.contingency-table-row-plus button.dynamic-classification-button').click(function () {
+    $('.contingency-table-row-plus button.download-dynamic-classification-button').click(function () {
         _download_dynamic_classification_file();
+    });
+    $('.contingency-table-row-plus button.download-bayes-net-xml-button').click(function () {
+        _download_bayes_net_xml_file();
     });
 });
 
@@ -109,5 +112,62 @@ var _download_dynamic_classification_file = function () {
     _headers.push("class");
     var _result = _headers.join(",") + "\n" + _lines.join("\n");
     //console.log(_result);
-    _download_file(_result, "lag-events.csv", "text/csv");
+    _download_file(_result, "lag-events-" + _create_current_date_string() + ".csv", "text/csv");
+};
+
+// ----------------------------------
+
+var _download_bayes_net_xml_file = function () {
+    var _lags = $("#input_dynamic_lag").val();
+    _lags = eval(_lags);
+    
+    var _name = "bayes-net-config-" + _create_current_date_string() + ".xml";
+    
+    var _var_list = [];
+    for (var _i = 0; _i < _lags; _i++) {
+        _var_list.push("lag" + (_lags-_i));
+    }
+    _var_list.push('class');
+    
+    var _variables = "";
+    var _var_head = '<VARIABLE TYPE="nature"><NAME>';
+    //var _var_foot = '</NAME></VARIABLE>';
+    for (var _i = 0; _i < _var_list.length; _i++) {
+        var _v = _var_head 
+                + _var_list[_i] 
+                + '</NAME>'
+                + '<PROPERTY>position = (10, ' + ((_i*100) + 10) + ')</PROPERTY>'
+                + '</VARIABLE>';
+        _variables += _v;
+    }
+    
+    
+    
+    var _definition = "";
+    var _reverse = false;
+    for (var _i = 0; _i < _var_list.length; _i++) {
+        var _d = '<DEFINITION><FOR>' + _var_list[_i] + '</FOR>';
+        if (_reverse === false) {
+            if (_i > 0) {
+                _d += '<GIVEN>' + _var_list[(_i-1)] + '</GIVEN>';
+            }
+        }
+        else {
+            if (_i < _var_list.length-1) {
+                _d += '<GIVEN>' + _var_list[(_i+1)] + '</GIVEN>';
+            }
+        }
+        _d += '<TABLE></TABLE></DEFINITION>';
+        _definition += _d;
+    }
+    
+    
+    $.get("bayes-net-template.txt", function (_xml) {
+        _xml = _xml.replace("{{NAME}}", _name);
+        _xml = _xml.replace("{{VARIABLE}}", _variables);
+        _xml = _xml.replace("{{DEFINITION}}", _definition);
+        //console.log(_xml);
+        
+        _download_file(_xml, _name, "text/xml");
+    });
 };

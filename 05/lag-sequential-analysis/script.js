@@ -4,7 +4,8 @@ var _combine_input = function () {
     _reset_result();
     // ------------------------------------------
     // 資料處理設定
-    _download_dynamic_classification_file();
+    //_download_dynamic_classification_file();
+    _download_bayes_net_xml_file();
     
     var _csv = $("#input_data").val();
     _load_csv_to_ct_json(_csv);
@@ -43,6 +44,8 @@ tinyMCE.init({
     }
 });
 }
+
+
 
 var _reset_result = function () {
     
@@ -148,6 +151,14 @@ var _load_textarea = function(evt) {
             _panel.find(".download-file").click();
         }
     });
+};
+
+var _create_current_date_string = function () {
+    var d = new Date();
+    var utc = d.getTime() - (d.getTimezoneOffset() * 60000);
+    var local = new Date(utc);
+    var _file_name = local.toJSON().slice(0,19).replace(/:/g, "-");
+    return _file_name;
 };
 
 // ----------------------------------
