@@ -66,6 +66,7 @@ var _output_filename_surffix="_output";
 
 // -------------------------------------
 
+var _file_name;
 var _load_file = function(evt) {
     //console.log(1);
     if(!window.FileReader) return; // Browser is not compatible
@@ -83,7 +84,7 @@ var _load_file = function(evt) {
     var reader = new FileReader();
     var _result;
 
-    var _file_name = evt.target.files[0].name;
+    _file_name = evt.target.files[0].name;
     
     reader.onload = function(evt) {
         if(evt.target.readyState !== 2) return;

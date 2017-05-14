@@ -243,7 +243,13 @@ $(function () {
 
 var _download_bayes_net_xml_file = function () {
     
-    var _name = "bayesnet-" + _create_current_date_string() + ".xml";
+    var _name = _file_name;
+    if (_name === undefined) {
+        _name = "bayesnet-" + _create_current_date_string() + ".xml";
+    }
+    else {
+        _name += '.xml';
+    }
     
     var _tr_list = $("#bayesnet_structure_editor > table tbody > tr");
     
