@@ -1,9 +1,13 @@
 $(function () {
-    $('.contingency-table-row-plus button.download-dynamic-classification-button').click(function () {
+    $('button.download-dynamic-classification-button').click(function () {
         _download_dynamic_classification_file();
     });
-    $('.contingency-table-row-plus button.download-bayes-net-xml-button').click(function () {
+    $('button.download-bayes-net-xml-button').click(function () {
         _download_bayes_net_xml_file();
+    });
+    $('button.download-bayes-net-flat-xml-button').click(function () {
+        console.log(1);
+        _download_bayes_net_flat_xml_file();
     });
 });
 
@@ -121,7 +125,7 @@ var _download_bayes_net_xml_file = function () {
     var _lags = $("#input_dynamic_lag").val();
     _lags = eval(_lags);
     
-    var _name = "bayes-net-config-" + _create_current_date_string() + ".xml";
+    var _name = "bayesnet-multilayer-" + _create_current_date_string() + ".xml";
     
     var _var_list = [];
     for (var _i = 0; _i < _lags; _i++) {
@@ -155,6 +159,66 @@ var _download_bayes_net_xml_file = function () {
         else {
             if (_i < _var_list.length-1) {
                 _d += '<GIVEN>' + _var_list[(_i+1)] + '</GIVEN>';
+            }
+        }
+        _d += '<TABLE></TABLE></DEFINITION>';
+        _definition += _d;
+    }
+    
+    
+    $.get("bayes-net-template.txt", function (_xml) {
+        _xml = _xml.replace("{{NAME}}", _name);
+        _xml = _xml.replace("{{VARIABLE}}", _variables);
+        _xml = _xml.replace("{{DEFINITION}}", _definition);
+        //console.log(_xml);
+        
+        _download_file(_xml, _name, "text/xml");
+    });
+};
+
+var _download_bayes_net_flat_xml_file = function () {
+    var _lags = $("#input_dynamic_lag").val();
+    _lags = eval(_lags);
+    console.log(_lags);
+    var _name = "bayesnet-flat-" + _create_current_date_string() + ".xml";
+    
+    var _var_list = [];
+    for (var _i = 0; _i < _lags; _i++) {
+        _var_list.push("lag" + (_lags-_i));
+    }
+    _var_list.push('class');
+    
+    var _variables = "";
+    var _var_head = '<VARIABLE TYPE="nature"><NAME>';
+    //var _var_foot = '</NAME></VARIABLE>';
+    for (var _i = 0; _i < _var_list.length; _i++) {
+        var _v = _var_head 
+                + _var_list[_i] 
+                + '</NAME>';
+        if (_i < _var_list.length -1) {
+            _v += '<PROPERTY>position = (' + ((_i*200) + 10) + ', 10)</PROPERTY>';
+        }
+        else {
+            _v += '<PROPERTY>position = (' + (((_var_list.length -2)*100) + 10) + ', 110)</PROPERTY>';
+        }
+        _v += '</VARIABLE>';
+        _variables += _v;
+    }
+    
+    var _definition = "";
+    var _reverse = false;
+    for (var _i = 0; _i < _var_list.length; _i++) {
+        var _d = '<DEFINITION><FOR>' + _var_list[_i] + '</FOR>';
+        if (_reverse === false) {
+            if (_i === _var_list.length-1) {
+                for (var _j = 0; _j < _var_list.length-1; _j++) {
+                    _d += '<GIVEN>' + _var_list[_j] + '</GIVEN>';
+                }
+            }
+        }
+        else {
+            if (_i < _var_list.length-1) {
+                _d += '<GIVEN>' + _var_list[(_var_list.length-1)] + '</GIVEN>';
             }
         }
         _d += '<TABLE></TABLE></DEFINITION>';
