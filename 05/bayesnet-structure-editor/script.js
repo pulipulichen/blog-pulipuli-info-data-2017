@@ -8,7 +8,7 @@ var _combine_input = function () {
     //_download_bayes_net_xml_file();
     
     var _csv = $("#input_data").val();
-    _load_csv_to_ct_json(_csv);
+    _draw_bayesnet_table(_csv);
 };	// var _combine_input = function () {
 
 // ---------------------------------------
@@ -289,7 +289,7 @@ $(function () {
     
     _panel.find(".download-file").click(_download_file_button);
     _panel.find(".change-trigger").change(_combine_input);
-    _panel.find(".change-trigger-draw").change(_draw_result_table);
+    _panel.find(".change-trigger-draw").change(_combine_input);
     _panel.find(".key-up-trigger").keyup(_combine_input);
 
     _panel.find(".focus_select").focus(function () {

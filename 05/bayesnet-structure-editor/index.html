@@ -26,7 +26,6 @@ and open the template in the editor.
 -->
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="dynamic-classification.js"></script>
 <script src="bayesnet-structure-editor.js"></script>
 <script src="script.js"></script>
 
@@ -109,7 +108,7 @@ and open the template in the editor.
     貝氏網路結構
 </h1>
         <div class="contingency-table-col-plus ui inline field">
-            <label for="input_target_node">快速結構: </label>
+            <label for="input_target_node">快速設定結構: </label>
             <select name="input_target_node" id="input_target_node">
                 <option value="lag2" >lag2</option>
                 <option value="lag1" >lag1</option>
@@ -124,7 +123,13 @@ and open the template in the editor.
                 此節點為結果
             </button>
         </div>
-            <div class="contingency-table-col-plus ui field" style="text-align: center;">
+        <div class="contingency-table-col-plus ui inline field">
+            <button type="button" class="ui button tiny input-set-reverse">
+                <i class="exchange icon"></i>
+                全部子節點與父節點交換因果
+            </button>
+        </div>
+        <div class="contingency-table-col-plus ui field" style="text-align: center;">
             <button type="button" class="fluid ui button teal tiny input-download-bayes-net-xml">
                 <i class="download icon"></i>
                 下載貝氏網路結構檔
