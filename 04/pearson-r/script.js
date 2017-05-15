@@ -171,7 +171,7 @@ var _draw_result_table = function () {
         _colspan = 1;
     }
     
-    var _table = $('<div style="display:inline-block;"><div class="caption" style="text-align:center;display:inline-block">相關分析</caption>'
+    var _table = $('<div style="display:inline-block;"><div class="caption" style="text-align:center;display:inline-block">相關分析</div>'
         + '<table border="1" cellpadding="0" cellspacing="0">'
         //+ '<caption>' + "相關分析" + '</caption>'
         + '<thead><tr class="x-attr"><th colspan="' + _colspan + '" class="right-border-bold"></th></tr></thead>'

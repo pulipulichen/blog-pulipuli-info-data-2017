@@ -111,7 +111,7 @@ var _download_dynamic_classification_file = function () {
     var _headers = [];
     // 2
     for (var _i = 0; _i < _lags; _i++) {
-        _headers.push("lag" + (_lags-_i));
+        _headers.push("lag-" + (_lags-_i));
     }
     _headers.push("class");
     var _result = _headers.join(",") + "\n" + _lines.join("\n");
@@ -129,7 +129,7 @@ var _download_bayes_net_xml_file = function () {
     
     var _var_list = [];
     for (var _i = 0; _i < _lags; _i++) {
-        _var_list.push("lag" + (_lags-_i));
+        _var_list.push("lag-" + (_lags-_i));
     }
     _var_list.push('class');
     
@@ -179,12 +179,12 @@ var _download_bayes_net_xml_file = function () {
 var _download_bayes_net_flat_xml_file = function () {
     var _lags = $("#input_dynamic_lag").val();
     _lags = eval(_lags);
-    console.log(_lags);
+    //console.log(_lags);
     var _name = "bayesnet-flat-" + _create_current_date_string() + ".xml";
     
     var _var_list = [];
     for (var _i = 0; _i < _lags; _i++) {
-        _var_list.push("lag" + (_lags-_i));
+        _var_list.push("lag-" + (_lags-_i));
     }
     _var_list.push('class');
     
