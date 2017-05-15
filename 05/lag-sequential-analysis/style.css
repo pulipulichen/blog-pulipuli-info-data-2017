@@ -90,6 +90,12 @@ table td {
     border-bottom-width: 1px;
 }
 
+.analyze-result .top-border-thin,
+.analyze-result tr.top-border-thin td,
+.analyze-result tr.top-border-thin th {
+    border-top-width: 1px;
+}
+
 .analyze-result .bottom-border-medium,
 .analyze-result tr.bottom-border-medium td,
 .analyze-result tr.bottom-border-medium th {

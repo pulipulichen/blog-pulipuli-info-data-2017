@@ -219,7 +219,7 @@ var _get_ct_json_from_ui = function () {
             }
             
             if (_y_attr === _x_attr 
-                    && $("#input_count_same_adjacent_event:checked").length === 0) {
+                    && _is_count_same_adjacent_event()) {
                 _ct_json[_y_attr][_x_attr] = 0;
             }
             else {
@@ -233,6 +233,9 @@ var _get_ct_json_from_ui = function () {
     return _ct_json;
 };
 
+var _is_count_same_adjacent_event = function () {
+    return ($("#input_count_same_adjacent_event:checked").length === 0);
+};
 
 /**
  * 
@@ -456,7 +459,7 @@ var _draw_result_table = function () {
     var _y_var_name;
     _y_vars_count = 0;
     var _y_name = $("#variable_y_name").val().trim();
-    var _rowspan = 5;
+    var _rowspan = 6;
     $("#contingency_table input.variable_y").each(function (_i, _input) {
         var _name = _input.value.trim();
         if (_name === "") {
@@ -466,12 +469,13 @@ var _draw_result_table = function () {
         // -----------
         
         
-        var _tr_num = $('<tr y_var="' + _name + '" class="num-tr row"><th rowspan="' + _rowspan + '" class="bottom-border-thin" valign="top" align="left">' + _name + '</th>'
+        var _tr_num = $('<tr y_var="' + _name + '" class="num-tr row top-border-thin"><th rowspan="' + _rowspan + '" class="bottom-border-thin" valign="top" align="left">' + _name + '</th>'
                 + '<th valign="top" align="left">' + '出現頻率 f(g,t)' + '</th></tr>').appendTo(_tbody);
         var _tr_global = $('<tr y_var="' + _name + '" class="global-tr"><th valign="top" align="left">' + '出現機率 p(g,t)' + '</th></tr>').appendTo(_tbody);
         var _tr_exp = $('<tr y_var="' + _name + '" class="exp-tr"><th valign="top" align="left">' + '期望個數 exp(g,t)' + '</th></tr>').appendTo(_tbody);
         var _tr_residual = $('<tr y_var="' + _name + '" class="residual-tr"><th valign="top" align="left">' + '殘差' + '</th></tr>').appendTo(_tbody);
-        var _tr_adj_residual = $('<tr y_var="' + _name + '" class="adj-residual-tr bottom-border-thin"><th valign="top" align="left">' + '調整後殘差' + '</th></tr>').appendTo(_tbody);
+        var _tr_adj_residual = $('<tr y_var="' + _name + '" class="adj-residual-tr"><th valign="top" align="left">' + '調整後殘差<sup>a</sup>' + '</th></tr>').appendTo(_tbody);
+        var _tr_yule_q = $('<tr y_var="' + _name + '" class="yule-q-tr"><th valign="top" align="left">' + "相關係數<sup>b</sup>" + '</th></tr>').appendTo(_tbody);
         
         // -----------
         
@@ -500,6 +504,7 @@ var _draw_result_table = function () {
             
             _td.clone().appendTo(_tr_residual);
             _td.clone().appendTo(_tr_adj_residual);
+            _td.clone().appendTo(_tr_yule_q);
         }
         
         // -------------------
@@ -623,10 +628,17 @@ var _draw_num_cell = function () {
     //_cross_table.find('.x-sum.x-per-tr .total-sum').html(precision_string(100, 1) + '%');
     _cross_table.find('.x-sum.per-tr .total-sum').html(_get_percent_text(1));
     
+    var _note = $('<ol type="a">'
+        + '<li>調整後殘差是用Allison & Liker (1982)的z分數計算公式。</li>'
+        + '<li>相關係數是用Yule\'Q的計算公式。</li>'
+        + '</ol>')
+        .insertAfter(_cross_table);
+    
     if ($("#input_table_display_details:checked").length === 0) {
         _cross_table.find("tbody tr.exp-tr").remove();
         _cross_table.find("tbody tr.global-tr").remove();
         _cross_table.find("tbody tr.residual-tr").remove();
+        _cross_table.find("tbody tr.yule-q-tr").remove();
         _cross_table.find("tbody th:first").attr("rowspan", _cross_table.find("tbody tr").length);
         _cross_table.find("tbody tr.num-tr").each(function (_i, _tr) {
             //console.log(_i);
@@ -696,7 +708,7 @@ var _draw_cell_percent_cell = function () {
             //var _exp = (_x_sum_list[_x_var_name] * _y_sum_list[_y_var_name]) / _total_sum;
             //console.log([_num, _y_sum_list[_y_var_name], _x_sum_list[_x_var_name], _total_sum]);
             var _pt = _x_per_list[_x_var_name];
-            if ($("#input_count_same_adjacent_event:checked").length === 0) {
+            if (_is_count_same_adjacent_event() === false) {
                 // 編碼不可重複的情況
                 _pt = (_x_sum_list[_x_var_name]) / (_total_sum - _y_sum_list[_y_var_name]);
             }
@@ -739,10 +751,46 @@ var _draw_cell_percent_cell = function () {
             if (_adj_residual >= 1.96) {
                 _tbody.find('tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').addClass("sig");
             }
+            
+            var _q = _calc_yule_q(_y_var_name, _x_var_name);
+            _tbody.find('tr.yule-q-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_q, 3));
         }
     }
     
     _draw_contingency_table_analyze_result(_chi_squared, _yates_chi_squared);
+};
+
+var _calc_yule_q = function (_y_var_name, _x_var_name) {
+    //    X ~X 
+    // Y  a  b
+    // ~Y c  d
+    
+    var _a = 0;
+    var _b = 0;
+    var _c = 0;
+    var _d = 0;
+    for (var _y in _ct_json) {
+        for (var _x in _ct_json[_y]) {
+            var _freq = _ct_json[_y][_x];
+            if (_x === _x_var_name && _y === _y_var_name) {
+                _a += _freq;
+            }
+            else if (_x !== _x_var_name && _y === _y_var_name) {
+                _b += _freq;
+            }
+            else if (_x === _x_var_name && _y !== _y_var_name) {
+                _c += _freq;
+            }
+            else {
+                _d += _freq;
+            }
+        }
+    }
+    
+    var _ad = _a * _d;
+    var _bc = _b * _c;
+    var _q = (_ad - _bc) / (_ad + _bc);
+    return _q;
 };
 
 var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_squared) {
