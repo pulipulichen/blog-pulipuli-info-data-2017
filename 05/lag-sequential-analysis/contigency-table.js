@@ -629,8 +629,8 @@ var _draw_num_cell = function () {
     _cross_table.find('.x-sum.per-tr .total-sum').html(_get_percent_text(1));
     
     var _note = $('<ol type="a">'
-        + '<li>調整後殘差是用Allison & Liker (1982)的z分數計算公式。</li>'
-        + '<li>相關係數是用Yule\'Q的計算公式。</li>'
+        + '<li>調整後殘差是用Allison & Liker (1982)的z分數計算公式，超過1.96即達0.05顯著水準，表示此序列次數顯著較多。</li>'
+        + '<li>相關係數是用Yule\'Q的計算公式，介於-1至1之間。大於0為正相關，小於0為複相關。絕對值1為完全相關、0.7~0.9為高度相關、0.4~0.6為中度相關、0.1~0.3為低度相關、0.1以下為無相關。</li>'
         + '</ol>')
         .insertAfter(_cross_table);
     
