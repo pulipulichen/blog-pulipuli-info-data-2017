@@ -206,7 +206,7 @@ var _get_ct_json_from_ui = function () {
     _table.find("tbody tr").each(function (_y, _y_tr) {
         $(_y_tr).find(".vairable_cell").each(function (_x, _cell) {
             var _cell_value = _cell.value.trim();
-            if (isNaN(_cell_value)) {
+            if (isNaN(_cell_value) || _cell_value === "") {
                 _cell_value = 0;
             }
             _cell_value = eval(_cell_value);
@@ -219,7 +219,7 @@ var _get_ct_json_from_ui = function () {
             }
             
             if (_y_attr === _x_attr 
-                    && _is_count_same_adjacent_event()) {
+                    && _is_count_same_adjacent_event() === false) {
                 _ct_json[_y_attr][_x_attr] = 0;
             }
             else {
@@ -411,14 +411,14 @@ var _draw_result_table = function () {
     var _cross_table = $('<div class="cross-table"><table border="1" cellpadding="0" cellspacing="0">'
         + '<thead>'
             + '<tr class="x-var-tr"><th colspan="3" rowspan="2"></th><th class="x-var-name"></th>'
-                +'<th rowspan="2" valign="bottom">' + 'Lag 0 (g)<br />總合' + '</th></tr>'
+                +'<th rowspan="2" valign="bottom">' + 'Lag 0 (g)<br />總數' + '</th></tr>'
             + '<tr class="x-vars-tr">'
                 //+'<th valign="bottom">' + 'Lag 0 出現機率 p(g)' + '</th>'
             + '</tr></thead>'
         + '<tbody></tbody>'
         + '<tfoot>'
             + '<tr class="row x-sum num-tr top-border-medium">'
-                + '<th rowspan="2" colspan="2" align="left" valign="top">' + 'Lag 1 (t)<br />總合' + '</th>'
+                + '<th rowspan="2" colspan="2" align="left" valign="top">' + 'Lag 1 (t)<br />總數' + '</th>'
                 + '<th align="left" valign="top" class="right-border-medium">' + '出現頻率 f(t)' + '</th></tr>'
             + '<tr class="row x-sum per per-tr bottom-border-medium"><th align="left" valign="top">' + '出現機率 p(t)' + '</th></tr>'
             //+ '<tr class="row x-sum exp-tr bottom-border-medium"><th align="left" valign="top">' + '期望個數 exp(t)' + '</th></tr>' 
@@ -682,7 +682,7 @@ var _draw_y_percent_cell = function () {
 };
 
 var _get_percent_text = function (_per) {
-    return precision_string(_per, 2);
+    return precision_string(_per, 3);
     //_per = _per*100;
     //return precision_string(_per, 1) + '%';
 };
@@ -731,7 +731,27 @@ var _draw_cell_percent_cell = function () {
                 var _z2 = _exp;
                 var _z3 = 1 - _y_per_list[_y_var_name];
                 var _z4 = 1 - _pt;
-                _adj_residual = _z1 / Math.sqrt(_z2 * _z3 * _z4);
+                if (_z2 !== 0 && _z3 !== 0 && _z4 !== 0) {
+                    _adj_residual = _z1 / Math.sqrt(_z2 * _z3 * _z4);
+                }
+                else {
+                    console.log({
+                        "error": "e",
+                        x: _x_var_name,
+                        y: _y_var_name,
+                        z1: _z1,
+                        z2: _z2,
+                        z3: _z3,
+                        z4: _z4,
+                        x_per: _x_per_list[_x_var_name],
+                        x_sum: _x_sum_list[_x_var_name],
+                        y_sum: _y_sum_list[_y_var_name],
+                        total: _total_sum,
+                        same: _is_count_same_adjacent_event(),
+                    });
+                }
+                
+                
                 // -1.5 / Math.sqrt(2*0.75*0.25*0.67)
                 
                 /*
@@ -750,6 +770,21 @@ var _draw_cell_percent_cell = function () {
             
             if (_adj_residual >= 1.96) {
                 _tbody.find('tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').addClass("sig");
+                
+                console.log({
+                        "error": "sig",
+                        x: _x_var_name,
+                        y: _y_var_name,
+                        z1: _z1,
+                        z2: _z2,
+                        z3: _z3,
+                        z4: _z4,
+                        x_per: _x_per_list[_x_var_name],
+                        x_sum: _x_sum_list[_x_var_name],
+                        y_sum: _y_sum_list[_y_var_name],
+                        total: _total_sum,
+                        same: _is_count_same_adjacent_event(),
+                    });
             }
             
             var _q = _calc_yule_q(_y_var_name, _x_var_name);
@@ -809,13 +844,13 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     
     if ($("#input_display_full_transfer_diagram:checked").length === 0) {
         if (_sig_seq.length > 0) {
-            $('<div style="margin-top: 1em;">事件轉移圖：</div>').appendTo(_result);
+            $('<div style="margin-top: 1em;">事件轉移圖：(可拖曳事件調整位置)</div>').appendTo(_result);
             _draw_diagram(_result, _sig_seq);
         }
     }
     else {
         var _full_seq = _get_full_seq();
-        $('<div style="margin-top: 1em;">事件轉移圖：</div>').appendTo(_result);
+        $('<div style="margin-top: 1em;">事件轉移圖：(可拖曳事件調整位置)</div>').appendTo(_result);
         _draw_diagram(_result, _full_seq);
     }
     
@@ -836,7 +871,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     
     for (var _i = 0; _i < _sig_seq.length; _i++) {
         var _seq = _sig_seq[_i];
-        $('<li><span class="speak">編碼「' + _seq.g + '」到編碼「' + _seq.t + '」</span>，調整後殘差為' + _seq.z + '<span class="speak">。</span></li>')
+        $('<li><span class="speak">事件「' + _seq.g + '」到事件「' + _seq.t + '」</span>，調整後殘差為' + _seq.z + '<span class="speak">。</span></li>')
                 .appendTo(_chi_squared_container);
     }
     
