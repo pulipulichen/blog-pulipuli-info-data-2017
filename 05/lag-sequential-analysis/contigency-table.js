@@ -480,7 +480,7 @@ var _draw_obs_seq_table = function () {
                 + '<th>研究對象數量</th>'
                 + '<th>事件類別數量</th>'
                 + '<th>事件總數</th>'
-                + '<th>每位研究對象平均事件數量</th>'
+                + '<th>每位研究對象<br />平均事件數量</th>'
             + '</tr></thead>'
         + '<tbody>'
             + '<tr>'
@@ -983,7 +983,7 @@ var _draw_contingency_table_analyze_result = function () {
         
     for (var _i = 0; _i < _sig_seq.length; _i++) {
         var _seq = _sig_seq[_i];
-        $('<li><span class="speak">事件「' + _seq.g + '」到事件「' + _seq.t + '」</span>，調整後殘差為' + _seq.z + '<span class="speak">。</span></li>')
+        $('<li><span class="speak">事件「' + _seq.g + '」到事件「' + _seq.t + '」</span>調整後殘差為' + _seq.z + '<span class="speak">。</span></li>')
                 .appendTo(_chi_squared_container);
     }
     
