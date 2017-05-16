@@ -7,6 +7,10 @@ var _DEBUG = {
 _ct_json = {};
 _event_list = [];
 
+_events_count = 0;
+_users_count = 0;
+_events_stat = {};
+
 var _load_csv_to_ct_json = function (_csv) {
     if (_csv === undefined || _csv.trim() === "") {
         return;
@@ -24,14 +28,27 @@ var _load_csv_to_ct_json = function (_csv) {
     
     var _users_seq = {};
     
+    _events_count = 0;
+    _events_stat = {};
+    _events_list = [];
     for (var _l = 1; _l < _lines.length; _l++) {
         var _fields = _lines[_l].trim().split(",");
         
         var _user = _fields[0].trim();
         var _seq_id = eval(_fields[1].trim());
         var _events = _fields[2].trim().split(";");
-        for (var _e = 0; _e < _events.length; _e++) {
-            _events[_e] = _events[_e].trim();
+        if (_events.length > 0) {
+            for (var _e = 0; _e < _events.length; _e++) {
+                var _event_name = _events[_e].trim();
+                _events[_e] = _event_name;
+                
+                if (typeof(_events_stat[_event_name]) === "undefined") {
+                    _events_list.push(_event_name);
+                    _events_stat[_event_name] = 0;
+                }
+                _events_stat[_event_name]++;
+            }
+            _events_count++;
         }
         
         if (typeof(_users_seq[_user]) === "undefined") {
@@ -42,7 +59,9 @@ var _load_csv_to_ct_json = function (_csv) {
     
     // --------------------------
     
+    _users_count = 0;
     for (var _u in _users_seq) {
+        _users_count++;
         var _seq = _users_seq[_u];
         
         _seq.sort(function(_a,_b) {
@@ -408,7 +427,115 @@ var _draw_result_table = function () {
     var _panel = $(".file-process-framework");
     var _result = _panel.find("#preview_html");
     
-    var _cross_table = $('<div class="cross-table" style="display:inline-block">'
+    // ---------------------------------
+    
+    var _abs_table = _draw_obs_seq_table();
+    _abs_table.appendTo(_result);
+    var _evts_table = _draw_event_count_table();
+    _evts_table.appendTo(_result);
+    
+    
+    // ---------------------------------
+    
+    var _cross_table = _draw_cross_table();
+    _cross_table.appendTo(_result);
+    var _note = _draw_cross_table_note();
+    _note.appendTo(_result);
+    
+    // ---------------------------------
+    
+    var _abs = _draw_contingency_table_analyze_result();
+    _abs.appendTo(_result);
+    
+    // ---------------------------------
+    
+    // 找出有顯著轉移的序列
+    var _sig_seq = _get_sig_seq();
+    //console.log(_sig_seq);
+    if ($("#input_display_full_transfer_diagram:checked").length === 0) {
+        if (_sig_seq.length > 0) {
+            $('<div style="margin-top: 1em;">事件轉移圖：(可拖曳事件調整位置)</div>').appendTo(_result);
+            _draw_diagram(_result, _sig_seq);
+        }
+    }
+    else {
+        var _full_seq = _get_full_seq();
+        $('<div style="margin-top: 1em;">事件轉移圖：(可拖曳事件調整位置)</div>').appendTo(_result);
+        _draw_diagram(_result, _full_seq);
+    }
+    
+    if ($("#input_table_style_display:checked").length === 1) {
+        _result.find(".analyze-result").removeClass("analyze-result");
+    }
+};
+
+var _draw_obs_seq_table = function () {
+    
+    //var _event_list = _get_attr();
+    var _cross_table = $('<div class="analyze-result cross-table" style="display:inline-block">'
+        + '<div class="caption" style="text-align:center;display:block">觀察樣本統計摘要表</div>'
+        + '<table border="1" cellpadding="0" cellspacing="0">'
+        + '<thead>'
+            + '<tr>'
+                + '<th>研究對象數量</th>'
+                + '<th>事件類別數量</th>'
+                + '<th>事件總數</th>'
+                + '<th>每位研究對象平均事件數量</th>'
+            + '</tr></thead>'
+        + '<tbody>'
+            + '<tr>'
+                + '<td>' + _users_count + '</td>'
+                + '<td>' + _events_list.length + '</td>'
+                + '<td>' + _events_count + '</td>'
+                + '<td>' + precision_string((_events_count / _users_count),3) + '</td>'
+            + '</tr>'
+        + '</tbody>'
+        + '</table></div><br />');
+
+    return _cross_table;
+};
+
+var _draw_event_count_table = function () {
+    
+    var _cross_table = $('<div class="analyze-result cross-table" style="display:inline-block">'
+        + '<div class="caption" style="text-align:center;display:block">事件統計表</div>'
+        + '<table border="1" cellpadding="0" cellspacing="0">'
+        + '<thead>'
+            + '<tr>'
+                + '<th>事件編碼</th>'
+                + '<th>出現頻率</th>'
+                + '<th>出現百分比</th>'
+            + '</tr></thead>'
+        + '<tbody>'
+        + '</tbody>'
+        + '<tfoot>'
+            + '<tr class="top-border-medium">'
+                + '<th align="left" class="right-border-medium">事件總數</th>' 
+                + '<th align="right">' + _events_count + '</th>'
+                + '<th align="right">100.0%</th>'
+        + '</tfoot>'
+        + '</table></div><br />');
+
+    _events_list = _events_list.sort();
+    
+    var _tbody = _cross_table.find("tbody");
+    for (var _i = 0; _i < _event_list.length; _i++) {
+        var _event_name = _event_list[_i];
+        var _count = _events_stat[_event_name];
+        var _per = precision_string((_count/_events_count)*100, 1) + "%";
+        
+        $('<tr>'
+            + '<th align="left" style="text-align:left">' + _event_name + '</th>'
+            + '<td>' + _count + '</td>'
+            + '<td>' + _per + '</td>'
+            + '</tr>').appendTo(_tbody);
+    }
+    
+    return _cross_table;
+};
+
+var _draw_cross_table = function () {
+    var _cross_table = $('<div class="analyze-result cross-table" style="display:inline-block">'
         + '<div class="caption" style="text-align:center;display:block">事件轉移表</div>'
         + '<table border="1" cellpadding="0" cellspacing="0">'
         + '<thead>'
@@ -427,10 +554,7 @@ var _draw_result_table = function () {
         + '</tfoot>'
         + '</table></div>');
 
-    if ($("#input_table_style_display:checked").length === 0) {
-        _cross_table.addClass("analyze-result");
-    }
-    _cross_table.appendTo(_result);
+    //_cross_table.appendTo(_result);
     
     // ------------------
     // 先畫出x變數
@@ -543,10 +667,25 @@ var _draw_result_table = function () {
         _td.clone().appendTo(_tfoot_per_tr);
     }
     
+    _draw_num_cell(_cross_table);
+    _draw_x_percent_cell(_cross_table);
+    _draw_y_percent_cell(_cross_table);
+    _draw_cell_percent_cell(_cross_table);
+    
+    return _cross_table;
     //_result.html("1");
-    
-    
-    _draw_num_cell();
+};
+
+var _draw_cross_table_note = function () {
+    var _note = $('<ol type="a">'
+        + '<li>調整後殘差是用Allison & Liker (1982)的z分數計算公式，超過1.96即達0.05顯著水準，表示此序列次數顯著較多。</li>'
+        + '<li class="q">相關係數是用Yule\'Q的計算公式，介於-1至1之間。大於0為正相關，小於0為複相關。絕對值1為完全相關、0.7~0.9為高度相關、0.4~0.6為中度相關、0.1~0.3為低度相關、0.1以下為無相關。</li>'
+        + '</ol>');
+
+    if ($("#input_table_display_details:checked").length === 0) {
+        _note.find(".q").hide();
+    }
+    return _note;
 };
 
 var _x_sum_list;
@@ -557,14 +696,12 @@ var _is_sum_too_small;
 var _is_zero_cell_existed;
 var _is_sum_zero_cell_existed;
 
-var _draw_num_cell = function () {
+var _draw_num_cell = function (_cross_table) {
     _x_sum_list = {};
     _y_sum_list = {};
     _total_sum = 0;
     _is_sum_too_small = true;
     _is_zero_cell_existed = false;
-    
-    var _cross_table = $("#preview_html .cross-table");
     
     for (var _x_var_name in _ct_json) {
         for (var _y_var_name in _ct_json[_x_var_name]) {
@@ -630,11 +767,6 @@ var _draw_num_cell = function () {
     //_cross_table.find('.x-sum.x-per-tr .total-sum').html(precision_string(100, 1) + '%');
     _cross_table.find('.x-sum.per-tr .total-sum').html(_get_percent_text(1));
     
-    var _note = $('<ol type="a">'
-        + '<li>調整後殘差是用Allison & Liker (1982)的z分數計算公式，超過1.96即達0.05顯著水準，表示此序列次數顯著較多。</li>'
-        + '<li>相關係數是用Yule\'Q的計算公式，介於-1至1之間。大於0為正相關，小於0為複相關。絕對值1為完全相關、0.7~0.9為高度相關、0.4~0.6為中度相關、0.1~0.3為低度相關、0.1以下為無相關。</li>'
-        + '</ol>')
-        .insertAfter(_cross_table);
     
     if ($("#input_table_display_details:checked").length === 0) {
         _cross_table.find("tbody tr.exp-tr").remove();
@@ -648,14 +780,11 @@ var _draw_num_cell = function () {
         });
     }
     
-    _draw_x_percent_cell();
-    _draw_y_percent_cell();
-    _draw_cell_percent_cell();
 };
 
 _x_per_list = {};
-var _draw_x_percent_cell = function () {
-    var _cross_table = $("#preview_html .cross-table");
+var _draw_x_percent_cell = function (_cross_table) {
+    //var _cross_table = $("#preview_html .cross-table");
     for (var _x_var_name in _x_sum_list) {
         var _num = _x_sum_list[_x_var_name];
         var _per = (_num) / _total_sum ;
@@ -668,8 +797,8 @@ var _draw_x_percent_cell = function () {
 };
 
 _y_per_list = {};
-var _draw_y_percent_cell = function () {
-    var _cross_table = $("#preview_html .cross-table");
+var _draw_y_percent_cell = function (_cross_table) {
+    //var _cross_table = $("#preview_html .cross-table");
     for (var _y_var_name in _y_sum_list) {
         var _num = _y_sum_list[_y_var_name];
         var _per = (_num) / _total_sum;
@@ -690,14 +819,14 @@ var _get_percent_text = function (_per) {
 };
 
 var _is_cell_exp_too_small;
-var _draw_cell_percent_cell = function () {
+var _draw_cell_percent_cell = function (_cross_table) {
     
     _is_cell_exp_too_small = false;
     
-    var _chi_squared = 0;
-    var _yates_chi_squared = 0;
+    //var _chi_squared = 0;
+    //var _yates_chi_squared = 0;
     
-    var _cross_table = $("#preview_html .cross-table");
+    //var _cross_table = $("#preview_html .cross-table");
     var _tbody = _cross_table.find("tbody");
     for (var _x_var_name in _ct_json) {
         for (var _y_var_name in _ct_json[_x_var_name]) {
@@ -793,8 +922,6 @@ var _draw_cell_percent_cell = function () {
             _tbody.find('tr.yule-q-tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').html(precision_string(_q, 3));
         }
     }
-    
-    _draw_contingency_table_analyze_result(_chi_squared, _yates_chi_squared);
 };
 
 var _calc_yule_q = function (_y_var_name, _x_var_name) {
@@ -830,31 +957,18 @@ var _calc_yule_q = function (_y_var_name, _x_var_name) {
     return _q;
 };
 
-var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_squared) {
+var _draw_contingency_table_analyze_result = function () {
     
     //console.log([_yates_chi_squared]);
     
     // ------------------------
     
-    var _panel = $(".file-process-framework");
-    var _result = _panel.find("#preview_html");
+    var _result = $("<div></div>");
     
     // -------------------
     
     // 找出有顯著轉移的序列
     var _sig_seq = _get_sig_seq();
-    
-    if ($("#input_display_full_transfer_diagram:checked").length === 0) {
-        if (_sig_seq.length > 0) {
-            $('<div style="margin-top: 1em;">事件轉移圖：(可拖曳事件調整位置)</div>').appendTo(_result);
-            _draw_diagram(_result, _sig_seq);
-        }
-    }
-    else {
-        var _full_seq = _get_full_seq();
-        $('<div style="margin-top: 1em;">事件轉移圖：(可拖曳事件調整位置)</div>').appendTo(_result);
-        _draw_diagram(_result, _full_seq);
-    }
     
     // ------------------
     
@@ -865,12 +979,8 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     var _button = $('<button type="button" class="ui icon button tiny teal speak skip"><i class="talk icon"></i></button>').prependTo(_title_container);
     _button.click(_speak_analyze_result);
     
-    var _chi_squared_container = $('<ul class="chi-squared-container"></ul>').appendTo(_result);
-    
-    if ($("#input_table_style_display:checked").length === 0) {
-        _chi_squared_container.addClass("analyze-result");
-    }
-    
+    var _chi_squared_container = $('<ul class="analyze-result chi-squared-container"></ul>').appendTo(_result);
+        
     for (var _i = 0; _i < _sig_seq.length; _i++) {
         var _seq = _sig_seq[_i];
         $('<li><span class="speak">事件「' + _seq.g + '」到事件「' + _seq.t + '」</span>，調整後殘差為' + _seq.z + '<span class="speak">。</span></li>')
@@ -885,7 +995,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     }
     
     // ----------------------
-    
+    return _result;
 };
 
 var _get_sig_seq = function () {
