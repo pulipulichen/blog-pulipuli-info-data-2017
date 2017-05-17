@@ -4,27 +4,39 @@
 minSupport <- 0.8
 
 if(require("arules")){
-    print("arules is loaded correctly")
+  print("arules is loaded correctly")
 } else {
-    print("trying to install arules")
-    install.packages("arules")
-    if(require(arules)){
-        print("arules installed and loaded")
-    } else {
-        stop("could not install arules")
-    }
+  print("trying to install arules")
+  install.packages("arules")
+  if(require(arules)){
+    print("arules installed and loaded")
+  } else {
+    stop("could not install arules")
+  }
 }
 
 if(require("arulesSequences")){
-    print("arulesSequences is loaded correctly")
+  print("arulesSequences is loaded correctly")
 } else {
-    print("trying to install arulesSequences")
-    install.packages("arulesSequences")
-    if(require(arules)){
-        print("arulesSequences installed and loaded")
-    } else {
-        stop("could not install arulesSequences")
-    }
+  print("trying to install arulesSequences")
+  install.packages("arulesSequences")
+  if(require(arules)){
+    print("arulesSequences installed and loaded")
+  } else {
+    stop("could not install arulesSequences")
+  }
+}
+
+if(require("stringr")){
+  print("stringr is loaded correctly")
+} else {
+  print("trying to install stringr")
+  install.packages("stringr")
+  if(require(arules)){
+    print("stringr installed and loaded")
+  } else {
+    stop("could not install stringr")
+  }
 }
 
 library(Matrix)
@@ -41,7 +53,7 @@ df[col.names[3]] <- sapply(df[col.names[3]], function(x) {
   gsub(";", " ", x)
 })
 df$Event_count <- sapply(df[col.names[3]], function(x) {
-	length(unlist(strsplit(as.character(trim(x)), "\\W+")))
+  length(unlist(strsplit(as.character(trim(x)), "\\W+")))
 })
 df2<-data.frame("score"=df[col.names[1]],"sequence_length"=df[col.names[2]],"support"=df["Event_count"],"sequence"=df[col.names[3]])
 
