@@ -1,0 +1,19 @@
+.div_graph-node {
+    display: inline-block;
+}
+.div_graph-hide-position {
+    position: absolute !important;
+    top: -100vh !important;
+    left: -100vw !important;
+}
+
+#canvas > svg {
+    border: 1px solid green !important;
+}
+.c {
+    transition: opacity 0.3s ease-in-out;
+}
+.moving {
+    /*visibility: hidden;*/
+    opacity: 0;
+}

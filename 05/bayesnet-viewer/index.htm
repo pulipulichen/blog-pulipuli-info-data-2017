@@ -2,25 +2,26 @@
 <!-- saved from url=(0050)https://www.graphdracula.net/0.0.3alpha/index.html -->
 <html><head>
         <title>viewer</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252"></head><body><header>
-    <script type="text/javascript" src="./index_files/raphael.2.2.1.min.js"></script>
-    <script type="text/javascript" src="./index_files/dracula_graffle.js"></script>
-    <script type="text/javascript" src="./index_files/dracula_graph.js"></script>
-    <script type="text/javascript" src="raphaeljs-infobox.js"></script>
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <link rel="stylesheet" href="index_files/dracula_graph.css" />
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+    </head>
+<body>
     
-    <script type="text/javascript" src="script.js"></script>
-</header>
+    
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="div_graph/raphael-min.js"></script>
+<script type="text/javascript" src="div_graph/dracula_graffle.js"></script>
+<script type="text/javascript" src="div_graph/dracula_graph.js"></script>
+<link rel="stylesheet" href="div_graph/dracula_graph.css" />
+<script type="text/javascript" src="div_graph/div_graph.js"></script>
 
-<div id="canvas">
-    <div id="raphael-canvas" class="c" style="display:inline-block;background-color: yellow;pointer-events: none;width: 50px;height: 50px;"  >
-        <span onclick="console.log(111)" style="pointer-events: all;">bbbb<br />b</span>
-        <span onclick="console.log(111)" style="pointer-events: all;">bbbb<br />b</span>
-    </div>
+<script type="text/javascript" src="script.js"></script>
+<link rel="stylesheet" href="style.css" />
+    
+<div id="canvas" style="width: 800px; height: 400px;border: 1px solid red;">
+<div node_id="A">A</div>
+<div node_id="B" parent_node=["A"]>B</div>
+<div node_id="C" parent_node=["A"]>C</div>
+<div node_id="D" parent_node='["B","C"]'>D</div>
 </div>
 
-        <!--
-<button id="redraw" onclick="redraw();">redraw</button>
-        -->
 </body></html>
