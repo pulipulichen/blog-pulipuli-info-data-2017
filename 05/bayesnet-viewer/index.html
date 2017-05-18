@@ -25,7 +25,9 @@ and open the template in the editor.
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 -->
 
-<script src="bayesnet-viewer.js"></script>
+<script type="text/javascript" src="bayes.js"></script>
+<!-- <script type="text/javascript" src="sick.js"></script> -->
+<script type="text/javascript" src="bayesnet-viewer.js"></script>
 
 <script src='https://code.responsivevoice.org/responsivevoice.js'></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -38,6 +40,8 @@ and open the template in the editor.
 <link rel="stylesheet" href="div_graph/dracula_graph.css"></link>
 <script type="text/javascript" src="div_graph/div_graph.js"></script>
 <!-- 繪圖需要的所有函式庫 -->
+
+
 
 <!-- ------------------------------------------------------------ -->
 
@@ -99,8 +103,10 @@ and open the template in the editor.
     <h1 class="ui horizontal divider header">
       Result
     </h1>
-    	
+  
+  <div id="preview_html_wrapper">
   <div id="preview_html" class="ui segment" ></div>
+  </div>
   
   
   </div>

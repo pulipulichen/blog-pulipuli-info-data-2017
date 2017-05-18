@@ -30,12 +30,14 @@ var div_graph = function (_selector) {
         
         //_N = _n;
         //console.log($(_n));
+        /*
         console.log(JSON.stringify({
             h: _h,
             w: _w,
             x: _x,
             y: _y
         }));
+        */
         
         var _stroke_width = 1;
         var _m = 10;
@@ -81,7 +83,7 @@ var div_graph = function (_selector) {
             var _node_center_left = _node_left + (_node_width / 2);
             //var _c_center_top = (_node_center_top - (_c.outerWidth() / 2));
             */
-           console.log([_node_top, _node_left]);
+           //console.log([_node_top, _node_left]);
             var _c_center_top = _node_top + (_stroke_width/2);
             //var _c_center_left = (_node_center_left + (_c.outerHeight() / 2));
             var _c_center_left = _node_left + (_stroke_width/2);
