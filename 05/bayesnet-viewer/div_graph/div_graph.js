@@ -27,12 +27,14 @@ var div_graph = function (_selector) {
         var _h = _c.outerHeight();
         var _x = _n.point[0];
         var _y = _n.point[1];
+        /*
         console.log(JSON.stringify({
             h: _h,
             w: _w,
             x: _x,
             y: _y
         }));
+        */
         var _stroke_width = 1;
         var _m = 0;
         var _rect = r.rect((_y - (_h / 2)), (_x - (_w / 2)), (_w + (_stroke_width) + (_m / 2)), (_h + (_stroke_width) + (_m / 2)))
