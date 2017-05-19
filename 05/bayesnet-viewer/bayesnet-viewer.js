@@ -27,7 +27,7 @@ var _draw_result_table = function (_xml_text) {
     
     // ----------------------------------------
     var _given = {};
-    var _cpt = {};
+    var _lines_cpt = {};
     var _outcome = {};
     var _bayes_nodes = {};
     _xml.find("DEFINITION").each(function (_i, _ele) {
@@ -51,7 +51,7 @@ var _draw_result_table = function (_xml_text) {
             }
             _cpt_table.push(_cpt_row);
         }
-        _cpt[_for] = _cpt_table;
+        _lines_cpt[_for] = _cpt_table;
     });
     //console.log(_cpt);
     
@@ -88,6 +88,81 @@ var _draw_result_table = function (_xml_text) {
         _display_bayesnet_prob_dis();
     };
     
+    
+    var _open_cpt_window = function () {
+        var _name = $(this).parents('[node_id]:first').attr("node_id");
+        
+        
+        var _c = _lines_cpt[_name];
+        //console.log(_c);
+        
+        var _win = window.open("", _name + "_cpt"
+            , "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes");
+        
+        var _title = _name + ' 條件機率表(CPT)';
+        
+        if ($(_win.document.body).find("div:first").length > 0) {
+            return;
+        }
+        
+        $(_win.document.head).append('<title>' + _title + '</title>');
+        $(_win.document.head).append('<link rel="stylesheet" href="style.css" />');
+        
+        var _container = $('<div class="cpt-container" style="display:inline-block;text-align:center;margin:auto;"></div>').appendTo($(_win.document.body));
+        $('<h1>' + _title +'</h1>').appendTo(_container);
+        var _table = $('<table align="center" border="1" cellspacing="0" cellpadding="5">'
+            + '<thead><tr class="attr-name"></tr><tr class="domain"></tr></thead>'
+            + '<tbody></tbody>'
+            + '</table>').appendTo(_container);
+        //_win.document.body.innerHTML = "HTML";
+        
+        // -------------------------------
+        
+        var _thead_attr = _table.find("thead > tr.attr-name");
+        if (_given[_name].length > 0) {
+            for (var _g = 0; _g < _given[_name].length; _g++) {
+                $('<th align="center" rowspan="2" valign="bottom">' + _given[_name][_g] + '</th>').appendTo(_thead_attr);
+            }
+            
+        }
+        
+        // --------------------------------
+        
+        $('<th align="center" colspan="' + _outcome[_name].length + '">' + _name + '</th>').appendTo(_thead_attr);
+        var _thead = _table.find("thead > tr.domain");
+        $('<th align="center">' + _outcome[_name].join('</th><th align="center">') + '</th>').appendTo(_thead);
+        
+        // -------------------------------
+        
+        var _tbody = _table.find("tbody");
+        for (var _i = 0; _i < _c.length; _i++) {
+            var _tr = $('<tr></tr>').appendTo(_tbody);
+            
+            // 在之前要先加入parents_outcome
+            for (var  _g = 0; _g < _given[_name].length; _g++) {
+                var _parent_name = _given[_name][_g];
+                var _parent_outcome = _cpt_rows[_name][_i]['parents_outcome'][_parent_name];
+                $('<th align="left">' + _parent_outcome + '</th>').appendTo(_tr);
+            }
+            
+            for (var _j = 0; _j < _c[_i].length; _j++) {
+                var _p = _c[_i][_j];
+                _p = Math.round(_p*10000)/10000;
+                $('<td align="left">' + _p + '</td>').appendTo(_tr);
+            }
+        }
+        
+        // -------------------------------
+        
+        _table.find('th').css('background-color', '#CCC');
+        
+        setTimeout(function () {
+            //console.log(_container.width());
+            _win.resizeTo(_container.outerWidth() + 50, _container.outerHeight() + 100);
+        },0);
+        
+    };
+    
     var _variables = [];
     _variables_ele.each(function (_i, _ele) {
         _ele = $(_ele);
@@ -101,14 +176,22 @@ var _draw_result_table = function (_xml_text) {
         // -------------------------
         var _o = [];
         _ele.find("OUTCOME").each(function (_j, _ele_given) {
-            _o.push($(_ele_given).text());
+            var _text = $(_ele_given).text();
+            _text = _text.split("'\\'").join('');
+            _text = _text.split("\\''").join('');
+            _o.push(_text);
         });
         _outcome[_name] = _o;
         
         // -------------------------
         
-        var _div = $('<div node_id="' + _name + '"><span class="attr-name">' + _name + '</span><span class="setted-evidence"></span></div>');
+        var _div = $('<div node_id="' + _name + '">'
+            + '<button type="button" class="ui icon teal mini button" title="點擊檢視條件機率表(CPT)"><i class="table icon"></i></button>'
+            + '<span class="attr-name">' + _name + '</span><span class="setted-evidence"></span>'
+            + '</div>');
         _div.appendTo(_container);
+        
+        _div.find("button:first").click(_open_cpt_window);
         
         if (_given[_name].length > 0) {
             _div.attr("parent_nodes", JSON.stringify(_given[_name]));
@@ -132,6 +215,8 @@ var _draw_result_table = function (_xml_text) {
     
     // --------------------------
     // 重整cpt表格
+    var _object_cpt = {};
+    var _cpt_rows = {};
     if (DEBUG.enable_bayes === true) {
         var _reorganize_cpt = function (_config, _pi) {
             //var _parents = _given[_name];
@@ -141,6 +226,12 @@ var _draw_result_table = function (_xml_text) {
             else if (_pi === _config.p.length) {
                 var _c = _config.c[_config.l];
                 _config.l++;
+                //console.log(_config.pg);
+                //console.log(_c);
+                _cpt_rows[_config.n].push({
+                    parents_outcome: JSON.parse(JSON.stringify(_config.pg)),
+                    prob: _c
+                });
                 return _c;
             }
             else {
@@ -150,6 +241,7 @@ var _draw_result_table = function (_xml_text) {
                 //console.log(_pi);
                 //_config.pi++;
                 for (var _p = 0; _p < _parent_outcome.length; _p++) {
+                    _config.pg[_parent_name] = _parent_outcome[_p];
                     _c.push(_reorganize_cpt(_config, (_pi+1) ));
                     //var _parent_outcome_list = _outcome[_parent_name];
                 }
@@ -160,14 +252,17 @@ var _draw_result_table = function (_xml_text) {
             }
         };
         
-        for (var _name in _cpt) {
+        for (var _name in _lines_cpt) {
             var _config = {
-                c: _cpt[_name],
+                n: _name,
+                c: _lines_cpt[_name],
                 l: 0,
-                p: _given[_name]
+                p: _given[_name],
+                pg: {}
             };
+            _cpt_rows[_name] = [];
             //console.log(_config);
-            _cpt[_name] = _reorganize_cpt(_config, 0);
+            _object_cpt[_name] = _reorganize_cpt(_config, 0);
         }
        /*
         var _reorganize_cpt = function (_c, _parents_list, _p_index) {
@@ -187,8 +282,8 @@ var _draw_result_table = function (_xml_text) {
         }
         */
         //console.log(_cpt);
+        //console.log(_cpt_rows);
     }
-    
     
     // -----------------------
     // 設定貝氏網路\
@@ -196,7 +291,7 @@ var _draw_result_table = function (_xml_text) {
         for (var _v = 0; _v < _variables.length; _v++) {
             var _name = _variables[_v];
             var _bn  = new Bayes.Node(_name,_outcome[_name]);
-            _bn.cpt = _cpt[_name];
+            _bn.cpt = _object_cpt[_name];
             _bayes_nodes[_name] = _bn;
             //Bayes.nodes.push(_bn);
         }
@@ -236,6 +331,7 @@ var _draw_result_table = function (_xml_text) {
     div_graph("#preview_html");
     _display_bayesnet_prob_dis();
     $("#preview_html_wrapper").addClass("wrapper");
+    //$("body").dragScroller();
     //console.log(Bayes);
 };
 

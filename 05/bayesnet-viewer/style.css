@@ -269,6 +269,15 @@ table td {
     pointer-events: none;
 }
 
+#preview_html .div_graph-node > button {
+    float:right;
+    display: inline-block;
+    padding: 5px 3px 3px 3px;
+    margin-right: 0;
+    pointer-events: all;
+    cursor: pointer;
+}
+
 #preview_html .div_graph-node.set .attr-name,
 #preview_html .div_graph-node.set .setted-evidence {
     color: #007F08;
@@ -290,4 +299,7 @@ table td {
     overflow: auto;
     margin: auto;
     border: 1px solid gray;
+}
+body {
+    cursor: grab; cursor : -o-grab; cursor : -moz-grab; cursor : -webkit-grab;
 }

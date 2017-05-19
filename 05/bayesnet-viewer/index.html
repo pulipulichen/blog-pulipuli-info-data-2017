@@ -17,7 +17,7 @@ and open the template in the editor.
 <link rel="stylesheet" href="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.css" />
 <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" />
     </head>
-    <body>
+    <body class="dragscroll">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
 <script src="http://pulipulichen.github.io/blogger/posts/2016/12/puli-util.clipboard.js"></script>
@@ -37,10 +37,10 @@ and open the template in the editor.
 <script type="text/javascript" src="div_graph/raphael-min.js"></script>
 <script type="text/javascript" src="div_graph/dracula_graffle.js"></script>
 <script type="text/javascript" src="div_graph/dracula_graph.js"></script>
-<link rel="stylesheet" href="div_graph/dracula_graph.css"></link>
+<link rel="stylesheet" href="div_graph/dracula_graph.css" />
 <script type="text/javascript" src="div_graph/div_graph.js"></script>
+<script type="text/javascript" src="div_graph/dragscroll.js"></script>
 <!-- 繪圖需要的所有函式庫 -->
-
 
 
 <!-- ------------------------------------------------------------ -->
@@ -108,7 +108,7 @@ and open the template in the editor.
       <li>勾選變項中的證據來表示該變項呈現已知，觀察其他變項機率的變化吧。</li>
       <li>變項可以拖曳移動。</li>
   </ul>
-  <div id="preview_html_wrapper">
+  <div id="preview_html_wrapper" class="dragscroll">
   <div id="preview_html" class="ui segment" ></div>
   </div>
   

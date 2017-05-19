@@ -110,13 +110,14 @@ var div_graph = function (_selector) {
             
         //console.log(["c", (_offset.top + (_stroke_width / 2)), (_offset.left + (_stroke_width / 2))]);
         var start = function () {
+            DRAG_SCROLL_ENABLE = false;
             _c.addClass("moving");
-            
             $("body").one("mouseup", up);
         };
         var up = function (e) {
             _set_offset();
             _c.removeClass("moving");
+            DRAG_SCROLL_ENABLE = true;
         };
         var set = r.set().push(_rect);
         set.mousedown(start);

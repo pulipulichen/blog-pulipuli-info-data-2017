@@ -268,7 +268,7 @@ Graph.Layout.Spring.prototype = {
             d2 = d * d;
         }
         var attractiveForce = (d2 - this.k * this.k) / this.k;
-        if (edge.attraction == undefined) edge.attraction = 1;
+        if (edge.attraction === undefined) edge.attraction = 1;
         attractiveForce *= Math.log(edge.attraction) * 0.5 + 1;
         node2.layoutForceX -= attractiveForce * dx / d;
         node2.layoutForceY -= attractiveForce * dy / d;
