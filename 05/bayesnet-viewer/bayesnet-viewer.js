@@ -99,7 +99,7 @@ var _draw_result_table = function (_xml_text) {
         var _win = window.open("", _name + "_cpt"
             , "toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes");
         
-        var _title = _name + ' 條件機率表(CPT)';
+        var _title = '「' + _name + '」條件機率表(CPT)';
         
         if ($(_win.document.body).find("div:first").length > 0) {
             return;
@@ -109,7 +109,7 @@ var _draw_result_table = function (_xml_text) {
         $(_win.document.head).append('<link rel="stylesheet" href="style.css" />');
         
         var _container = $('<div class="cpt-container" style="display:inline-block;text-align:center;margin:auto;"></div>').appendTo($(_win.document.body));
-        $('<h1>' + _title +'</h1>').appendTo(_container);
+        $('<h1 style="white-space:nowrap;">' + _title +'</h1>').appendTo(_container);
         var _table = $('<table align="center" border="1" cellspacing="0" cellpadding="5">'
             + '<thead><tr class="attr-name"></tr><tr class="domain"></tr></thead>'
             + '<tbody></tbody>'
