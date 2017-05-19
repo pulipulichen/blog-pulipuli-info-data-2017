@@ -61,7 +61,9 @@ var _draw_result_table = function (_xml_text) {
         var _d_li = $(this);
         _d_li.addClass("current");
         var _ul = _d_li.parent();
-        var _name = _d_li.parents("[node_id]:first").attr("node_id");
+        var _div = _d_li.parents("[node_id]:first");
+        var _name = _div.attr("node_id");
+        var _setted_evi = _div.find(".setted-evidence");
         var _value_index = parseInt(_d_li.attr("value_index"), 10);
         // 先把其他人的checked都移除掉
         _ul.find('li:not(.current) :checked').prop('checked', false);
@@ -75,9 +77,13 @@ var _draw_result_table = function (_xml_text) {
             _d_li.addClass("set");
             _bayes_nodes[_name].value = _value_index;
             _bayes_nodes[_name].isObserved = true;
+            _setted_evi.text("=" + _d_li.attr("outcome"));
+            _div.addClass("set");
         }
         else {
             _bayes_nodes[_name].isObserved = false;
+            _setted_evi.empty();
+            _div.removeClass("set");
         }
         _display_bayesnet_prob_dis();
     };
@@ -101,7 +107,7 @@ var _draw_result_table = function (_xml_text) {
         
         // -------------------------
         
-        var _div = $('<div node_id="' + _name + '"><span class="attr-name">' + _name + '</span></div>');
+        var _div = $('<div node_id="' + _name + '"><span class="attr-name">' + _name + '</span><span class="setted-evidence"></span></div>');
         _div.appendTo(_container);
         
         if (_given[_name].length > 0) {
@@ -115,7 +121,7 @@ var _draw_result_table = function (_xml_text) {
         var _domain_ul = $('<ul></ul>').appendTo(_div);
         for (var _o = 0; _o < _outcome[_name].length; _o++) {
             var _d = _outcome[_name][_o];
-            var _d_li = $('<li><label><input type="checkbox" /> ' + _d + ': <span class="prob">100.00</span>%</label></li>').appendTo(_domain_ul);
+            var _d_li = $('<li outcome="' + _d + '"><label><input type="checkbox" /> ' + _d + ': <span class="prob">100.00</span>%</label></li>').appendTo(_domain_ul);
             _d_li.attr("value_index", _o).click(_outcome_click_handler);
             //_d_li
         }

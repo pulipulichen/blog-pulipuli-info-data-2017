@@ -269,10 +269,17 @@ table td {
     pointer-events: none;
 }
 
-#preview_html .attr-name {
+#preview_html .div_graph-node.set .attr-name,
+#preview_html .div_graph-node.set .setted-evidence {
+    color: #007F08;
+}
+
+#preview_html .attr-name,
+#preview_html .setted-evidence {
     font-size: 1.2rem;
     font-weight: bold;
 }
+
 #preview_html li.set {
     color: green;
 }
