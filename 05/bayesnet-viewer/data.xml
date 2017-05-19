@@ -18,62 +18,33 @@
 
 <BIF VERSION="0.3">
 <NETWORK>
-<NAME>New Network</NAME>
+<NAME>sick-weka.filters.unsupervised.attribute.ReplaceMissingValues</NAME>
 <VARIABLE TYPE="nature">
-<NAME>Cloudy</NAME>
-<OUTCOME>yes</OUTCOME>
-<OUTCOME>no</OUTCOME>
-<PROPERTY>position = (0,0)</PROPERTY>
+	<NAME>吸菸</NAME>
+	<OUTCOME>是</OUTCOME>
+	<OUTCOME>否</OUTCOME>
+	<PROPERTY>position = (10,10)</PROPERTY>
 </VARIABLE>
+
 <VARIABLE TYPE="nature">
-<NAME>Sprinkler</NAME>
-<OUTCOME>yes</OUTCOME>
-<OUTCOME>no</OUTCOME>
-<PROPERTY>position = (0,96)</PROPERTY>
+	<NAME>生病</NAME>
+	<OUTCOME>是</OUTCOME>
+	<OUTCOME>否</OUTCOME>
+	<PROPERTY>position = (310,10)</PROPERTY>
 </VARIABLE>
-<VARIABLE TYPE="nature">
-<NAME>Rain</NAME>
-<OUTCOME>yes</OUTCOME>
-<OUTCOME>no</OUTCOME>
-<PROPERTY>position = (310,96)</PROPERTY>
-</VARIABLE>
-<VARIABLE TYPE="nature">
-<NAME>Wet grass</NAME>
-<OUTCOME>yes</OUTCOME>
-<OUTCOME>no</OUTCOME>
-<PROPERTY>position = (0,192)</PROPERTY>
-</VARIABLE>
+
 <DEFINITION>
-<FOR>Cloudy</FOR>
+<FOR>吸菸</FOR>
 <TABLE>
-0.6 0.4
+0.4 0.6 
 </TABLE>
 </DEFINITION>
 <DEFINITION>
-<FOR>Sprinkler</FOR>
-<GIVEN>Cloudy</GIVEN>
+<FOR>生病</FOR>
+	<GIVEN>吸菸</GIVEN>
 <TABLE>
-0.1 0.9 
-0.5 0.5 
-</TABLE>
-</DEFINITION>
-<DEFINITION>
-<FOR>Rain</FOR>
-<GIVEN>Cloudy</GIVEN>
-<TABLE>
-0.8 0.2
-0.2 0.8 
-</TABLE>
-</DEFINITION>
-<DEFINITION>
-<FOR>Wet grass</FOR>
-<GIVEN>Sprinkler</GIVEN>
-<GIVEN>Rain</GIVEN>
-<TABLE>
-0.9 0.1 
-0.6 0.4 
-0.2 0.7 
-0.6 0.4 
+0.75 0.25 
+0.16666666666666666 0.8333333333333334 
 </TABLE>
 </DEFINITION>
 </NETWORK>

@@ -4,7 +4,7 @@ var DEBUG = {
 
 var _draw_result_table = function (_xml_text) {
     var _container = $("#preview_html");
-    var _node_width_unit = 150;
+    var _node_width_unit = 250;
     
     var _xml = $($.parseXML(_xml_text));
     //console.log(_xml.find('VARIABLE[TYPE="nature"]').length);

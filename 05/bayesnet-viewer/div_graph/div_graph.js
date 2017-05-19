@@ -165,7 +165,35 @@ var div_graph = function (_selector) {
     //container.show();
     var _layouter = new Graph.Layout.Spring(_g);
     _layouter.layout();
+    /*
+    console.log(_g);
+    //return;
+    var _layoutX = [-0.01, -1, 1, 0.01];   //3.2/3 = 0.8
+    var _layoutY = [-1.5, -0.5, -0.5, 1.5];   //3.2/3 = 0.8
     
+    console.log("處理過後");
+    for (var _i = 0; _i < _g.nodelist.length; _i++) {
+        var _n = _g.nodelist[_i];
+        //_n.layoutForceX = 0;
+        //_n.layoutForceY = 0;
+        //console.log([_n.layoutPosX, _n.layoutPosY]);
+        
+        // -1.5 -0.5 -0.5 -1.5
+        // 0-2 / 2; 1-2 / 2 3 -4
+        //_n.layoutPosX = 0;
+        _n.layoutPosX = _layoutX[_i]*4;   
+        _n.layoutPosY = _layoutY[_i]*4;   
+        //_n.layoutPosX = _n.layoutPosX *-1;
+        //_n.layoutPosY = _n.layoutPosY *-1;
+    }
+    //_g.layoutMaxX = 1.5;
+    //_g.layoutMaxY = 1.5;
+    //_g.layoutMinX = -1.5;
+    //_g.layoutMinY = -1.5;
+    
+    console.log(_g);
+    //return;
+    */
     
     /* draw the graph using the RaphaelJS draw implementation */
     
@@ -180,7 +208,7 @@ var div_graph = function (_selector) {
     _renderer.width = _container_width;
     _renderer.height =  _container_height;
     
-    
+    /*
     setTimeout(function () {
         //_container.removeClass("div_graph-hide-position");
         //_layouter.layout();
@@ -188,4 +216,5 @@ var div_graph = function (_selector) {
         //_container.hide();
         //_container.fadeIn();
     }, 100);
+    */
 };
