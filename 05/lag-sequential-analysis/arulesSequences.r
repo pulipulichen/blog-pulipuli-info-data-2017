@@ -78,7 +78,7 @@ s3$score <- sapply(s3$score, function(x) {
 s3$support <- sapply(s3$support, function(x) {
   round(x, 3)
 })
-write.table(s3, file=choose.files(default = "output.csv", caption = "Please specify the output CSV file path"), row.names=FALSE, sep=",")
+write.table(s3, file=choose.files(default = paste0("output-",format(Sys.time(), "%m%d-%H%M"),".csv"), caption = "Please specify the output CSV file path"), row.names=FALSE, sep=",")
 
 # -------------
 file.remove(tmp.txt)
