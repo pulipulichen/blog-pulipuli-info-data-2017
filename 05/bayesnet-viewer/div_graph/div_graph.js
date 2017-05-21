@@ -49,6 +49,10 @@ var div_graph = function (_selector) {
         else if (_rect_y + _rect_height > (_container_height - _m)) {
             // 過長的時候，修正位置
             console.log(["修正y", _rect_y, (_container_height - _m - _rect_height)]);
+            //_rect_y = _rect_y * 0.5;
+            //while (_rect_y + _rect_height > (_container_height - _m)) {
+            //    _rect_y = _rect_y * 0.75;
+            //}
             _rect_y = _container_height - _m - _rect_height;
         }
         
@@ -173,6 +177,7 @@ var div_graph = function (_selector) {
         var _n = _g.nodelist[_i];
         console.log([_n.layoutPosX, _n.layoutPosY]);
     }
+    console.log(_g);
     /*
     console.log(_g);
     //return;

@@ -5,6 +5,21 @@ var DEBUG = {
 var _draw_result_table = function (_xml_text) {
     var _container = $("#preview_html");
     
+    
+    if ($("#preview_html_wrapper").hasClass("wrapper")) {
+        _container.css({
+            "width": "auto",
+            "height": "auto"
+        });
+        $("#preview_html_wrapper").removeClass("wrapper");
+        setTimeout(function () {
+            _draw_result_table(_xml_text);
+        }, 0);
+        return;
+    }
+    
+    
+    
     var _xml = $($.parseXML(_xml_text));
     //console.log(_xml.find('VARIABLE[TYPE="nature"]').length);
     
@@ -171,7 +186,10 @@ var _draw_result_table = function (_xml_text) {
     
     div_graph("#preview_html");
     _display_bayesnet_prob_dis();
+    
+    //setTimeout(function () {
     $("#preview_html_wrapper").addClass("wrapper");
+    //}, 0);
     //$("body").dragScroller();
     //console.log(Bayes);
 };
@@ -313,15 +331,18 @@ var _resize_container = function (_var_length) {
     var _square = Math.ceil(Math.sqrt(_var_length));
     var _container = $("#preview_html");
     var _node_width_unit = 200;
+    if (_square > 2) {
+        //_node_width_unit = 300;
+    }
     _container.css({
         //"border": "1px solid red",
-        //"width": (_node_width_unit * _square) + "px",
+        "width": (_node_width_unit * _square) + "px",
         "height": (_node_width_unit * _square) + "px",
         "border-width": 0
     });
     
     if (_container.outerWidth() < (_node_width_unit * _square)) {
-        _container.css("width", (_node_width_unit * _square) + "px");
+        //_container.css("width", (_node_width_unit * _square) + "px");
     }
 };
 
@@ -361,7 +382,7 @@ var _draw_node_div = function (_variables, _open_cpt_window, _given, _outcome, _
 };
 
 var _draw_node_list = function (_variables, _open_cpt_window, _given, _outcome, _outcome_click_handler) {
-    var _container = $(".bayesnet-table > table > tbody");
+    var _container = $(".bayesnet-table > table > tbody").empty();
     for (var _v = 0; _v < _variables.length; _v++) {
         var _name = _variables[_v];
         var _tr = $('<tr node_id="' + _name + '"></tr>').appendTo(_container);
