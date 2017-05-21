@@ -249,17 +249,22 @@ table td {
     padding: 0;
 }
 
+.bayesnet-table ul,
 .div_graph-node ul {
     padding: 0;
     margin: 0;
     margin-top: 0.5rem;
 }
+.bayesnet-table ul li,
 .div_graph-node ul li {
     list-style: none;
     line-height: 1rem;
     cursor: pointer;
     pointer-events: all;
 }
+
+.bayesnet-table ul li label,
+.bayesnet-table ul li input,
 .div_graph-node ul li label,
 .div_graph-node ul li input {
     cursor: pointer;
@@ -278,17 +283,30 @@ table td {
     cursor: pointer;
 }
 
+.bayesnet-table > button {
+    display: inline-block;
+    padding: 5px 3px 3px 3px;
+    margin-right: 0;
+    pointer-events: all;
+    cursor: pointer;
+}
+
+.bayesnet-table .set .attr-name,
+.bayesnet-table .set .setted-evidence,
 #preview_html .div_graph-node.set .attr-name,
 #preview_html .div_graph-node.set .setted-evidence {
     color: #007F08;
 }
 
+.bayesnet-table .attr-name,
+.bayesnet-table .setted-evidence,
 #preview_html .attr-name,
 #preview_html .setted-evidence {
     font-size: 1.2rem;
     font-weight: bold;
 }
 
+.bayesnet-table li.set,
 #preview_html li.set {
     color: green;
 }
@@ -302,4 +320,14 @@ table td {
 }
 body {
     cursor: grab; cursor : -o-grab; cursor : -moz-grab; cursor : -webkit-grab;
+}
+
+.bayesnet-table table {
+    margin-top: 1em;
+    border-spacing: 0 !important;
+}
+
+.bayesnet-table table th,
+.bayesnet-table table td {
+    padding: 5px;
 }
