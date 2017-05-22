@@ -456,8 +456,11 @@ var _outcome_set_handler = function (_d_li, _bayes_nodes) {
     _container.find('[node_id="' + _name + '"] ul li input:checked').prop("checked", false);
     _table.find('[node_id="' + _name + '"] ul li input:checked').prop("checked", false);
     
-    _container.find('.set').removeClass("set");
-    _table.find('.set').removeClass("set");
+    _container.find('[node_id="' + _name + '"].set').removeClass("set");
+    _table.find('[node_id="' + _name + '"].set').removeClass("set");
+    
+    _container.find('[node_id="' + _name + '"] .set').removeClass("set");
+    _table.find('[node_id="' + _name + '"] .set').removeClass("set");
     
     // -----------------------------
     // 根據情況決定要不要勾選

@@ -5,3 +5,5 @@ https://pulipulichen.github.io/blog-pulipuli-info-data-2017/
 
 https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/facebook-share/facebook-logo-white.svg
 https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/pearson-r
+
+https://pulipulichen.github.io/blog-pulipuli-info-data-2017/05/bayesnet-viewer/

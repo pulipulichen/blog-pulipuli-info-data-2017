@@ -21,15 +21,15 @@
 <NAME>sick-weka.filters.unsupervised.attribute.ReplaceMissingValues</NAME>
 <VARIABLE TYPE="nature">
 	<NAME>吸菸</NAME>
-	<OUTCOME>是</OUTCOME>
-	<OUTCOME>否</OUTCOME>
+	<OUTCOME>有吸</OUTCOME>
+	<OUTCOME>沒吸</OUTCOME>
 	<PROPERTY>position = (10,10)</PROPERTY>
 </VARIABLE>
 
 <VARIABLE TYPE="nature">
 	<NAME>生病</NAME>
-	<OUTCOME>是</OUTCOME>
-	<OUTCOME>否</OUTCOME>
+	<OUTCOME>有病</OUTCOME>
+	<OUTCOME>沒病</OUTCOME>
 	<PROPERTY>position = (310,10)</PROPERTY>
 </VARIABLE>
 
