@@ -220,7 +220,7 @@ table td {
 #preview_html {
     /*max-height: 300px !important;*/
     max-height: inherit !important;
-    box-shadow: none;
+    box-shadow: none !important;
 }
 
 .skip {
