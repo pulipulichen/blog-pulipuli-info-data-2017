@@ -13,7 +13,8 @@ var _combine_input = function () {
     _data = _variables;
     
     // 只勾選前面兩個
-    _set_variables_limit(2);
+    //_set_variables_limit(2);
+    _check_variables_list([0,1]);
     
     //console.log(_variables);
     //_load_csv_to_ct_json(_csv);
@@ -23,28 +24,101 @@ var _combine_input = function () {
 var _draw_result_table = function () {
     var _variables = _get_checked_variables(_data);
     var _preview_container = $("#preview_html");
+    _preview_container.empty();
     
     // 箱型圖
     _preview_container.append(_draw_box_plot(_variables));
     
     // 樣本敘述統計量
-    _preview_container.append(_draw_descriptive_table(_variables));
+    var _descriptive_table = _draw_descriptive_table(_variables);
+    _preview_container.append(_descriptive_table);
     
-    _preview_container.append('<br />');
+    if (get_json_keys(_variables).length === 2) {
+
+        _preview_container.append('<br />');
+
+        // 變異數同質性檢定
+        var _var_test = $('input[name="var_test"]:checked').val();
+        var _var_test_table;
+        if (_var_test === 'f-test') {
+            _var_test_table = _draw_f_test_table(_variables);
+        }
+        else if (_var_test === 'levene-test') {
+            _var_test_table = _draw_levene_test_table(_variables);
+        }
+        _preview_container.append(_var_test_table);
+        var _is_equal = _var_test_table.find(".var_test:first").attr("is_equal");
+        _is_equal = (_is_equal === "true");
+
+        // 獨立樣本t檢定
+        var _t_test_table = _draw_t_test_table(_variables, _is_equal);
+        _preview_container.append(_t_test_table);
+
+        var _is_sig = _t_test_table.find('.t-test:first').attr("is_sig");
+        _is_sig = (_is_sig === "true");
+        
+        _preview_container.append(_create_speak_button());
+
+        // 結論：
+        _preview_container.append(_build_conclusion(_variables
+        , _descriptive_table
+        , _var_test_table
+        , _t_test_table));
+    }   // if (get_json_keys(_variables).length === 2) {
     
-    // 變異數同質性檢定
-    var _var_test = $('input[name="var_test"]:checked').val();
-    if (_var_test === 'f-test') {
-        _preview_container.append(_draw_f_test_table(_variables));
+    if (_disable_table_style() === true) {
+        _preview_container.find('.analyze-result').removeClass('analyze-result');
     }
-    else if (_var_test === 'levene-test') {
-        _preview_container.append(_draw_levene_test_table(_variables));
-    }
-    
-    // 獨立樣本t檢定
 };
 
 // ---------------------------------------
+
+var _create_speak_button = function () {
+    var _button = $('<div><button type="button" class="ui icon button tiny teal speak skip"><i class="talk icon"></i></button></div>');
+    _button.click(function () {
+        var _preview_container = $("#preview_html");
+        var _text = "";
+        _preview_container.find('.speak').each(function(_i, _span) {
+            if ($(_span).attr("alt") === undefined) {
+                _text += $(_span).text();
+            }
+            else {
+                _text += $(_span).attr("alt");
+            }
+        });
+        //_text = "獨立樣本t檢定分析結果顯示。" + _text + "分析結束。";
+        _text = _text.replace(/「|」/g, '');
+        //console.log(_text);
+        
+        //return;
+        var _speak_list = _text.split("。");
+        if (navigator.userAgent.match(/Android/)) {
+            _speak_list = [_text];
+        }
+        
+        var _loop = function (_i) {
+            if (_i < _speak_list.length) {
+                responsiveVoice.speak(_speak_list[_i], 'Chinese Female', {
+                    rate: 1.2,
+                    onend: function () {
+                        //clearTimeout(_timer);
+                        _i++;
+                        _loop(_i);
+                        console.log(_i);
+                    }
+                });
+                
+//                console.log(_speak_list[_i].length * 1000 * 0.3 );
+//                _timer = setTimeout(function () {
+//                    console.log(_i);
+//                    _next(_i);
+//                }, _speak_list[_i].length * 1000 * 0.3 );
+            }
+        };
+        _loop(0);
+    });
+    return _button;
+};
 
 _data = {};
 
@@ -54,7 +128,9 @@ var _get_fix_precision = function (_number) {
     return precision_string(_number, _precision);
 };
 
-
+var _disable_table_style = function () {
+    return ($("#input_table_style_display:checked").length === 1);
+};
 
 
 // -----------------------------------------------------

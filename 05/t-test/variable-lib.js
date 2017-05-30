@@ -129,6 +129,13 @@ var _draw_variables_list = function (_attr_list) {
         _div.find('input').change(_draw_result_table);
         _div.bind('dragstop', _draw_result_table);
     }
+    
+    $( ".sortable" ).sortable({
+        beforeStop: function () {
+            //_draw_result_table();
+        }
+    });
+    $( ".sortable" ).disableSelection();
 };
 
 var _set_variables_limit = function (_limit) {

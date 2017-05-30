@@ -105,7 +105,7 @@ function udistr ($p) {
 
 function tdistr ($n, $p) {
     if ($n <= 0 || Math.abs($n) - Math.abs(integer($n)) !== 0) {
-            throw("Invalid n: $n\n");
+            throw("Invalid n: \n" + $n);
     }
     if ($p <= 0 || $p >= 1) {
             throw("Invalid p: $p\n");

@@ -100,17 +100,17 @@ var _draw_descriptive_table = function (_variable) {
         
         $('<td>' + _name + '</td>').appendTo(_tr);
         
-        $('<td>' + _values.length + '</td>').appendTo(_tr);
+        $('<td align="right">' + _values.length + '</td>').appendTo(_tr);
         
-        $('<td>' + precision_string(_calc_avg(_values), 4) + '</td>').appendTo(_tr);
+        $('<td align="right">' + precision_string(_calc_avg(_values), 4) + '</td>').appendTo(_tr);
         
-        $('<td>' + _calc_median(_values) + '</td>').appendTo(_tr);
+        $('<td align="right">' + _calc_median(_values) + '</td>').appendTo(_tr);
         
-        $('<td>' + _calc_minimum(_values) + '</td>').appendTo(_tr);
+        $('<td align="right">' + _calc_minimum(_values) + '</td>').appendTo(_tr);
         
-        $('<td>' + _calc_maximum(_values) + '</td>').appendTo(_tr);
+        $('<td align="right">' + _calc_maximum(_values) + '</td>').appendTo(_tr);
         
-        $('<td>' + precision_string(_calc_stdev(_values), 4) + '</td>').appendTo(_tr);
+        $('<td align="right">' + precision_string(_calc_stdev(_values), 4) + '</td>').appendTo(_tr);
     }
     
     return _table;
@@ -154,14 +154,14 @@ var _draw_f_test_table = function (_variable) {
     
     //console.log();
     
-    var _pass = false;
+    var is_equal = true;
     if (_p_value < 0.05) {
-        _pass = true;
+        is_equal = false;
     }
     
     var _table = $('<div class="analyze-result">'
         + '<div class="caption" style="text-align:center;display:block">雙樣本變異數(標準差)差異檢定：</div>'
-        + '<table border="1" cellpadding="0" cellspacing="0" class="var_test" var_test="' + _pass + '">'
+        + '<table border="1" cellpadding="0" cellspacing="0" class="var_test" is_equal="' + is_equal + '">'
             + '<thead>'
                 + '<tr><th colspan="6"><strong>虛無假設</strong>：兩組資料的變異數相等<br />H<sub>0</sub>: σ<sub>1</sub><sup>2</sup>/σ<sub>2</sub><sup>2</sup> = 1</th></tr>'
                 + '<tr><th rowspan="2">' + 'F檢定統計量 <br /> F-statistics' + '</th>'
@@ -170,19 +170,19 @@ var _draw_f_test_table = function (_variable) {
                 + '<th rowspan="2">' + 'p-值<sup>I</sup> <br /> p-value' + '</th>'
                 + '<th colspan="2">' + '母體變異數比值的95%信賴區間 <br /> 95% C.I. for ratio' + '</th></tr>'
                 + '<tr>'
-                + '<th>' + '下界 <br /> lower' + '</th>'
-                + '<th>' + '上界 <br /> upper' + '</th>'
+                + '<th>' + '下界 <br /> Lower' + '</th>'
+                + '<th>' + '上界 <br /> Upper' + '</th>'
             + '</tr></thead>'
             + '<tbody><tr>'
-                + '<td>' + precision_string(_f_stat, 4) + '</td>'
-                + '<td>' + _df_numerator + '</td>'
-                + '<td>' + _df_denominator + '</td>'
-                + '<td>' + precision_string(_p_value, 4) + '</td>'
-                + '<td>' + precision_string(_lower, 4) + '</td>'
-                + '<td>' + precision_string(_upper, 4) + '</td>'
+                + '<td align="right" class="f_stat">' + precision_string(_f_stat, 4) + '</td>'
+                + '<td align="right">' + _df_numerator + '</td>'
+                + '<td align="right">' + _df_denominator + '</td>'
+                + '<td align="right" class="p_value">' + precision_string(_p_value, 4) + '</td>'
+                + '<td align="right">' + precision_string(_lower, 4) + '</td>'
+                + '<td align="right">' + precision_string(_upper, 4) + '</td>'
             + '</tr></tbody>'
         + '</table>'
-        + '<div>I: 顯著性代碼： \'***\': < 0.001, \'**\': < 0.01, \'*\': < 0.05, \'#\': < 0.1, </div>'
+        + '<div>I: 顯著性代碼： \'***\': < 0.001, \'**\': < 0.01, \'*\': < 0.05, \'#\': < 0.1 </div>'
         + '</div>');
 
     return  _table;
@@ -212,14 +212,14 @@ var _draw_levene_test_table = function (_variable) {
     //_p_value = jStat.centralF.pdf(_f_stat, k-1, N-k )*2;
     _p_value = LEVENE_TEST.calc_p_value(k, N, _f_stat);
     
-    var _pass = false;
+    var is_equal = true;
     if (_p_value < 0.05) {
-        _pass = true;
+        is_equal = false;
     }
     
         var _table = $('<div class="analyze-result">'
         + '<div class="caption" style="text-align:center;display:block">(獨立)多樣本變異數(標準差)差異檢定：</div>'
-        + '<table border="1" cellpadding="0" cellspacing="0" class="var_test" var_test="' + _pass + '">'
+        + '<table border="1" cellpadding="0" cellspacing="0" class="var_test" is_equal="' + is_equal + '">'
             + '<thead>'
                 + '<tr><th colspan="5"><strong>虛無假設</strong>：兩組資料的變異數相等<br />H<sub>0</sub>: σ<sub>1</sub><sup>2</sup> = σ<sub>2</sub><sup>2</sup></th></tr>'
                 + '<tr><th>' + 'F檢定統計量 <br /> F-statistics' + '</th>'
@@ -229,15 +229,289 @@ var _draw_levene_test_table = function (_variable) {
                 + '<th>' + 'p-值<sup>I</sup> <br /> p-value' + '</th>'
             + '</tr></thead>'
             + '<tbody><tr>'
-                + '<td>' + precision_string(_f_stat, 4) + '</td>'
-                + '<td>' + (k-1) + '</td>'
-                + '<td>' + (N-k) + '</td>'
-                + '<td>' + precision_string(_crit, 4) + '</td>'
-                + '<td>' + precision_string(_p_value, 4) + '</td>'
+                + '<td align="right" class="f_stat">' + precision_string(_f_stat, 4) + '</td>'
+                + '<td align="right">' + (k-1) + '</td>'
+                + '<td align="right">' + (N-k) + '</td>'
+                + '<td align="right">' + precision_string(_crit, 4) + '</td>'
+                + '<td class="p_value">' + precision_string(_p_value, 4) + '</td>'
             + '</tr></tbody>'
         + '</table>'
-        + '<div>I: 顯著性代碼： \'***\': < 0.001, \'**\': < 0.01, \'*\': < 0.05, \'#\': < 0.1, </div>'
+        + '<div>I: 顯著性代碼： \'***\': < 0.001, \'**\': < 0.01, \'*\': < 0.05, \'#\': < 0.1 </div>'
         + '</div>');
 
     return  _table;
+};
+
+// ----------------------------------------
+
+var _draw_t_test_table = function (_variable, _is_equal) {
+    
+    var _data = [];
+    for (var _i in _variable) {
+        _data.push(_variable[_i]);
+    }
+    //console.log(_data);
+    
+    var _n1 = _data[0].length;
+    var _n2 = _data[1].length;
+    var _x1 = _calc_avg(_data[0]);
+    var _x2 = _calc_avg(_data[1]);
+    var _u = (_calc_sum(_data[0]) + _calc_sum(_data[1])) / (_n1+_n2);
+    
+    //console.log(JSON.stringify({
+    //    u: _u,
+    //    'x1-x2': (_x1 - _x2)
+    //}));
+    
+    // 接下來算sw2
+    var _df1 = _n1 - 1;
+    var _df2 = _n2 - 1;
+    var _s1 = _calc_var(_data[0]);
+    var _s2 = _calc_var(_data[1]);
+    var _sw2 = ( (_df1 * _s1) + (_df2 * _s2) ) / (_df1 + _df2);
+    
+    // --------------------------------------
+    
+    var _t_stat = 0;
+    if (_is_equal === true) {
+        _t_stat = ( _x1 - _x2 ) / Math.sqrt( _sw2 * ( (1/_n1) + (1/_n2)  )  );
+    }
+    else {
+        _t_stat = (_x1 - _x2) / Math.sqrt( (_s1/_n1) + (_s2/_n2) );
+    }
+    //_t_stat = Math.abs(_t_stat);
+    
+    var _df = _df1 + _df2;
+    
+    //var _crit = tprob(_df, _t_stat);
+    var _alpha = 0.05;
+    
+    var _crit = tdistr(_df, (1- (_alpha/2) ) );
+    _crit = Math.abs(_crit);
+    
+    // https://jstat.github.io/all.html#jStat.studentt
+    var _p_value = tprob(_df, _t_stat)*2;
+    
+    var _diff = Math.abs(_x1 - _x2);
+    
+    var _is_sig = false;
+    if (_p_value < 0.05) {
+        _is_sig = true;
+    }
+    
+    // ----------------------------------
+    // http://www.itl.nist.gov/div898/handbook/eda/section3/eda352.htm
+    /*
+    
+    var _n = _combine_data.length;
+    var _t_stat_ci = tdistr((_n-1), (1-(_alpha/2)));
+    var _combine_stddev = _calc_stdev(_combine_data);
+    var _combine_mean = _calc_avg(_combine_data);
+    
+    console.log(_combine_stddev);
+    
+    
+    var _interval = _t_stat_ci * _combine_stddev / Math.sqrt(_n);
+    _interval = Math.abs(_interval);
+    var _lower = _combine_mean - _interval;
+    var _upper = _combine_mean + _interval;
+    */
+   
+    // http://www.sample-size.net/confidence-interval-mean/
+    /*
+    var _combine_data = _data[0].concat(_data[1]);
+    var _combine_stddev = _calc_stdev(_combine_data);
+    var _n = _combine_data.length;
+    var _tcl = tdistr(_n-1, (_alpha/2) );
+    var _sem = _combine_stddev / Math.sqrt(_n);
+    console.log({
+        1: _combine_data,
+        2: _combine_stddev,
+        3: _n,
+        4: _tcl,
+        5: _sem
+    });
+    //var _mse = (_s1 + _s2) / 2;
+    var _lower = _u - (_tcl * _sem); 
+    var _upper = _u + (_tcl * _sem);
+    */
+    //var _sm1m2 = Math.sqrt( (2*_mse) /  )
+    
+    // http://www.statisticslectures.com/topics/ciindependentsamplest/
+    var _combine_data = _data[0].concat(_data[1]);
+    var _ci_df = _df;
+    var _sp2 = (( _df1 * _s1 ) +  ( _df2 * _s2 )) / _df;
+    var _sp = Math.sqrt(_sp2);
+    var _ci_s = _calc_stdev(_combine_data);
+    /*
+    if (_df2 < _ci_df) {
+        _ci_df = _df2;
+    }
+    */
+    
+    /*
+    var _x1 = 266.2;
+    var _x2 = 219.7778;
+    var _s1 = 19.5095*19.5095;
+    var _s2 = 30.3677*30.3677;
+    var _n1 = 10;
+    var _n2 = 9;
+    var _ci_df = 8;
+    var _diff = _x1 - _x2;
+    */
+    
+    var _t_stat_ci = tdistr(_ci_df, (_alpha/2));
+    var _interval = _t_stat_ci * _sp * Math.sqrt( (1/_n1) + (1 / _n2) );
+    _interval = Math.abs(_interval);
+    var _lower = _diff - _interval;
+    var _upper = _diff + _interval;
+    
+    /*
+    console.log({
+        df: _ci_df,
+        x1: _x1,
+        x2: _x2,
+        tci: _t_stat_ci,
+        s1: _s1,
+        n1: _n1,
+        s1n1: (_s1/_n1),
+        s2: _s2,
+        n2: _n2,
+        s2n2: (_s2/_n2),
+        int: _interval
+    });
+    */
+    // ----------------------------------------
+    
+    var _note1 = "根據雙樣本變異數檢定結果，假設兩母體具有相同變異數進行雙樣本平均數差異t檢定。";
+    if (_is_equal === false) {
+        _note1 = "根據雙樣本變異數檢定結果，假設兩母體具有不同變異數進行雙樣本平均數差異t檢定。";
+    }
+    
+    var _table = $('<div class="analyze-result">'
+        + '<div class="caption" style="text-align:center;display:block">雙樣本平均數差異t檢定(獨立樣本)<sup>I</sup>：</div>'
+        + '<table border="1" cellpadding="0" cellspacing="0" class="t-test" is_sig="' + _is_sig + '">'
+            + '<thead>'
+                + '<tr><th colspan="7">'
+                    + '<strong>虛無假設</strong>：' 
+                    + '母體平均數差異 = 0<br />'
+                    + 'H<sub>0</sub>: μ<sub>1</sub> - μ<sub>2</sub> = 0</th></tr>'
+                + '<tr><th rowspan="2">' + 't檢定統計量 <br /> t-statistics' + '</th>'
+                + '<th rowspan="2">' + '自由度 <br /> d.f.' + '</th>'
+                + '<th rowspan="2">' + '臨界值 <br /> t(d.f., 1-α/2)' + '</th>'
+                + '<th rowspan="2">' + 'p-值<sup>I</sup> <br /> p-value' + '</th>'
+                + '<th rowspan="2">' + '樣本平均數與母體平均數的差異 <br /> Difference between sample and null means' + '</th>'
+                + '<th colspan="2">' + '母體變異數比值的95%信賴區間 <br /> 95% C.I. for difference' + '</th></tr>'
+                + '<tr>'
+                + '<th>' + '下界 <br /> Lower' + '</th>'
+                + '<th>' + '上界 <br /> Upper' + '</th>'
+            + '</tr></thead>'
+            + '<tbody><tr>'
+                + '<td align="right" class="t_stat">' + precision_string(_t_stat, 4) + '</td>'
+                + '<td align="right">' + _df + '</td>'
+                + '<td align="right">' + precision_string(_crit, 4) + '</td>'
+                + '<td align="right" class="p_value">' + precision_string(_p_value, 4) + '</td>'
+                + '<td align="right">' + precision_string(_diff, 4) + '</td>'
+                + '<td align="right">' + precision_string(_lower, 4) + '</td>'
+                + '<td align="right">' + precision_string(_upper, 4) + '</td>'
+            + '</tr></tbody>'
+        + '</table>'
+        + '<div>I: ' + _note1 + ' <br />'
+        + 'II: 顯著性代碼： \'***\': < 0.001, \'**\': < 0.01, \'*\': < 0.05, \'#\': < 0.1 </div>'
+        + '</div>');
+
+    return  _table;
+};
+
+// ----------------------------------------
+
+var _build_conclusion = function (_variables, _descriptive_table, _var_test_table, _t_test_table) {
+    var _conclusion = $('<div>'
+        + '<span class="speak" alt="獨立樣本t檢定分析結果顯示。">獨立樣本t檢定分析結果：</span>'
+        + '<ul></ul></div>');
+    var _ul = _conclusion.find('ul');
+    
+    var _attr_list = [];
+    for (var _attr in _variables) {
+        _attr_list.push(_attr);
+    }
+    
+    $('<li>' + '<span class="speak">本研究</span>使用獨立樣本t檢定來<span class="speak">比較' 
+            + _attr_list[0] + '與' + _attr_list[1]
+            + '的平均數是否有所差異。</span>'
+            + '</li>').appendTo(_ul);
+    
+    // -----------------------------
+    
+    var _n1 = _variables[_attr_list[0]].length;
+    var _x1 = _calc_avg(_variables[_attr_list[0]]);
+    _x1 = Math.round(_x1 * 1000)/1000;
+    var _n2 = _variables[_attr_list[1]].length;
+    var _x2 = _calc_avg(_variables[_attr_list[1]]);
+    _x2 = Math.round(_x2 * 1000)/1000;
+    
+    $('<li class="speak">' + _attr_list[0] + '抽樣' + _n1 + '個，平均數為' + _x1 + '；'
+            + _attr_list[1] + '抽樣' + _n2 + '個，平均數為' + _x2 + '。'
+            + '</li>').appendTo(_ul);
+    
+    // -----------------------------
+    
+    var _f_stat = _var_test_table.find('.f_stat').text();
+    var _var_test_p_value = _var_test_table.find('.p_value').text();
+    var _is_equal = _var_test_table.find(".var_test:first").attr("is_equal");
+    _is_equal = (_is_equal === "true");
+    
+    var _f_con = '在變異數同質性檢定中，檢定統計量f值為' + _f_stat + '，'
+        + '機率值p值為' + _var_test_p_value;
+    if (_is_equal === true) {
+        _f_con += '，未達α=0.05的顯著水準，'
+            + '表示兩組樣本的變異數並無顯著差異，因此獨立樣本t檢定採用變異數相同的檢定統計量t值計算方式。'
+    }
+    else {
+        _f_con += '，達到α=0.05的顯著水準，'
+            + '表示兩組樣本的變異數存在顯著差異，因此獨立樣本t檢定採用變異數不相同的檢定統計量t值計算方式。'
+    }
+    
+    $('<li>' + _f_con + '</li>').appendTo(_ul);
+    
+    // --------------------------------------
+    var _t_stat = _t_test_table.find('.t_stat').text();
+    var _t_test_p_value = _t_test_table.find('.p_value').text();
+    var _is_sig = _t_test_table.find('.t-test:first').attr("is_sig");
+    _is_sig = (_is_sig === "true");
+    
+    var _t_con = '在獨立樣本t檢定中，<span class="speak">檢定統計量t值為' + _t_stat + '，'
+        + '機率值p值為' + _t_test_p_value + '，</span>';
+    if (_is_sig === false) {
+        _t_con += '未達α=0.05的顯著水準，因此無法拒絕虛無假設。';
+    }
+    else {
+        _t_con += '達到α=0.05的顯著水準，因此拒絕虛無假設，接受對立假設。';
+    }
+    
+    $('<li>' + _t_con + '</li>').appendTo(_ul);
+    
+    // -----------------------
+    
+    var _r_conf = '';
+    if (_is_sig === false) {
+        _r_conf = '表示' + _attr_list[0] + '與' + _attr_list[1] 
+                + '兩組的平均數並沒有顯著差異。';
+    }
+    else {
+        _r_conf = '表示' + _attr_list[0] + '與' + _attr_list[1] 
+                + '兩組的平均數有顯著差異。其中';
+        if (_x1 > _x2) {
+            _r_conf += _attr_list[0] + '顯著大於' + _attr_list[1] + '。';
+        }
+        else {
+            _r_conf += _attr_list[1] + '顯著大於' + _attr_list[0] + '。';
+        }
+    }
+    
+    _r_conf += '<span class="speak" alt="分析結束。"></span>';
+    
+    $('<li class="speak">' + _r_conf + '</li>').appendTo(_ul);
+    
+    return _conclusion;
 };

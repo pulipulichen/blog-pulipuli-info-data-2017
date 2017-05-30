@@ -126,13 +126,15 @@ and open the template in the editor.
         <label for="fruit">請選擇變異數檢定的方法：</label>
         <div class="field">
           <div class="ui radio checkbox">
-            <input type="radio" name="var_test" value='f-test' tabindex="0" class="hidden">
+            <input type="radio" name="var_test" value='f-test' tabindex="0"  checked="checked"
+                   class="hidden change-trigger-draw">
             <label>F檢定 (f-test)</label>
           </div>
         </div>
         <div class="field">
           <div class="ui radio checkbox">
-            <input type="radio" name="var_test" value="levene-test" checked="checked" tabindex="0" class="hidden">
+            <input type="radio" name="var_test" value="levene-test" tabindex="0" 
+                   class="hidden change-trigger-draw">
             <label>Levene's test</label>
           </div>
         </div>
