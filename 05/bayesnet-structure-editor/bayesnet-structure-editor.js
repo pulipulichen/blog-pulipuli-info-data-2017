@@ -1,7 +1,22 @@
 var _attr_list;
 var _draw_bayesnet_table = function (_csv) {
-    // 只需要第一行
-    _attr_list = _csv.trim().split("\n")[0].trim().split(",");
+    
+    //console.log([_csv.indexOf('<?xml version="1.0"?>'), _csv.indexOf('<VARIABLE TYPE="nature">') ]);
+    if (_csv.indexOf("@data") > 0 && _csv.indexOf("@attribute ") > 0) {
+        _attr_list = _get_attr_list_from_arff(_csv);
+    } 
+    else if (_csv.indexOf('<?xml version="1.0"?>') > -1 && _csv.indexOf('<VARIABLE TYPE="nature">') > 0) {
+        _attr_list = _get_attr_list_from_xmlbif(_csv);
+    }
+    else {
+        // 只需要第一行
+        var _first_line = _csv.trim().split("\n")[0].trim();
+        if (_first_line.indexOf(",") === -1) {
+            alert("輸入格式錯誤：沒有變項資料。");
+            return;
+        }
+        _attr_list = _first_line.trim().split(",");
+    }
     
     _reset_bayesnet_table();
     //console.log(_attr_list);
@@ -11,6 +26,26 @@ var _draw_bayesnet_table = function (_csv) {
     
     // ------------------
     _setup_quick_structure(_attr_list);
+};
+
+var _get_attr_list_from_arff = function (_arff) {
+    var _parts = _arff.split("@attribute ");
+    var _result = [];
+    for (var _i = 1; _i < _parts.length; _i++) {
+        var _r = _parts[_i].trim();
+        _r = _r.substr(0, _r.indexOf(" "));
+        _result.push(_r);
+    }
+    return _result;
+};
+
+var _get_attr_list_from_xmlbif = function (_xml_text) {
+    var _xml = $($.parseXML(_xml_text));
+    var _result = [];
+    _xml.find("VARIABLE > NAME").each(function (_i, _name) {
+        _result.push($(_name).text().trim());
+    });
+    return _result;
 };
 
 // --------------------------------
@@ -245,10 +280,11 @@ var _download_bayes_net_xml_file = function () {
     
     var _name = _file_name;
     if (_name === undefined) {
-        _name = "bayesnet-" + _create_current_date_string() + ".xml";
+        _name = "xmlbif-" + _create_current_date_string() + ".xml";
     }
     else {
-        _name += '.xml';
+        _name = _name.substr(0, _name.indexOf("."));
+        _name = "xmlbif-" + _name + '.xml';
     }
     
     var _tr_list = $("#bayesnet_structure_editor > table tbody > tr");
