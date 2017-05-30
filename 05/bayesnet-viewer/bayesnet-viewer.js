@@ -515,3 +515,12 @@ var _outcome_set_handler = function (_d_li, _bayes_nodes) {
     }
     */
 };
+
+// ---------------------------------
+$(function () {
+    $(".cancel-evidences-button").click(_cancel_evidences);
+});
+
+var _cancel_evidences = function () {
+    $(".bayesnet-table li label input:checked").click();
+};
