@@ -6,8 +6,10 @@ var _draw_box_plot = function (_variables) {
     // ----------------------
     // 想辦法把variables轉換成experiments的資料吧
     var experiments = [];
+    var _count = 0;
     for (var _name in _variables) {
         var _values = _variables[_name];
+        _count++;
         for (var _v = 0; _v < _values.length; _v++) {
             experiments.push({
                 "Expt": _name,
@@ -49,10 +51,17 @@ var _draw_box_plot = function (_variables) {
             }
           );
 
+    var _w = $("#preview_html").width()-50;
+    //console.log([_w, _count*300]);
+    if (_w > _count*300) {
+        _w = _count*300;
+    }
+    
+
       chart
-        .width(768)
-        .height(480)
-        .margins({top: 10, right: 50, bottom: 30, left: 50})
+        .width(_w)
+        .height(_w*0.6)
+        .margins({top: 10, right: 50, bottom: 50, left: 50})
         .dimension(experimentDimension)
         .group(speedArrayGroup)
         .elasticY(true)
