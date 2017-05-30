@@ -234,3 +234,7 @@ table td {
 #preview_html button.speak {
     display: block;
 }
+
+#preview_html .analyze-result {
+    display: inline-block;
+}

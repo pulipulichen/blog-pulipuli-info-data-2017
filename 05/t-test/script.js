@@ -23,7 +23,17 @@ var _combine_input = function () {
 var _draw_result_table = function () {
     var _variables = _get_checked_variables(_data);
     var _preview_container = $("#preview_html");
+    
+    // 箱型圖
     _preview_container.append(_draw_box_plot(_variables));
+    
+    // 樣本敘述統計量
+    _preview_container.append(_draw_descriptive_table(_variables));
+    
+    // 變異數同質性檢定
+    _preview_container.append(_draw_f_test_table(_variables));
+    
+    // 獨立樣本t檢定
 };
 
 // ---------------------------------------

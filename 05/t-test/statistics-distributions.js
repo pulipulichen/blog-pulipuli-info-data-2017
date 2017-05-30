@@ -580,41 +580,15 @@ function precision_string ($x, sign) {
     }
 }
 
-function round_to_precision ($x, $p) {
-        $x = $x * Math.pow(10, $p);
-        $x = Math.round($x);
-        return $x / Math.pow(10, $p);
+function round_to_precision($x, $p) {
+    $x = $x * Math.pow(10, $p);
+    $x = Math.round($x);
+    return $x / Math.pow(10, $p);
 }
 
-function integer ($i) {
-        if ($i > 0)
-                return Math.floor($i);
-        else
-                return Math.ceil($i);
+function integer($i) {
+    if ($i > 0)
+        return Math.floor($i);
+    else
+        return Math.ceil($i);
 }
-
-
-var _calc_avg = function (_ary) {
-    if (_ary.length === 0) {
-        return;
-    }
-    var _sum = 0;
-    for (var _i = 0; _i < _ary.length; _i++) {
-        _sum += _ary[_i];
-    }
-    return (_sum / _ary.length);
-};
-
-var _calc_stdev = function (_ary) {
-    if (_ary.length === 0) {
-        return;
-    }
-    var _avg = _calc_avg(_ary);
-    var _var = 0;
-    
-    for (var _i = 0; _i < _ary.length; _i++) {
-        var _a = (_ary[_i] - _avg);
-        _var += _a*_a;
-    }
-    return Math.sqrt(_var / (_ary.length-1));
-};
