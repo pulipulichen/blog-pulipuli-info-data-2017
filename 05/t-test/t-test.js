@@ -399,7 +399,7 @@ var _draw_t_test_table = function (_variable, _is_equal) {
                 + '<tr><th rowspan="2">' + 't檢定統計量 <br /> t-statistics' + '</th>'
                 + '<th rowspan="2">' + '自由度 <br /> d.f.' + '</th>'
                 + '<th rowspan="2">' + '臨界值 <br /> t(d.f., 1-α/2)' + '</th>'
-                + '<th rowspan="2">' + 'p-值<sup>I</sup> <br /> p-value' + '</th>'
+                + '<th rowspan="2">' + 'p-值<sup>II</sup> <br /> p-value' + '</th>'
                 + '<th rowspan="2">' + '樣本平均數與母體平均數的差異 <br /> Difference between sample and null means' + '</th>'
                 + '<th colspan="2">' + '母體變異數比值的95%信賴區間 <br /> 95% C.I. for difference' + '</th></tr>'
                 + '<tr>'
