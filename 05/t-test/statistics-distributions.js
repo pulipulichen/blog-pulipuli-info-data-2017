@@ -115,17 +115,17 @@ function tdistr ($n, $p) {
 }
 
 function fdistr ($n, $m, $p) {
-	if (($n<=0) || ((Math.abs($n)-(Math.abs(integer($n))))!=0)) {
-		throw("Invalid n: $n\n"); /* first degree of freedom */
-	}
-	if (($m<=0) || ((Math.abs($m)-(Math.abs(integer($m))))!=0)) {
-		throw("Invalid m: $m\n"); /* second degree of freedom */
-	}
-	if (($p<=0) || ($p>1)) {
-		throw("Invalid p: $p\n");
-	}
-	//return precision_string(_subf($n-0, $m-0, $p-0));
-        return _subf($n-0, $m-0, $p-0);
+    if (($n<=0) || ((Math.abs($n)-(Math.abs(integer($n))))!=0)) {
+            throw("Invalid n: $n\n"); /* first degree of freedom */
+    }
+    if (($m<=0) || ((Math.abs($m)-(Math.abs(integer($m))))!=0)) {
+            throw("Invalid m: $m\n"); /* second degree of freedom */
+    }
+    if (($p<=0) || ($p>1)) {
+            throw("Invalid p: $p\n");
+    }
+    //return precision_string(_subf($n-0, $m-0, $p-0));
+    return _subf($n-0, $m-0, $p-0);
 }
 
 function uprob ($x) {
@@ -354,35 +354,35 @@ function _subtprob ($n, $x) {
 }
 
 function _subf ($n, $m, $p) {
-	var $x;
+    var $x;
 
-	if ($p >= 1 || $p <= 0) {
-		throw("Invalid p: $p\n");
-	}
+    if ($p >= 1 || $p <= 0) {
+            throw("Invalid p: $p\n");
+    }
 
-	if ($p === 1) {
-		$x = 0;
-	} else if ($m == 1) {
-		$x = 1 / Math.pow(_subt($n, 0.5 - $p / 2), 2);
-	} else if ($n == 1) {
-		$x = Math.pow(_subt($m, $p/2), 2);
-	} else if ($m == 2) {
-		var $u = _subchisqr($m, 1 - $p);
-		var $a = $m - 2;
-		$x = 1 / ($u / $m * (1 +
-			(($u - $a) / 2 +
-				(((4 * $u - 11 * $a) * $u + $a * (7 * $m - 10)) / 24 +
-					(((2 * $u - 10 * $a) * $u + $a * (17 * $m - 26)) * $u
-						- $a * $a * (9 * $m - 6)
-					)/48/$n
-				)/$n
-			)/$n));
-	} else if ($n > $m) {
-		$x = 1 / _subf2($m, $n, 1 - $p)
-	} else {
-		$x = _subf2($n, $m, $p)
-	}
-	return $x;
+    if ($p === 1) {
+            $x = 0;
+    } else if ($m == 1) {
+            $x = 1 / Math.pow(_subt($n, 0.5 - $p / 2), 2);
+    } else if ($n == 1) {
+            $x = Math.pow(_subt($m, $p/2), 2);
+    } else if ($m == 2) {
+            var $u = _subchisqr($m, 1 - $p);
+            var $a = $m - 2;
+            $x = 1 / ($u / $m * (1 +
+                    (($u - $a) / 2 +
+                            (((4 * $u - 11 * $a) * $u + $a * (7 * $m - 10)) / 24 +
+                                    (((2 * $u - 10 * $a) * $u + $a * (17 * $m - 26)) * $u
+                                            - $a * $a * (9 * $m - 6)
+                                    )/48/$n
+                            )/$n
+                    )/$n));
+    } else if ($n > $m) {
+            $x = 1 / _subf2($m, $n, 1 - $p)
+    } else {
+            $x = _subf2($n, $m, $p)
+    }
+    return $x;
 }
 
 function _subf2 ($n, $m, $p) {

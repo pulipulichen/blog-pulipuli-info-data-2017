@@ -119,10 +119,7 @@ var _draw_descriptive_table = function (_variable) {
 
 // --------------------------------------------
 
-var _draw_var_test_table = function (_variable, _var_test) {
-    if (_var_test === undefined) {
-        _var_test = 'f-test';
-    }
+var _draw_f_test_table = function (_variable) {
     
     var _data = [];
     for (var _name in _variable) {
@@ -147,16 +144,15 @@ var _draw_var_test_table = function (_variable, _var_test) {
     var _df_numerator = _data[0].length - 1;
     var _df_denominator = _data[1].length - 1;
     
-    if (_var_test === "f-test") {
-        var _f_stat = F_TEST.calc_f_stat(_data[0], _data[1]);
-        var _p_value = jStat.centralF.cdf(_f_stat, _df_numerator, _df_denominator)*2;
+    var _f_stat, _p_value, _lower, _upper;
+    
+        _f_stat = F_TEST.calc_f_stat(_data[0], _data[1]);
+        _p_value = jStat.centralF.cdf(_f_stat, _df_numerator, _df_denominator)*2;
 
-        var _lower = F_TEST.calc_confidence_interval_lower(_data[0], _data[1]);
-        var _upper = F_TEST.calc_confidence_interval_upper(_data[0], _data[1]);
-    }
-    else if (_var_test === "levene-test") {
-        
-    }
+        _lower = F_TEST.calc_confidence_interval_lower(_data[0], _data[1]);
+        _upper = F_TEST.calc_confidence_interval_upper(_data[0], _data[1]);
+    
+    //console.log();
     
     var _pass = false;
     if (_p_value < 0.05) {
@@ -167,7 +163,7 @@ var _draw_var_test_table = function (_variable, _var_test) {
         + '<div class="caption" style="text-align:center;display:block">雙樣本變異數(標準差)差異檢定：</div>'
         + '<table border="1" cellpadding="0" cellspacing="0" class="var_test" var_test="' + _pass + '">'
             + '<thead>'
-                + '<tr><th colspan="6"><strong>虛無假設</strong>：兩組資料的變異數相等<br />H<sub>0</sub>: σ<sub>1</sub><sup>2</sup>/σ<sub>2</sub><sup>2</sup></th></tr>'
+                + '<tr><th colspan="6"><strong>虛無假設</strong>：兩組資料的變異數相等<br />H<sub>0</sub>: σ<sub>1</sub><sup>2</sup>/σ<sub>2</sub><sup>2</sup> = 1</th></tr>'
                 + '<tr><th rowspan="2">' + 'F檢定統計量 <br /> F-statistics' + '</th>'
                 + '<th rowspan="2">' + '分子自由度 <br /> d.f. of numerator' + '</th>'
                 + '<th rowspan="2">' + '分母自由度 <br /> d.f. of denominator' + '</th>'
@@ -184,6 +180,60 @@ var _draw_var_test_table = function (_variable, _var_test) {
                 + '<td>' + precision_string(_p_value, 4) + '</td>'
                 + '<td>' + precision_string(_lower, 4) + '</td>'
                 + '<td>' + precision_string(_upper, 4) + '</td>'
+            + '</tr></tbody>'
+        + '</table>'
+        + '<div>I: 顯著性代碼： \'***\': < 0.001, \'**\': < 0.01, \'*\': < 0.05, \'#\': < 0.1, </div>'
+        + '</div>');
+
+    return  _table;
+};
+
+var _draw_levene_test_table = function (_variable) {
+    // https://jstat.github.io/all.html#jStat.centralF.pdf
+    
+    var _data = [];
+    for (var _name in _variable) {
+        _data.push(_variable[_name]);
+    }
+    
+    if (_data[0].length < _data[1].length) {
+        var _temp = _data[0];
+        _data[0] = _data[1];
+        _data[1] = _temp;
+    }
+    
+    var _f_stat, _p_value, _crit = 0;
+    _f_stat = LEVENE_TEST.calc_levene_test(_variable);
+    var k = LEVENE_TEST.calc_k(_data);
+    var N = LEVENE_TEST.calc_N(_variable);
+
+    _crit = LEVENE_TEST.calc_critical_value(k, N, 0.05);
+
+    //_p_value = jStat.centralF.pdf(_f_stat, k-1, N-k )*2;
+    _p_value = LEVENE_TEST.calc_p_value(k, N, _f_stat);
+    
+    var _pass = false;
+    if (_p_value < 0.05) {
+        _pass = true;
+    }
+    
+        var _table = $('<div class="analyze-result">'
+        + '<div class="caption" style="text-align:center;display:block">(獨立)多樣本變異數(標準差)差異檢定：</div>'
+        + '<table border="1" cellpadding="0" cellspacing="0" class="var_test" var_test="' + _pass + '">'
+            + '<thead>'
+                + '<tr><th colspan="5"><strong>虛無假設</strong>：兩組資料的變異數相等<br />H<sub>0</sub>: σ<sub>1</sub><sup>2</sup> = σ<sub>2</sub><sup>2</sup></th></tr>'
+                + '<tr><th>' + 'F檢定統計量 <br /> F-statistics' + '</th>'
+                + '<th>' + '分子自由度 <br /> d.f. of numerator' + '</th>'
+                + '<th>' + '分母自由度 <br /> d.f. of denominator' + '</th>'
+                + '<th>' + '臨界值 <br /> F(d.f.1, d.f.2, 1-α)' + '</th>'
+                + '<th>' + 'p-值<sup>I</sup> <br /> p-value' + '</th>'
+            + '</tr></thead>'
+            + '<tbody><tr>'
+                + '<td>' + precision_string(_f_stat, 4) + '</td>'
+                + '<td>' + (k-1) + '</td>'
+                + '<td>' + (N-k) + '</td>'
+                + '<td>' + precision_string(_crit, 4) + '</td>'
+                + '<td>' + precision_string(_p_value, 4) + '</td>'
             + '</tr></tbody>'
         + '</table>'
         + '<div>I: 顯著性代碼： \'***\': < 0.001, \'**\': < 0.01, \'*\': < 0.05, \'#\': < 0.1, </div>'

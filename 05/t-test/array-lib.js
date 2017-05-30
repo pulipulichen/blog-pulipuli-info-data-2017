@@ -17,3 +17,11 @@ var get_json_keys = function (_json) {
     }
     return _keys;
 };
+
+var json_to_array = function (_json) {
+    var _result = [];
+    for (var _i in _json) {
+        _result.push(_json[_i]);
+    }
+    return _result;
+};

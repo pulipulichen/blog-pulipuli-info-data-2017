@@ -34,7 +34,12 @@ var _draw_result_table = function () {
     
     // 變異數同質性檢定
     var _var_test = $('input[name="var_test"]:checked').val();
-    _preview_container.append(_draw_var_test_table(_variables, _var_test));
+    if (_var_test === 'f-test') {
+        _preview_container.append(_draw_f_test_table(_variables));
+    }
+    else if (_var_test === 'levene-test') {
+        _preview_container.append(_draw_levene_test_table(_variables));
+    }
     
     // 獨立樣本t檢定
 };

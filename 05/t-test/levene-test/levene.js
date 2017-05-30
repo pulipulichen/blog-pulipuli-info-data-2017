@@ -4,31 +4,49 @@
 
 //var sm = require('statistical-methods');
 
-var abs = function(mu, s) {
+var LEVENE_TEST = {};
+
+LEVENE_TEST.abs = function(mu, s) {
 	return Math.abs(mu - s);
 };
 
-var quad = function(mu, s) {
+LEVENE_TEST.quad = function(mu, s) {
 	var delta = (mu - s);
 	return delta * delta;
 };
 
 // Perform the Levene transformation.
-var transform = function(samples, quadratic) {
-	var z = [];
+LEVENE_TEST.transform = function(samples, quadratic) {
+    var z = [];
 
-	var modifier = (quadratic) ? quad : abs;
+    var modifier = (quadratic) ? LEVENE_TEST.quad : LEVENE_TEST.abs;
 
-	samples.forEach(function(sample) {
-		var mu = _calc_avg(sample);
-		var zj = [];
-		sample.forEach(function(s) {
-			zj.push(modifier(mu, s));
-		});
-		z.push(zj);
-	});
+    samples.forEach(function(sample) {
+            var mu = _calc_avg(sample);
+            var zj = [];
+            sample.forEach(function(s) {
+                    zj.push(modifier(mu, s));
+            });
+            z.push(zj);
+    });
 
-	return z;
+    return z;
+};
+
+LEVENE_TEST.calc_k = function (samples) {
+    return samples.length;
+};
+
+LEVENE_TEST.calc_N = function (samples) {
+    if (is_array(samples) === false) {
+        samples = json_to_array(samples);
+    }
+    
+    var N = 0;
+    samples.forEach(function(sample) {
+            N += sample.length;
+    });
+    return N;
 };
 
 /**
@@ -37,46 +55,60 @@ var transform = function(samples, quadratic) {
  * @param {type} quadratic
  * @returns {Number}
  */
-var _calc_levene_test = function(samples, quadratic) {
-	var z = transform(samples, quadratic);
+LEVENE_TEST.calc_levene_test = function(samples, quadratic) {
+    if (is_array(samples) === false) {
+        samples = json_to_array(samples);
+    }
+    
+    var z = LEVENE_TEST.transform(samples, quadratic);
 
-	// Compute N, the total number of observations
-	// and p, the number of samples
-	var N = 0, p = samples.length;
-	samples.forEach(function(sample) {
-		N += sample.length;
-	});
+    // Compute N, the total number of observations
+    // and p, the number of samples
+    var p = samples.length;
+    var N = LEVENE_TEST.calc_N(samples);
+    
 
-	// Compute z.., the mean of all zij
-	var zs = [];
-	z.forEach(function(zi) {
-		zs = zs.concat(zi);
-	});
-	var zdotdot = _calc_avg(zs);
+    // Compute z.., the mean of all zij
+    var zs = [];
+    z.forEach(function(zi) {
+            zs = zs.concat(zi);
+    });
+    var zdotdot = _calc_avg(zs);
 
-	// Compute the denominator and the numerator
-	var numerator = 0, denominator = 0;
-	for (var i = 0; i < p; i++) {
+    // Compute the denominator and the numerator
+    var numerator = 0, denominator = 0;
+    for (var i = 0; i < p; i++) {
 
-		// The number of observations in sample i
-		var n = samples[i].length;
+            // The number of observations in sample i
+            var n = samples[i].length;
 
-		// The mean of all zij for sample i
-		var zidot = _calc_avg(z[i]);
+            // The mean of all zij for sample i
+            var zidot = _calc_avg(z[i]);
 
-		var dz = (zidot - zdotdot);
-		numerator += (n * (dz * dz));
+            var dz = (zidot - zdotdot);
+            numerator += (n * (dz * dz));
 
-		denominator += _calc_sum(z[i].map(function(zij) {
-			var dz = (zij - zidot);
-			return (dz * dz);
-		}));
-	}
+            denominator += _calc_sum(z[i].map(function(zij) {
+                    var dz = (zij - zidot);
+                    return (dz * dz);
+            }));
+    }
 
-	// Add divisors
-	numerator = (N - p) * numerator;
-	denominator = (p - 1) * denominator;
+    // Add divisors
+    numerator = (N - p) * numerator;
+    denominator = (p - 1) * denominator;
 
-	// Return ratio
-	return (numerator / denominator); 
+    var _f_stat = (numerator / denominator);
+    
+    // Return ratio
+    return _f_stat; 
+};
+
+LEVENE_TEST.calc_critical_value = function (k, N, _alpha) {
+    // http://www.itl.nist.gov/div898/handbook/eda/section3/eda35a.htm
+    return jStat.centralF.inv(1-_alpha , (k-1),(N-k));
+};
+
+LEVENE_TEST.calc_p_value = function (k, N, _f_stat) {
+    return fprob(k-1, N-k, _f_stat);
 };
