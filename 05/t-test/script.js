@@ -50,6 +50,8 @@ var _draw_result_table = function () {
         var _is_equal = _var_test_table.find(".var_test:first").attr("is_equal");
         _is_equal = (_is_equal === "true");
 
+        _preview_container.append('<br />');
+
         // 獨立樣本t檢定
         var _t_test_table = _draw_t_test_table(_variables, _is_equal);
         _preview_container.append(_t_test_table);
