@@ -148,58 +148,69 @@ function tprob ($n, $x) {
     return _subtprob($n-0, $x-0);
 }
 
+/**
+ * 計算f值的p值
+ * @param {Number} $n 第一個自由度
+ * @param {Number} $m 第二個自由度
+ * @param {Number} $x f值
+ * @return {Number}
+ */
 function fprob ($n, $m, $x) {
-	if (($n<=0) || ((Math.abs($n)-(Math.abs(integer($n))))!=0)) {
-		throw("Invalid n: $n\n"); /* first degree of freedom */
-	}
-	if (($m<=0) || ((Math.abs($m)-(Math.abs(integer($m))))!=0)) {
-		throw("Invalid m: $m\n"); /* second degree of freedom */
-	} 
-	return _subfprob($n-0, $m-0, $x-0);
+    if (($n <= 0) || ((Math.abs($n) - (Math.abs(integer($n)))) != 0)) {
+        throw("Invalid n: $n\n"); /* first degree of freedom */
+    }
+    if (($m <= 0) || ((Math.abs($m) - (Math.abs(integer($m)))) != 0)) {
+        throw("Invalid m: $m\n"); /* second degree of freedom */
+    }
+    return _subfprob($n-0, $m-0, $x-0);
 }
 
 
-function _subfprob ($n, $m, $x) {
-	var $p;
+function _subfprob($n, $m, $x) {
+    var $p;
 
-	if ($x<=0) {
-		$p=1;
-	} else if ($m % 2 === 0) {
-		var $z = $m / ($m + $n * $x);
-		var $a = 1;
-		for (var $i = $m - 2; $i >= 2; $i -= 2) {
-			$a = 1 + ($n + $i - 2) / $i * $z * $a;
-		}
-		$p = 1 - Math.pow((1 - $z), ($n / 2) * $a);
-	} else if ($n % 2 === 0) {
-		var $z = $n * $x / ($m + $n * $x);
-		var $a = 1;
-		for (var $i = $n - 2; $i >= 2; $i -= 2) {
-			$a = 1 + ($m + $i - 2) / $i * $z * $a;
-		}
-		$p = Math.pow((1 - $z), ($m / 2)) * $a;
-	} else {
-		var $y = Math.atan2(Math.sqrt($n * $x / $m), 1);
-		var $z = Math.pow(Math.sin($y), 2);
-		var $a = ($n === 1) ? 0 : 1;
-		for (var $i = $n - 2; $i >= 3; $i -= 2) {
-			$a = 1 + ($m + $i - 2) / $i * $z * $a;
-		} 
-		var $b = Math.PI;
-		for (var $i = 2; $i <= $m - 1; $i += 2) {
-			$b *= ($i - 1) / $i;
-		}
-		var $p1 = 2 / $b * Math.sin($y) * Math.pow(Math.cos($y), $m) * $a;
+    if ($x <= 0) {
+        $p = 1;
+    } else if ($m % 2 === 0) {
+        //console.log('a');
+        var $z = $m / ($m + $n * $x);
+        var $a = 1;
+        for (var $i = $m - 2; $i >= 2; $i -= 2) {
+            $a = 1 + ($n + $i - 2) / $i * $z * $a;
+        }
+        $p = 1 - Math.pow((1 - $z), ($n / 2) * $a);
+    } else if ($n % 2 === 0) {
+        //console.log('2');
+        var $z = $n * $x / ($m + $n * $x);
+        var $a = 1;
+        for (var $i = $n - 2; $i >= 2; $i -= 2) {
+            $a = 1 + ($m + $i - 2) / $i * $z * $a;
+        }
+        $p = Math.pow((1 - $z), ($m / 2)) * $a;
+    } else {
+        
+        //console.log('3');
+        var $y = Math.atan2(Math.sqrt($n * $x / $m), 1);
+        var $z = Math.pow(Math.sin($y), 2);
+        var $a = ($n === 1) ? 0 : 1;
+        for (var $i = $n - 2; $i >= 3; $i -= 2) {
+            $a = 1 + ($m + $i - 2) / $i * $z * $a;
+        }
+        var $b = Math.PI;
+        for (var $i = 2; $i <= $m - 1; $i += 2) {
+            $b *= ($i - 1) / $i;
+        }
+        var $p1 = 2 / $b * Math.sin($y) * Math.pow(Math.cos($y), $m) * $a;
 
-		$z = Math.pow(Math.cos($y), 2);
-		$a = ($m === 1) ? 0 : 1;
-		for (var $i = $m-2; $i >= 3; $i -= 2) {
-			$a = 1 + ($i - 1) / $i * $z * $a;
-		}
-		$p = max(0, $p1 + 1 - 2 * $y / Math.PI
-			- 2 / Math.PI * Math.sin($y) * Math.cos($y) * $a);
-	}
-	return $p;
+        $z = Math.pow(Math.cos($y), 2);
+        $a = ($m === 1) ? 0 : 1;
+        for (var $i = $m - 2; $i >= 3; $i -= 2) {
+            $a = 1 + ($i - 1) / $i * $z * $a;
+        }
+        $p = max(0, $p1 + 1 - 2 * $y / Math.PI
+                - 2 / Math.PI * Math.sin($y) * Math.cos($y) * $a);
+    }
+    return $p;
 }
 
 

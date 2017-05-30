@@ -30,8 +30,11 @@ var _draw_result_table = function () {
     // 樣本敘述統計量
     _preview_container.append(_draw_descriptive_table(_variables));
     
+    _preview_container.append('<br />');
+    
     // 變異數同質性檢定
-    _preview_container.append(_draw_f_test_table(_variables));
+    var _var_test = $('input[name="var_test"]:checked').val();
+    _preview_container.append(_draw_var_test_table(_variables, _var_test));
     
     // 獨立樣本t檢定
 };
@@ -342,4 +345,6 @@ $(function () {
     $('#copy_source_code_html').click(function () {
         PULI_UTIL.clipboard.copy($("#preview_html_source").val());
     });
+    
+    $('.ui.radio.checkbox').checkbox();
 });

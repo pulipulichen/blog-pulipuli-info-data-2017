@@ -37,6 +37,9 @@ and open the template in the editor.
 <script src="statistics-distributions.js"></script>
 <script src="statistics-descriptive.js"></script>
 <script src="f-test.js"></script>
+<script src="jstat/jstat.min.js"></script>
+<script src="levene-test/levene.js"></script>
+
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="script.js"></script>
 
@@ -119,6 +122,21 @@ and open the template in the editor.
 <h1 class="ui horizontal divider header">
   Setting
 </h1> 
+    <div class="inline fields">
+        <label for="fruit">請選擇變異數檢定的方法：</label>
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input type="radio" name="var_test" value='f-test' checked="" tabindex="0" class="hidden">
+            <label>F檢定 (f-test)</label>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui radio checkbox">
+            <input type="radio" name="var_test" value="levene-test" tabindex="0" class="hidden">
+            <label>Levene's test</label>
+          </div>
+        </div>
+    </div>
     <div class="field">
         <div class="ui checkbox">
             <input type="checkbox" class="change-trigger-draw" 

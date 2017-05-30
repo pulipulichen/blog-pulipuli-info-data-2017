@@ -1,7 +1,7 @@
 var _draw_box_plot = function (_variables) {
     // https://dc-js.github.io/dc.js/examples/box-plot.html
     
-    console.log(_variables);
+    //console.log(_variables);
     
     // ----------------------
     // 想辦法把variables轉換成experiments的資料吧
@@ -25,7 +25,7 @@ var _draw_box_plot = function (_variables) {
     
     var chart = dc.boxPlot("#box_plot");
     //d3.csv("dc-js/morley_two_col.csv", function(error, experiments) {
-        console.log(experiments);
+        //console.log(experiments);
 
       experiments.forEach(function(x) {
         x.Speed = +x.Speed;
@@ -119,23 +119,53 @@ var _draw_descriptive_table = function (_variable) {
 
 // --------------------------------------------
 
-var _draw_f_test_table = function (_variable) {
+var _draw_var_test_table = function (_variable, _var_test) {
+    if (_var_test === undefined) {
+        _var_test = 'f-test';
+    }
     
     var _data = [];
     for (var _name in _variable) {
         _data.push(_variable[_name]);
     }
     
-    var _f_stat = F_TEST.calc_f_stat(_data[0], _data[1]);
+    if (_data[0].length < _data[1].length) {
+        var _temp = _data[0];
+        _data[0] = _data[1];
+        _data[1] = _temp;
+    }
+    /*
+    var _s1 = _calc_var(_data[0]);
+    var _s2 = _calc_var(_data[1]);
+    if (_s1 < _s2) {
+        var _temp = _data[0];
+        _data[0] = _data[1];
+        _data[1] = _temp;
+        console.log('交換');
+    }
+    */
     var _df_numerator = _data[0].length - 1;
     var _df_denominator = _data[1].length - 1;
-    var _p_value = 0;
-    var _lower = 0;
-    var _upper = 0;
+    
+    if (_var_test === "f-test") {
+        var _f_stat = F_TEST.calc_f_stat(_data[0], _data[1]);
+        var _p_value = jStat.centralF.cdf(_f_stat, _df_numerator, _df_denominator)*2;
+
+        var _lower = F_TEST.calc_confidence_interval_lower(_data[0], _data[1]);
+        var _upper = F_TEST.calc_confidence_interval_upper(_data[0], _data[1]);
+    }
+    else if (_var_test === "levene-test") {
+        
+    }
+    
+    var _pass = false;
+    if (_p_value < 0.05) {
+        _pass = true;
+    }
     
     var _table = $('<div class="analyze-result">'
         + '<div class="caption" style="text-align:center;display:block">雙樣本變異數(標準差)差異檢定：</div>'
-        + '<table border="1" cellpadding="0" cellspacing="0">'
+        + '<table border="1" cellpadding="0" cellspacing="0" class="var_test" var_test="' + _pass + '">'
             + '<thead>'
                 + '<tr><th colspan="6"><strong>虛無假設</strong>：兩組資料的變異數相等<br />H<sub>0</sub>: σ<sub>1</sub><sup>2</sup>/σ<sub>2</sub><sup>2</sup></th></tr>'
                 + '<tr><th rowspan="2">' + 'F檢定統計量 <br /> F-statistics' + '</th>'

@@ -1,4 +1,12 @@
 
+var _calc_sum = function (_ary) {
+    var _sum = 0;
+    for (var _i = 0; _i < _ary.length; _i++) {
+        _sum += _ary[_i];
+    }
+    return (_sum);
+};
+
 var _calc_avg = function (_ary) {
     if (_ary.length === 0) {
         return;
@@ -22,6 +30,20 @@ var _calc_stdev = function (_ary) {
         _var += _a*_a;
     }
     return Math.sqrt(_var / (_ary.length-1));
+};
+
+var _calc_var = function (_ary) {
+    if (_ary.length === 0) {
+        return;
+    }
+    var _avg = _calc_avg(_ary);
+    var _var = 0;
+    
+    for (var _i = 0; _i < _ary.length; _i++) {
+        var _a = (_ary[_i] - _avg);
+        _var += _a*_a;
+    }
+    return (_var / (_ary.length-1));
 };
 
 var _calc_minimum = function (_ary) {
