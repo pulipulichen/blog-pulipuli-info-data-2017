@@ -8,9 +8,23 @@ var _combine_input = function () {
     //_download_bayes_net_xml_file();
     
     var _csv = $("#input_data").val();
-    console.log(_csv);
+    var _variables = _preprocess_group_variables(_csv);
+    _draw_variables_list(_variables);
+    _data = _variables;
+    
+    // 只勾選前面兩個
+    _set_variables_limit(2);
+    
+    //console.log(_variables);
     //_load_csv_to_ct_json(_csv);
+    _draw_result_table();
 };	// var _combine_input = function () {
+
+var _draw_result_table = function () {
+    var _variables = _get_checked_variables(_data);
+    var _preview_container = $("#preview_html");
+    _preview_container.append(_draw_box_plot(_variables));
+};
 
 // ---------------------------------------
 
@@ -21,6 +35,9 @@ var _get_fix_precision = function (_number) {
     _precision = eval(_precision);
     return precision_string(_number, _precision);
 };
+
+
+
 
 // -----------------------------------------------------
 
@@ -290,7 +307,7 @@ $(function () {
     
     _panel.find(".download-file").click(_download_file_button);
     _panel.find(".change-trigger").change(_combine_input);
-    _panel.find(".change-trigger-draw").change(_combine_input);
+    _panel.find(".change-trigger-draw").change(_draw_result_table);
     _panel.find(".key-up-trigger").keyup(_combine_input);
 
     _panel.find(".focus_select").focus(function () {
