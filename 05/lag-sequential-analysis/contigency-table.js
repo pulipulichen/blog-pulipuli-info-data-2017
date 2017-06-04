@@ -497,7 +497,7 @@ var _draw_obs_seq_table = function () {
 
 var _draw_event_count_table = function () {
     
-    var _cross_table = $('<div class="analyze-result cross-table" style="display:inline-block">'
+    var _cross_table = $('<div class="analyze-result cross-table events-descriptive-table" style="display:inline-block">'
         + '<div class="caption" style="text-align:center;display:block">事件統計表</div>'
         + '<table border="1" cellpadding="0" cellspacing="0">'
         + '<thead>'
@@ -519,15 +519,31 @@ var _draw_event_count_table = function () {
     _events_list = _events_list.sort();
     
     var _tbody = _cross_table.find("tbody");
+    var _data = [];
     for (var _i = 0; _i < _event_list.length; _i++) {
         var _event_name = _event_list[_i];
         var _count = _events_stat[_event_name];
         var _per = precision_string((_count/_events_count)*100, 1) + "%";
+        _data.push({
+            n: _event_name,
+            c: _count,
+            p: _per
+        });
+    }
+    
+    _data.sort(function (a, b) {
+        return (b.c - a.c);
+    });
+    
+    for (var _i = 0; _i < _data.length; _i++) {
+        var _event_name = _data[_i].n;
+        var _count = _data[_i].c;
+        var _per = _data[_i].p;
         
-        $('<tr>'
+        $('<tr event="' + _event_name +'">'
             + '<th align="left" style="text-align:left">' + _event_name + '</th>'
-            + '<td>' + _count + '</td>'
-            + '<td>' + _per + '</td>'
+            + '<td class="count">' + _count + '</td>'
+            + '<td class="per">' + _per + '</td>'
             + '</tr>').appendTo(_tbody);
     }
     
@@ -535,7 +551,7 @@ var _draw_event_count_table = function () {
 };
 
 var _draw_cross_table = function () {
-    var _cross_table = $('<div class="analyze-result cross-table" style="display:inline-block">'
+    var _cross_table = $('<div class="analyze-result cross-table event-transfer-table" style="display:inline-block">'
         + '<div class="caption" style="text-align:center;display:block">事件轉移表</div>'
         + '<table border="1" cellpadding="0" cellspacing="0">'
         + '<thead>'
@@ -974,10 +990,50 @@ var _draw_contingency_table_analyze_result = function () {
     
     
     //console.log(_chi_squared);
-    var _title_container = $('<div>序列分析結果：</div>').appendTo(_result);
+    var _title_container = $('<div><h1>序列分析結果：</h1></div>').appendTo(_result);
     
     var _button = $('<button type="button" class="ui icon button tiny teal speak skip"><i class="talk icon"></i></button>').prependTo(_title_container);
     _button.click(_speak_analyze_result);
+    
+    // -------------------------------------------
+    // 研究目的
+    
+    // 幾個事件呢？
+    var _events = _get_attr();
+    var _con1_events = "";
+    for (var _e = 0; _e < _events.length; _e++) {
+        if (_e > 0) {
+            if (_e < _events.length-1) {
+                _con1_events += "、";
+            }
+            else {
+                _con1_events += "與";
+            }
+        }
+        _con1_events += '事件「' + _events[_e] + '」';
+    }
+    
+    var _con1 = $('<div class="speak">本研究使用序列分析來檢定研究對象的行為序列資料中' + _con1_events + '之間是否有顯著轉移。</div>').appendTo(_title_container);
+    
+    // ---------------------------------------
+    // 樣本敘述統計量
+    
+    $('<div class="speak">研究對象總共' + _users_count + '位，事件總數為' + _events_count + '次。</div>').appendTo(_title_container);
+    
+    var _con2_events = $('<ul></ul>').appendTo(_title_container);
+    var _event_desc_table = $('.events-descriptive-table');
+    for (var _e = 0; _e < _event_desc_table.find('tbody tr').length; _e++) {
+        var _n = _event_desc_table.find('tbody tr:eq(' + _e  + ') th').text();
+        var _c = _event_desc_table.find('tr[event="'+_n+'"] td.count').text();
+        var _p = _event_desc_table.find('tr[event="'+_n+'"] td.per').text();
+        $('<li>事件「' + _n + '」出現次數為' + _c + '次，佔' + _p + '。</li>').appendTo(_con2_events);
+    }
+    
+    $('<div class="speak">雙事件轉移序列總數為' + _total_sum + '次。</div>').appendTo(_title_container);
+    
+    // ---------------------------------------
+    
+    $('<div class="speak">序列分析結果顯示：</div>').appendTo(_title_container);
     
     var _chi_squared_container = $('<ul class="analyze-result chi-squared-container"></ul>').appendTo(_result);
         
