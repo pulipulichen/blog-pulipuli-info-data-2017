@@ -42,50 +42,61 @@ if(require("stringr")){
   }
 }
 
-if(require("V8")){
-  print("V8 is loaded correctly")
-} else {
-  print("trying to install V8")
-  install.packages("V8")
-  if(require(V8)){
-    print("V8 installed and loaded")
-  } else {
-    stop("could not install V8")
-  }
-}
-
 # 套件載入
 library(Matrix)
 library(arules)
 library(arulesSequences)
 library(stringr)
-library(V8)
 
 # 定義函式trim()
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 
 # --------------------------
 
-#df = read.csv(choose.files(default = "input.csv", caption = "Please select an input CSV file"), fileEncoding = "UTF-8")
-df = read.csv("data.csv", fileEncoding = "UTF-8") # 測試用
+df = read.csv(choose.files(default = "input.csv", caption = "Please select an input CSV file"), fileEncoding = "UTF-8")
+#df = read.csv("data.csv", fileEncoding = "UTF-8") # 測試用
 
+# 避免欄位變成charactor或factor，要轉換成string
+df <- data.frame(lapply(df, as.character), stringsAsFactors=FALSE)
 
 # 取得欄位名字
 col.names <- colnames(df)
 
+# 排序
+df<-df[order(df[col.names[2]], decreasing = FALSE),]
+df<-df[order(df[col.names[1]], decreasing = FALSE),]
+
+
 # --------------------------
 
-df3 <- data.frame(user_id=c(), seq_id=c(),events=c())
+df3 <- data.frame(user_id = c(), seq_id=c(), events=c(), stringsAsFactors=FALSE)
+colnames(df3) <- col.names
 
-insertRow <- function(existingDF, newrow, r) {
-  existingDF[seq(r+1,nrow(existingDF)+1),] <- existingDF[seq(r,nrow(existingDF)),]
-  existingDF[r,] <- newrow
-  existingDF
+lastUserId <- 0
+lastSeqId <- 0
+lastIndex <- 0
+for(i in 1:nrow(df)) {
+  userId <- df[i,col.names[1]]
+  seqId <- df[i,col.names[2]]
+  if (i == 1) {
+    
+    df3 <- rbind(df3, df[i,])
+    lastIndex <- i
+    lastUserId <- userId
+    lastSeqId <- seqId
+  } else {
+    if (lastUserId == userId && lastSeqId == seqId) {
+      events1 <- df3[nrow(df3), col.names[3]]
+      events2 <- df[i, col.names[3]]
+      df3[nrow(df3), col.names[3]] <- paste(events1, events2)
+    } else {
+      df3 <- rbind(df3, df[i,])
+      lastIndex <- i
+      lastUserId <- userId
+      lastSeqId <- seqId
+    }
+  }
 }
-
-df3 <- by(df, 1:nrow(df), function(row) {
-  row
-})
 
 # --------------------------
 
@@ -99,7 +110,7 @@ df$Event_count <- sapply(df[,col.names[3]], function(x) {
   length(unlist(strsplit(as.character(trim(x)), "\\W+")))
 })
 
-df2<-data.frame("score"=df[col.names[1]],"sequence_length"=df[col.names[2]],"support"=df["Event_count"],"sequence"=df[col.names[3]])
+df2<-data.frame("score"=df[col.names[1]],"sequence_length"=df[col.names[2]],"support"=df["Event_count"],"sequence"=df[col.names[3]], stringsAsFactors=FALSE)
 
 tmp.txt <- "tmp.txt"
 write.table(df2, file=tmp.txt, row.names=FALSE, col.names=FALSE, sep=" ", quote=FALSE)
@@ -115,14 +126,16 @@ s2<-as(s1, "data.frame")
 s2["sequence_length"]<-c(str_count(array(unlist(s2["sequence"])), "\\},\\{")+1)
 s2["score"]<-c(s2["sequence_length"]*s2["support"])
 s2<-s2[order(s2["score"], decreasing = TRUE),]
-s3<-data.frame("score"=s2["score"],"sequence_length"=s2["sequence_length"],"support"=s2["support"],"sequence"=s2["sequence"])
+s3<-data.frame("score"=s2["score"],"sequence_length"=s2["sequence_length"],"support"=s2["support"],"sequence"=s2["sequence"], stringsAsFactors=FALSE)
 s3$score <- sapply(s3$score, function(x) {
   round(x, 3)
 })
 s3$support <- sapply(s3$support, function(x) {
   round(x, 3)
 })
-#write.table(s3, file=choose.files(default = paste0("output-",format(Sys.time(), "%m%d-%H%M"),".csv"), caption = "Please specify the output CSV file path"), row.names=FALSE, sep=",")
+
+# 寫入檔案
+write.table(s3, file=choose.files(default = paste0("output-",format(Sys.time(), "%m%d-%H%M"),".csv"), caption = "Please specify the output CSV file path"), row.names=FALSE, sep=",")
 
 # -------------
 file.remove(tmp.txt)
