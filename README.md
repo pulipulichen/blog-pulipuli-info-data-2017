@@ -8,3 +8,4 @@ https://pulipulichen.github.io/blog-pulipuli-info-data-2017/04/pearson-r
 
 https://pulipulichen.github.io/blog-pulipuli-info-data-2017/05/bayesnet-viewer/
 https://pulipulichen.github.io/blog-pulipuli-info-data-2017/05/t-test/
+https://pulipulichen.github.io/blog-pulipuli-info-data-2017/05/lag-sequential-analysis
