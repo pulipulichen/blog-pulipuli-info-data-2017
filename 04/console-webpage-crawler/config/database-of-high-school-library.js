@@ -125,7 +125,7 @@ var _get_data_from_link = function (_link, _callback) {
         // ---------------------------------------------
         
         _result["書籍冊數"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td1");
-        _result["圖書借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td5");
+        _result["圖書借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td2");
         
         _result["總類"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td6");
         _result["總類借閱冊次"] = WEBCRAWLER.get_int_by_selector(_doc, "#Td7");
