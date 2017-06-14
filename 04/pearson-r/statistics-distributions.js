@@ -484,7 +484,7 @@ function precision ($x, sign) {
     if (sign === undefined) {
         sign = SIGNIFICANT;
     }
-	return Math.abs(integer(log10(Math.abs($x)) - sign));
+    return Math.abs(integer(log10(Math.abs($x)) - sign));
 }
 
 function precision_string ($x, sign) {
@@ -492,7 +492,7 @@ function precision_string ($x, sign) {
     if ($x !== undefined) {
         var _result = $x;
         if (isNaN(_result)) {
-            throw "錯誤";
+            throw "錯誤:" + _result;
             _result = 0;
         }
         /*

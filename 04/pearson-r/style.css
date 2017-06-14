@@ -193,3 +193,12 @@ table td {
     display: block;
     margin: 0 auto;
 }
+
+table.sig-table {
+    border-collapse: collapse !important;
+    border-spacing: 0;
+}
+
+table.sig-table td {
+    padding: 2px 5px;
+}

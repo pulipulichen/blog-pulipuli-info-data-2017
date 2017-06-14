@@ -370,9 +370,9 @@ var _draw_result_table = function () {
 var _create_conclusion = function (_result_div) {
     
     var _result = [];
+    _result.push("<div>相關分析結果顯示，</div>");
     
-    _result.push("相關分析結果顯示，");
-    
+    var _sig_pair_high = [];
     
     _result_div.find('[correlation="high"][significant="true"]').each(function (_i, _td_r) {
         _td_r = $(_td_r);
@@ -380,6 +380,7 @@ var _create_conclusion = function (_result_div) {
         var _y_var = _td_r.attr("y_var");
         var _r = _td_r.attr("r");
         var _dir = _td_r.attr("dir");
+        var _sig = (_td_r.attr("significant") === "true");
         
         var _desc = _x_var + "與" + _y_var;
         
@@ -391,6 +392,13 @@ var _create_conclusion = function (_result_div) {
         }
         
         _result.push(_desc);
+        //_ul1.push("<li>" + _desc + "</li>");
+        _sig_pair_high.push({
+            x_var: _x_var.trim(),
+            y_var: _y_var.trim(),
+            r: _r,
+            sig: _sig
+        });
     });
     
     _result_div.find('[correlation="middle"][significant="true"]').each(function (_i, _td_r) {
@@ -399,6 +407,7 @@ var _create_conclusion = function (_result_div) {
         var _y_var = _td_r.attr("y_var");
         var _r = _td_r.attr("r");
         var _dir = _td_r.attr("dir");
+        var _sig = (_td_r.attr("significant") === "true");
         
         var _desc = _x_var + "與" + _y_var + "的相關係數為" + _r + "，";
         
@@ -410,9 +419,18 @@ var _create_conclusion = function (_result_div) {
         }
         
         _result.push(_desc);
+        //_ul1.push("<li>" + _desc + "</li>");
+        _sig_pair_high.push({
+            x_var: _x_var.trim(),
+            y_var: _y_var.trim(),
+            r: _r,
+            sig: _sig
+        });
     });
     
-     _result_div.find('[correlation="middle"][significant="true"]').each(function (_i, _td_r) {
+    //var _ul3 = _result.find("ul.group3");
+    /*
+    _result_div.find('[correlation="middle"][significant="true"]').each(function (_i, _td_r) {
         _td_r = $(_td_r);
         var _x_var = _td_r.attr("x_var");
         var _y_var = _td_r.attr("y_var");
@@ -429,20 +447,28 @@ var _create_conclusion = function (_result_div) {
         }
         
         _result.push(_desc);
+        _sig_pair_high.push({
+            x_var: _x_var,
+            y_var: _y_var,
+            r: _r
+        });
     });
+    */
     
     // --------------------------
     
     // -------------------------
     
+    var _sig_pair_middle = [];
     var _middle = [];
-    
+    //var _ul2 = _result.find("ul.group2");
     _result_div.find('[correlation="high"][significant="false"]').each(function (_i, _td_r) {
         _td_r = $(_td_r);
         var _x_var = _td_r.attr("x_var");
         var _y_var = _td_r.attr("y_var");
         var _r = _td_r.attr("r");
         var _dir = _td_r.attr("dir");
+        var _sig = (_td_r.attr("significant") === "true");
         
         var _desc = _x_var + "與" + _y_var;
         
@@ -454,6 +480,13 @@ var _create_conclusion = function (_result_div) {
         }
         
         _middle.push(_desc);
+        
+        _sig_pair_middle.push({
+            x_var: _x_var.trim(),
+            y_var: _y_var.trim(),
+            r: _r,
+            sig: _sig
+        });
     });
     
     _result_div.find('[correlation="middle"][significant="false"]').each(function (_i, _td_r) {
@@ -462,6 +495,7 @@ var _create_conclusion = function (_result_div) {
         var _y_var = _td_r.attr("y_var");
         var _r = _td_r.attr("r");
         var _dir = _td_r.attr("dir");
+        var _sig = (_td_r.attr("significant") === "true");
         
         var _desc = _x_var + "與" + _y_var;
         
@@ -473,6 +507,13 @@ var _create_conclusion = function (_result_div) {
         }
         
         _middle.push(_desc);
+        
+        _sig_pair_middle.push({
+            x_var: _x_var.trim(),
+            y_var: _y_var.trim(),
+            r: _r,
+            sig: _sig
+        });
     });
     
     if (_middle.length > 0) {
@@ -490,6 +531,8 @@ var _create_conclusion = function (_result_div) {
     
     // ------------------------------
     
+    var _sig_pair_null = [];
+    
     var _null = [];
     
     _result_div.find('[correlation="low"]').each(function (_i, _td_r) {
@@ -498,10 +541,18 @@ var _create_conclusion = function (_result_div) {
         var _y_var = _td_r.attr("y_var");
         var _r = _td_r.attr("r");
         var _dir = _td_r.attr("dir");
+        var _sig = (_td_r.attr("significant") === "true");
         
         var _desc = _x_var + "與" + _y_var;
         
         _null.push(_desc);
+        
+        _sig_pair_null.push({
+            x_var: _x_var.trim(),
+            y_var: _y_var.trim(),
+            r: _r,
+            sig: _sig
+        });
     });
     
     if (_null.length > 0) {
@@ -565,11 +616,58 @@ var _create_conclusion = function (_result_div) {
                 });
     });
     
+    // -----------------------------------
+    // pair result
+    
+    var _pair_result = $('<div><hr />'
+        + '顯著且高度或中度相關: '
+        + '<table border="1" cellpadding="0" cellspacing="0" class="sig-table group0"><thead><tr><td colspan="2">變數</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
+        + '<hr />'
+        + '高度或中度相關: '
+        + '<table cellpadding="0" cellspacing="0"  border="1" class="sig-table group1"><thead><tr><td colspan="2">變數</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
+        //+ '<hr />'
+        //+ '低度或無相關: '
+        //+ '<table cellpadding="0" cellspacing="0"  border="1" class="sig-table group2"><thead><tr><td colspan="2">變數</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
+        + '</div>').appendTo(_return_div);
+    
+    var _sig_pair_array = [_sig_pair_high, _sig_pair_middle];
+    for (var _i = 0; _i < _sig_pair_array.length; _i++) {
+        var _sig_pair = JSON.parse(JSON.stringify(_sig_pair_array[_i]));
+        _sig_pair = _sig_pair.sort(function (_a, _b) {
+            //console.log([_a.x_var, _b.x_var, _a.x_var > _b.x_var]);
+            if (_a.x_var !== _b.x_var) {
+                return (_b.x_var < _a.x_var);
+            }
+            else {
+                return (_b.y_var < _a.y_var);
+            }
+        });
+        //_sig_pair.sort(function (_a, _b) {
+        //    return (_b.r - _a.r);
+        //});
+        var _group_ul = _pair_result.find("table.group" + _i + ' tbody');
+        
+        for (var _j = 0; _j < _sig_pair.length; _j++) {
+            var _s = _sig_pair[_j];
+            
+            $('<tr>'
+                + '<td>' + _s.x_var + '</td>'
+                + '<td>' + _s.y_var + '</td>'
+                + '<td>' + _s.r + '</td>'
+                + '<td>' + _s.sig + '</td>'
+                + '</tr>').appendTo(_group_ul);
+        }
+    }
+    
+    // --------------------------------------
+    
     var _ai = $(".ai-conclusion:visible");
     if (_ai.length > 0) {
         _ai.empty().append(_return_div.clone(true));
         //_ai.find("button").click();
     }
+    
+    // ------------------------------------------
     
     return _return_div;
 };
