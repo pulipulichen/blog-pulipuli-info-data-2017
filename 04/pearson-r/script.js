@@ -528,6 +528,26 @@ var _create_conclusion = function (_result_div) {
     }
     
     // --------------------------
+    var _sig_pair_low = [];
+    _result_div.find('[correlation="low"][significant="true"]').each(function (_i, _td_r) {
+        _td_r = $(_td_r);
+        var _x_var = _td_r.attr("x_var");
+        var _y_var = _td_r.attr("y_var");
+        var _r = _td_r.attr("r");
+        var _dir = _td_r.attr("dir");
+        var _sig = (_td_r.attr("significant") === "true");
+        
+        var _desc = _x_var + "與" + _y_var;
+        
+        //_null.push(_desc);
+        
+        _sig_pair_low.push({
+            x_var: _x_var.trim(),
+            y_var: _y_var.trim(),
+            r: _r,
+            sig: _sig
+        });
+    });
     
     // ------------------------------
     
@@ -535,7 +555,7 @@ var _create_conclusion = function (_result_div) {
     
     var _null = [];
     
-    _result_div.find('[correlation="low"]').each(function (_i, _td_r) {
+    _result_div.find('[correlation="low"][significant="false"]').each(function (_i, _td_r) {
         _td_r = $(_td_r);
         var _x_var = _td_r.attr("x_var");
         var _y_var = _td_r.attr("y_var");
@@ -621,16 +641,16 @@ var _create_conclusion = function (_result_div) {
     
     var _pair_result = $('<div><hr />'
         + '顯著且高度或中度相關: '
-        + '<table border="1" cellpadding="0" cellspacing="0" class="sig-table group0"><thead><tr><td colspan="2">變數</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
+        + '<table border="1" cellpadding="0" cellspacing="0" class="sig-table group0"><thead><tr><td>變數x</td><td>變數y</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
         + '<hr />'
         + '高度或中度相關: '
-        + '<table cellpadding="0" cellspacing="0"  border="1" class="sig-table group1"><thead><tr><td colspan="2">變數</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
-        //+ '<hr />'
-        //+ '低度或無相關: '
-        //+ '<table cellpadding="0" cellspacing="0"  border="1" class="sig-table group2"><thead><tr><td colspan="2">變數</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
+        + '<table cellpadding="0" cellspacing="0"  border="1" class="sig-table group1"><thead><tr><td>變數x</td><td>變數y</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
+        + '<hr />'
+        + '顯著低度或無相關: '
+        + '<table cellpadding="0" cellspacing="0"  border="1" class="sig-table group2"><thead><tr><td>變數x</td><td>變數y</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
         + '</div>').appendTo(_return_div);
     
-    var _sig_pair_array = [_sig_pair_high, _sig_pair_middle];
+    var _sig_pair_array = [_sig_pair_high, _sig_pair_middle, _sig_pair_low];
     for (var _i = 0; _i < _sig_pair_array.length; _i++) {
         var _sig_pair = JSON.parse(JSON.stringify(_sig_pair_array[_i]));
         _sig_pair = _sig_pair.sort(function (_a, _b) {
