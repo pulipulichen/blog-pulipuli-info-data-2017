@@ -409,7 +409,8 @@ var _create_conclusion = function (_result_div) {
         var _dir = _td_r.attr("dir");
         var _sig = (_td_r.attr("significant") === "true");
         
-        var _desc = _x_var + "與" + _y_var + "的相關係數為" + _r + "，";
+        //var _desc = _x_var + "與" + _y_var + "的相關係數為" + _r + "，";
+        var _desc = _x_var + "與" + _y_var;
         
         if (_dir === "plus") {
             _desc += "二者具有顯著的中度正相關，表示" + _x_var + "越高者，" + _y_var + "也會越高。";
@@ -619,7 +620,7 @@ var _create_conclusion = function (_result_div) {
         var _loop = function (_i) {
             if (_i < _result.length) {
                 var _t = _result[_i];
-                //console.log(_t);
+            //console.log(_t);
                 responsiveVoice.speak(_t, 'Chinese Female', {
                     rate: 1.2,
                     onend: function () {
@@ -631,7 +632,11 @@ var _create_conclusion = function (_result_div) {
         };
         _loop(0);
         */
-        responsiveVoice.speak(_result.join(), 'Chinese Female', {
+        var _t = $("<div>" + _result.join() + "</div>").text();
+        _t = _t.split("'").join(" ");
+        _t = _t.split(",").join(" ");
+        //console.log(_t);
+        responsiveVoice.speak(_t, 'Chinese Female', {
                     rate: 1.2
                 });
     });
