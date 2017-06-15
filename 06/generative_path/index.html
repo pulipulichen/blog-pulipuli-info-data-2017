@@ -21,14 +21,8 @@
   ga('send', 'pageview');
 
 </script>
-<script src="require.js"></script>
-<script src="https://www.lactame.com/lib/ml/2.0.0/ml.min.js"></script>
-<script>
-$(function () {
-    console.log(ML.Math);
-});
-    
-</script>
+<script src="machine_learning.min.js"></script>
+
 <!-- ------------------------------------ -->
 
 <div class="header">
@@ -59,9 +53,7 @@ $(function () {
 <div class="ui bottom attached  tab segment" data-tab="textarea">
   <div class="field">
     <label for="input_mode_textarea">Paste Profile CSV file here: </label>
-    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()">UserID,Class
-A,1
-</textarea>    
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()"></textarea>    
   </div>
     <div class="field">
     <label for="input_mode_textarea_buffer">Paste Sequence CSV file here: </label>
@@ -90,8 +82,13 @@ A,1
     <label for="autodownload">Download Processed File Automatically</label>
   </div>
     
+    <div class="inline field">
+    <label for="lag_config">Lag Config:</label>
+    
+    <input type="text" name="lag_config" id="lag_config" value="3" />
+  </div>
     <div>
-        <button type="button" class="start-generative-path">Start</button>
+        <button type="button" class="start-generative-path ui button fluid teal">START</button>
     </div>
 
 
