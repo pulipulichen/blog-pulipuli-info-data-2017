@@ -1,5 +1,7 @@
 var _process_file = function(_profile_csv, _sequence_csv, _callback) {
-    _loading_enable();
+    _loading_enable(function () {
+        
+    
     
     var _result = "";
     
@@ -20,7 +22,7 @@ var _process_file = function(_profile_csv, _sequence_csv, _callback) {
     var _lag_data = _lag_data_json.lag_data;
     var _class_data = _lag_data_json.class_data;
     //console.log(_lag_data);
-    console.log(_class_data);
+    //console.log(_class_data);
     
     
     var _cat_dict = _build_lag_dict(_lag_data);
@@ -45,19 +47,20 @@ var _process_file = function(_profile_csv, _sequence_csv, _callback) {
     
     // ------------------------------------
     // 建立類神經網路
-    //var _model = _build_mlp_model(_numeric_lag_data, _class_data);
+    var _model = _build_mlp_model(_numeric_lag_data, _class_data);
     // 建立隨機模型
-    var _model = _build_random_model(_numeric_lag_data, _class_data);
+    //var _model = _build_random_model(_numeric_lag_data, _class_data);
     
     // -----------------------------------
     // 準備生成路徑所需的資料
     var _start_points = _parse_start_points(_sequence);
-    //console.log(_start_points);
+    console.log(_start_points);
     var _end_points = _parse_end_points(_sequence);
-    //console.log(_end_points);
+    console.log(_end_points);
     
     var _next_points = _parse_next_points(_sequence);
-    //console.log(_next_points);
+    console.log(_next_points);
+    //return;
     
     // ------------------------------------
     // 開始進行生成
@@ -69,12 +72,17 @@ var _process_file = function(_profile_csv, _sequence_csv, _callback) {
         , _model);
     //console.log(_path);
     
+    _result = _path.join("\n");
+    _result = "總共" + _path.length + "步\n" + _result;
+    
     // --------------------------
     // 完成
     _loading_disable();
     if (typeof (_callback) === "function") {
         _callback(_result);
     }
+    
+    }); // _loading_enable(function () {
 };
 
 // ---------------------
@@ -183,7 +191,7 @@ var _build_lag_data = function (_profile, _sequence, _lag_config) {
                     // 計算他離結尾還有多少距離
                     var _end_steps = _user_seq.length - _lag_config - _i;
                     _class = _class * (1/_end_steps);
-                    _class_data.push(_class);
+                    _class_data.push([_class]);
                 }
             }
             
@@ -373,7 +381,7 @@ var _build_mlp_model = function (_x, _y) {
 
     mlp.train({
         'lr' : 0.6,
-        'epochs' : 200
+        'epochs' : 1000
     });
     
     return mlp;
@@ -398,13 +406,28 @@ var _start_generative_path = function (_start_points, _end_points, _next_points,
     // 隨機從_start_points中取出一個
     //console.log(_start_points);
     var _start_point = _array_pick_random_one(_start_points);
+    //console.log(["開始", _start_point]);
     _lag_data.push(_start_point);
     _path.push(_start_point);
     
     var _before_point = _start_point;
     while (true) {
         var _next_list = JSON.parse(JSON.stringify(_next_points[_before_point]));
-        var _next_point = _array_pick_random_one_remove(_next_list);
+        //console.log(_next_list);
+        
+        var _pick = function () {
+            var _result = _array_pick_random_one_remove(_next_list);
+            var _next_point = _result.rand;
+            _next_list = _result.array;
+            return _next_point;
+        };
+        var _next_point = _pick();
+        //console.log(["開始", _next_point]);
+        while ($.inArray(_next_point, _lag_data) > -1 && _next_list.length > 0) {
+            _next_point = _pick();
+            //console.log(["重複了，挑下一個", _next_point]);
+        }
+        
         //console.log(_next_point);
         if (_lag_data.length < _lag_config-1) {
             _lag_data.push(_next_point);
@@ -412,11 +435,14 @@ var _start_generative_path = function (_start_points, _end_points, _next_points,
         }
         else {
             var _y1 = _predict_y(_lag_data, _next_point, _model, _cat_rdict);
+            //console.log(["先走這個", _y1, _next_point]);
             while (_next_list.length > 0) {
-                var _next_point2 = _array_pick_random_one_remove(_next_list);
+                var _next_point2 = _pick();
                 var _y2 = _predict_y(_lag_data, _next_point2, _model, _cat_rdict);
+                //console.log(["挑一個試試看", _y2, _next_point2]);
                 
                 if (_y2 > _y1) {
+                    //console.log(["更新", _y2, _next_point2]);
                     _next_point = _next_point2;
                     _y1 = _y2;
                 }
@@ -424,8 +450,11 @@ var _start_generative_path = function (_start_points, _end_points, _next_points,
                     break;
                 }
             }
-            console.log([_y1, _next_point]);
+            //console.log([_y1, _next_point]);
             _path.push(_next_point);
+            _lag_data.slice(0,1);
+            _lag_data.push(_next_point);
+            _before_point = _next_point;
         }
         
         if (_path.length > _max_length) {
@@ -434,6 +463,7 @@ var _start_generative_path = function (_start_points, _end_points, _next_points,
         }
         
         if ($.inArray(_next_point, _end_points) > -1) {
+            console.log(["成功走到終點", _path.length, _path]);
             break;
         }
     }
@@ -449,7 +479,10 @@ var _array_pick_random_one_remove = function (_array) {
     var _i = Math.floor(Math.random() * _array.length);
     var _rand = _array[_i];
     _array.splice(_i, 1);
-    return _rand;
+    return {
+        rand: _rand,
+        array: _array
+    };
 };
 
 var _array_clone = function (_array) {
@@ -472,14 +505,18 @@ var _predict_y = function (_lag_data, _next_point, _model, _cat_rdict) {
     }
     var _x = _create_cat_feature(_x_json, _cat_rdict);
     //console.log(_x);
-    var _y = _model.predict(_x);
+    var _y = _model.predict([_x]);
+    while (typeof(_y) === "object") {
+        _y = _y[0];
+    }
+    
     return _y;
 };
 
 // ---------------------
 
-var _loading_enable = function () {
-    $("#preloader").show().fadeIn();
+var _loading_enable = function (_callback) {
+    $("#preloader").show().fadeIn(_callback);
 };
 
 var _loading_disable = function () {
