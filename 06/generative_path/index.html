@@ -23,9 +23,9 @@
 </script>
 
 <script src="lib/machine_learning.min.js"></script>
-<script src="toolkit/array.js"></script>
-<script src="toolkit/csv.js"></script>
-<script src="toolkit/statistics.js"></script>
+<script src="toolkit/fpf-array.js"></script>
+<script src="toolkit/fpf-csv.js"></script>
+<script src="toolkit/fpf-statistics.js"></script>
 <script src="dynamic-generative-path.js"></script>
 <script src="ml-models.js"></script>
 
@@ -145,7 +145,9 @@
         <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em">
           Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
         </div>
-            <button type="button" class="ui mini compact teal right labeled icon button copy-csv" style="margin-left: 1em">
+            <button type="button" class="ui mini compact teal right labeled icon button copy-csv" 
+                    copy_selector="#preview"
+                    style="margin-left: 1em">
                 COPY File
                 <i class="copy icon"></i>
 	    </button>

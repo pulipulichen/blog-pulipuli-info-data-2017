@@ -13,24 +13,15 @@ var _process_file = function(_callback) {
     }); // _loading_enable(function () {
 };
 
-// ----------------------
-
-
-var _
-
-
-
 // ---------------------
 
 var _loading_enable = function (_callback) {
-    $("#preloader").show().fadeIn(_callback);
+    $("#preloader").show().fadeIn("fast", "swing", _callback);
 };
 
 var _loading_disable = function () {
     $("#preloader").fadeOut().hide();
 };
-
-// ---------------------
 
 // -------------------------------------
 
@@ -52,8 +43,8 @@ var _change_to_fixed = function () {
 
 var _output_filename_surffix="-result";
 //var _output_filename_test_surffix="_test_set";
-var _output_filename_ext=".csv";
-var _output_filename_prefix="csv_result-";
+var _output_filename_ext=".txt";
+var _output_filename_prefix="dgp_result-";
 
 
 // -------------------------------------
@@ -72,12 +63,7 @@ var _load_file = function(evt) {
     var _result;
 
     var _original_file_name = evt.target.files[0].name;
-    //var _pos = _original_file_name.lastIndexOf(".");
-    //var _pos = _original_file_name.length;
     var _pos = _original_file_name.indexOf(".");
-    //var _file_name = _original_file_name.substr(0, _pos)
-    //    + _output_filename_surffix
-    //    //+ _original_file_name.substring(_pos, _original_file_name.length);
     var _file_name = _output_filename_prefix + _original_file_name.substr(0, _pos);
     _file_name = _file_name + _output_filename_ext;
     
@@ -224,125 +210,7 @@ var _load_textarea = function(evt) {
     });
 };
 
-var _download_file_button = function () {
-    var _panel = $(".file-process-framework");
-    
-    var _file_name = _panel.find(".filename").val();
-    var _data = _panel.find(".preview").val();
-    
-    _download_file(_data, _file_name, "arff");
-};
-
-var _download_test_file_button = function () {
-    var _panel = $(".file-process-framework");
-    
-    var _file_name = _panel.find(".test_filename").val();
-    var _data = _panel.find(".test_preview").val();
-    
-    _download_file(_data, _file_name, "arff");
-};
-
-
-var _download_file = function (data, filename, type) {
-    var a = document.createElement("a"),
-        file = new Blob([data], {type: type});
-    if (window.navigator.msSaveOrOpenBlob) // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);
-    else { // Others
-        var url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);  
-        }, 0); 
-    }
-
-};
-
 // ----------------------------
-
-var _copy_table = function () {
-	var _button = $(this);
-	
-	var _table = $($(this).data("copy-table"));
-	var _tr_coll = _table.find("tr");
-	
-	var _text = "";
-	for (var _r = 0; _r < _tr_coll.length; _r++) {
-		if (_r > 0) {
-			_text = _text + "\n";
-		}
-		
-		var _tr = _tr_coll.eq(_r);
-		var _td_coll = _tr.find("td");
-		if (_td_coll.length === 0) {
-			_td_coll = _tr.find("th");
-		}
-		for (var _c = 0; _c < _td_coll.length; _c++) {
-			var _td = _td_coll.eq(_c);
-			var _value = _td.text();
-			
-			if (_c > 0) {
-				_text = _text + "\t";
-			}
-			_text = _text + _value.trim();
-		}
-	}
-	
-	_copy_to_clipboard(_text);
-};
-
-var _copy_csv_table = function () {
-	var _button = $(this);
-	
-	var _text = $("#preview").val().replace(/,/g , "\t");
-	
-	_copy_to_clipboard(_text);
-};
-
-var _copy_to_clipboard = function(_content) {
-	//console.log(_content);
-	var _button = $('<button type="button" id="clipboard_button"></button>')
-		.attr("data-clipboard-text", _content)
-		.hide()
-		.appendTo("body");
-		
-	var clipboard = new Clipboard('#clipboard_button');
-	
-	_button.click();
-	_button.remove();
-};
-
-// -----------------------
-
-var _change_show_fulldata = function () {
-	
-	var _show = ($("#show_fulldata:checked").length === 1);
-	//console.log([$("#show_fulldata").attr("checked"), _show]);
-
-	var _cells = $(".stat-result .fulldata");
-	if (_show) {
-		_cells.show();
-	}
-	else {
-		_cells.hide();
-	}
-};
-
-var _change_show_std = function () {
-	var _show = ($("#show_std:checked").length === 1);
-
-	var _cells = $(".stat-result tr.std-tr");
-	if (_show) {
-            _cells.show();
-	}
-	else {
-            _cells.hide();
-	}
-};
 
 // -----------------------
 
@@ -356,8 +224,8 @@ $(function () {
   _panel.find(".download-test-file").click(_download_test_file_button);
   
   $('.menu .item').tab();
-  $("button.copy-table").click(_copy_table);
-  $("button.copy-csv").click(_copy_csv_table);
+  $("button.copy-table").click(FPF_COPY.copy_table);
+  $("button.copy-csv").click(FPF_COPY.copy_csv_table);
   $("#decimal_places").change(_change_to_fixed);
   
   $("#show_fulldata").change(_change_show_fulldata);
