@@ -1,7 +1,5 @@
 var _process_file = function(_profile_csv, _sequence_csv, _callback) {
     _loading_enable(function () {
-        
-    
     
     var _result = "";
     
@@ -22,22 +20,24 @@ var _process_file = function(_profile_csv, _sequence_csv, _callback) {
     var _lag_data = _lag_data_json.lag_data;
     var _class_data = _lag_data_json.class_data;
     //console.log(_lag_data);
-    //console.log(_class_data);
+    console.log(_class_data);
     
     
     var _cat_dict = _build_lag_dict(_lag_data);
+    //console.log(_cat_dict);
     var _cat_rdict = _reverse_dict(_cat_dict);
     //console.log(_cat_rdict);
     
     // 試著建立資料看看
     /*
+    // dummy variables
     var _t = _create_cat_feature({
-        "class": 0.5,
         "lag0_GL": "GL5_5",
         "lag0_URL": "/zh-tw"
     }, _cat_rdict);
     console.log(_t);
     */
+    
     var _numeric_lag_data = [];
     for (var _i = 0; _i < _lag_data.length; _i++) {
         var _d = _create_cat_feature(_lag_data[_i], _cat_rdict);
@@ -47,9 +47,9 @@ var _process_file = function(_profile_csv, _sequence_csv, _callback) {
     
     // ------------------------------------
     // 建立類神經網路
-    var _model = _build_mlp_model(_numeric_lag_data, _class_data);
+    //var _model = _build_mlp_model(_numeric_lag_data, _class_data);
     // 建立隨機模型
-    //var _model = _build_random_model(_numeric_lag_data, _class_data);
+    var _model = _build_random_model(_numeric_lag_data, _class_data);
     
     // -----------------------------------
     // 準備生成路徑所需的資料
@@ -405,7 +405,7 @@ var _start_generative_path = function (_start_points, _end_points, _next_points,
     var _path = [];
     var _lag_data = [];
     
-    var _max_length = 50;
+    var _max_length = 500;
     
     // --------------------------
     // 隨機從_start_points中取出一個
