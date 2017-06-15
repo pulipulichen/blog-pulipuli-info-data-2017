@@ -64,12 +64,17 @@ var _process_file = function(_profile_csv, _sequence_csv, _callback) {
     
     // ------------------------------------
     // 開始進行生成
-    var _path = _start_generative_path(_start_points
-        , _end_points
-        , _next_points
-        , _lag_config
-        , _cat_rdict
-        , _model);
+    var _path_sum = 0;
+    for (var _i = 0; _i < 100; _i++) {
+        var _path = _start_generative_path(_start_points
+            , _end_points
+            , _next_points
+            , _lag_config
+            , _cat_rdict
+            , _model);
+        _path_sum += _path.length;
+    }
+    console.log(["平均完成步數", (_path_sum/100)]);
     //console.log(_path);
     
     _result = _path.join("\n");
