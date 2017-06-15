@@ -386,7 +386,7 @@ var _build_mlp_model = function (_x, _y) {
 
     mlp.train({
         'lr' : 0.6,
-        'epochs' : 1000
+        'epochs' : 50
     });
     
     return mlp;
