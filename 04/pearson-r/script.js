@@ -370,7 +370,37 @@ var _draw_result_table = function () {
 var _create_conclusion = function (_result_div) {
     
     var _result = [];
-    _result.push("<div>相關分析結果顯示，</div>");
+    _result.push("<div>相關分析結果：</div>");
+    
+    // ---------------------------
+    
+    var _attr_list = _get_attr_list();
+    var _attr_desc = "";
+    for (var _i = 0; _i < _attr_list.length; _i++) {
+        if (_i > 0) {
+            if (_i < _attr_list.length - 1) {
+                _attr_desc += "、";
+            }
+            else {
+                _attr_desc += "與";
+            }
+        }
+        _attr_desc += _attr_list[_i];
+    }
+    
+    _result.push("<div>本研究使用積差相關分析來分析" + _attr_desc + "兩兩變項之間是否有線性相關。</div>");
+    
+    // ---------------------------
+    
+    for (var _i = 0; _i < _attr_list.length; _i++) {
+        var _name = _attr_list[_i];
+        var _tr = _result_div.find('.descriptive-table tr[var_name="' + _attr_list[_i] + '"]');
+        _result.push( _name + "的平均數為" + _tr.find(".avg").text() + "，標準差為" + _tr.find(".stdev").text() + "，樣本數為" + _tr.find(".count").text() + "。" );
+    }
+    
+    // ---------------------------
+    
+    _result.push("<br /><div>相關分析結果顯示：</div>");
     
     var _sig_pair_high = [];
     
@@ -611,6 +641,9 @@ var _create_conclusion = function (_result_div) {
         _result.push("相關分析到此結束。");
     }
     
+    
+    // ------------------------------------------------------------------------------------
+    
     var _return_div = $('<div class="conclusion"></div>').html(_result.join("<br />"));
     
     var _button = $('<button type="button" class="ui icon button tiny teal speak"><i class="talk icon"></i></button>').prependTo(_return_div);
@@ -717,11 +750,11 @@ var _draw_descriptive_table = function () {
         var _avg = _calc_avg(_d);
         var _stdev = _calc_stdev(_d);
         
-        var _tr = $('<tr>'
+        var _tr = $('<tr var_name="' + _attr + '">'
             + '<th align="left">' + _attr + '</th>'
-            + '<td align="right">' + _get_fix_precision(_avg) + '</td>'
-            + '<td align="right">' + _get_fix_precision(_stdev) + '</td>'
-            + '<td align="right">' + _d.length + '</td></tr>').appendTo(_tbody);
+            + '<td align="right" class="avg">' + _get_fix_precision(_avg) + '</td>'
+            + '<td align="right" class="stdev">' + _get_fix_precision(_stdev) + '</td>'
+            + '<td align="right" class="count">' + _d.length + '</td></tr>').appendTo(_tbody);
     } 
     
     return _table;
