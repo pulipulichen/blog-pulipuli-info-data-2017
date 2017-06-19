@@ -299,7 +299,8 @@ var _draw_t_test_table = function (_variable, _is_equal) {
     _crit = Math.abs(_crit);
     
     // https://jstat.github.io/all.html#jStat.studentt
-    var _p_value = tprob(_df, _t_stat)*2;
+    var _p_value = tprob(_df, Math.abs(_t_stat))*2;
+    //console.log([_df, _t_stat, tprob(_df, _t_stat)*2, _p_value]);
     
     var _diff = Math.abs(_x1 - _x2);
     

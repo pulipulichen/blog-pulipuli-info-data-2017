@@ -34,7 +34,7 @@ var _draw_result_table = function () {
     _preview_container.append(_descriptive_table);
     
     if (get_json_keys(_variables).length === 2) {
-
+        //console.log(_variables);
         _preview_container.append('<br />');
 
         // 變異數同質性檢定

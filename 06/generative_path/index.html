@@ -26,6 +26,9 @@
 <script src="toolkit/fpf-array.js"></script>
 <script src="toolkit/fpf-csv.js"></script>
 <script src="toolkit/fpf-statistics.js"></script>
+<script src="toolkit/fpf-copy.js"></script>
+<script src="toolkit/fpf-download.js"></script>
+<script src="toolkit/fpf-file.js"></script>
 <script src="dynamic-generative-path.js"></script>
 <script src="ml-models.js"></script>
 
@@ -77,15 +80,27 @@
 <div class="ui bottom attached active tab segment" data-tab="file">
     <div class="field">
         <label for="files">Profile CSV file: </label>
-        <input class="myfile file-input" name="files[]" id="files" multiple="" type="file" />
+        <input class="myfile file-input" name="files[]" multiple="" type="file"
+               id="files" 
+               set_filename="true"
+               set_selector="#input_mode_profile"
+               />
     </div>
     <div class="field">
         <label for="files_sequence">Sequence CSV file: </label>
-        <input class="myfile_sequence file-input" name="files_buffer[]" id="files_buffer" multiple="" type="file" />
+        <input class="myfile_sequence file-input" name="files_buffer[]" multiple="" type="file"
+               id="files_buffer"
+               set_filename="true"
+               set_selector="#input_mode_textarea_sequence"
+               />
     </div>
     <div class="field">
         <label for="files_target">Target CSV file: </label>
-        <input class="myfile_target file-input" name="files_target[]" id="files_target" multiple="" type="file" />
+        <input class="myfile_target file-input" name="files_target[]" multiple="" type="file" 
+               id="files_target"
+               set_filename="true"
+               set_selector="#input_mode_textarea_target"
+               />
     </div>
   
   <div class="inline field">
@@ -125,7 +140,11 @@
 	
 	<div class="ui doubling grid">
 		<div class="eight sixteen column">
-                    <button type="button" class="fluid ui large right labeled icon green button download-file">
+                    <button type="button" class="fluid ui large right labeled icon green button download-file"
+                            download_filename_selector=".file-process-framework .filename"
+                            download_data_selector=".file-process-framework .preview"
+                            download_type="text/plain"
+                            >
                         <i class="right download icon"></i>
                         DOWNLOAD
                     </button>
