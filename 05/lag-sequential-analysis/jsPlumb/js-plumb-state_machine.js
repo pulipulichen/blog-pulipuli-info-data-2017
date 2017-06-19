@@ -47,6 +47,9 @@ var _init_state_machine = function (_canvas_id, _seq_list) {
                 _node_list.push(_to);
                 _to_id = _node_list.length-1;
             }
+            else {
+                _to_id = $.inArray(_to, _node_list);
+            }
             
             _seq_list[_i].from_id = _from_id;
             _seq_list[_i].to_id = _to_id;

@@ -18,7 +18,7 @@ var _load_csv_to_ct_json = function (_csv) {
     
     _csv = _combine_time_seq(_csv);
     
-    console.log(_csv);
+    //console.log(_csv);
     
     _ct_json = {};
     
@@ -116,7 +116,7 @@ var _load_csv_to_ct_json = function (_csv) {
 var _combine_time_seq = function (_csv) {
     var _users_seq = [];
 	var _seq_type = null;
-    console.log(_csv);
+    //console.log(_csv);
     // 第二格是time
     var _lines = _csv.trim().split("\n");
     for (var _l = 1; _l < _lines.length; _l++) {
@@ -996,6 +996,7 @@ var _draw_cell_percent_cell = function (_cross_table) {
             if (_adj_residual >= 1.96) {
                 _tbody.find('tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').addClass("sig");
                 
+                /*
                 console.log({
                         "error": "sig",
                         x: _x_var_name,
@@ -1010,6 +1011,7 @@ var _draw_cell_percent_cell = function (_cross_table) {
                         total: _total_sum,
                         same: _is_count_same_adjacent_event(),
                     });
+                */
             }
             
             var _q = _calc_yule_q(_y_var_name, _x_var_name);
@@ -1200,7 +1202,7 @@ var _speak_analyze_result = function () {
     });
     _text = "序列分析結果顯示。" + _text + "序列分析結束。";
     _text = _text.replace(/「|」/g, '');
-    console.log(_text);
+    //console.log(_text);
     var _speak_list = _text.split("。");
     if (navigator.userAgent.match(/Android/)) {
         _speak_list = [_text];
@@ -1310,6 +1312,6 @@ var _draw_diagram = function (_result, _sig_seq) {
             "label": "1234",
         });
     */
-
+    console.log(_seq_list);
     _init_state_machine("js_plumb_canvas", _seq_list);
 }; 
