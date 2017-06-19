@@ -638,7 +638,7 @@ var _create_conclusion = function (_result_div) {
         _result = [];
     }
     else {
-        _result.push("相關分析到此結束。");
+        _result.push("<br />相關分析到此結束。");
     }
     
     
