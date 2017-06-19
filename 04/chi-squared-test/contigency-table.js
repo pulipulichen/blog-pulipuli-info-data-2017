@@ -821,9 +821,9 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
     var _y_var_name = $("#variable_y_name").val().trim();
     
     var _sig_pass = '，達到<span class="skip">α = </span> 0.05的顯著水準 ，因此拒絕虛無假設，接受對立假設。'
-                    + '表示<span class="speak">「' + _x_var_name + '」的不同對「' + _y_var_name + '」有顯著的影響。</span></li>';
+                    + '表示<span class="speak">「' + _y_var_name + '」的不同對「' + _x_var_name + '」有顯著的影響。</span></li>';
     var _sig_not_pass = '，未達<span class="skip">α = </span> 0.05的顯著水準，因此無法拒絕虛無假設。'
-                    + '表示<span class="speak">「' + _x_var_name + '」的不同對「' + _y_var_name + '」並沒有顯著的影響。</span></li>';
+                    + '表示<span class="speak">「' + _y_var_name + '」的不同對「' + _x_var_name + '」並沒有顯著的影響。</span></li>';
     
     if (_fisher_mode) {
         _p = _calc_fisher_exact_test();
@@ -891,7 +891,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
         else if (_cramer_v > 0.1) {
             _cramer_v_desc = "，<span class='speak'>屬於低度相關。</span>";
         }
-        var _cramer_v_li = $('<li><span class="speak">「' + _x_var_name + '」跟「' + _y_var_name + '」'
+        var _cramer_v_li = $('<li><span class="speak">「' + _y_var_name + '」跟「' + _x_var_name + '」'
             + '</span>之相關係數Cramer\'s V值<span class="skip" alt="為">(介於0~1之間)</span>為 ' + precision_string(_cramer_v, 3) + ' ' + _cramer_v_desc + '</li>')
             .appendTo(_chi_squared_container);
         
@@ -901,17 +901,17 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
         var _tau_container_ul = _tau_container.find('ul');
 
         // ---------------------------
-        // x tau
-
-        $('<li>以「' + _x_var_name + '」來預測「' + _y_var_name + '」的正確比例為' 
-                + precision_string(_calc_x2y_tau()*100, 3) + '%。</li>')
-                .appendTo(_tau_container_ul);
-
-        // ---------------------------
         // y tau
 
         $('<li>以「' + _y_var_name + '」來預測「' + _x_var_name + '」的正確比例為' 
                 + precision_string(_calc_y2x_tau()*100, 3) + '%。</li>')
+                .appendTo(_tau_container_ul);
+
+        // ---------------------------
+        // x tau
+
+        $('<li>以「' + _x_var_name + '」來預測「' + _y_var_name + '」的正確比例為' 
+                + precision_string(_calc_x2y_tau()*100, 3) + '%。</li>')
                 .appendTo(_tau_container_ul);
 
         // ---------------------------
@@ -926,7 +926,7 @@ var _draw_contingency_table_analyze_result = function (_chi_squared, _yates_chi_
                 var _x_var = _td.attr('x_var');
                 var _y_var = _td.parent().attr('y_var');
 
-                var _text = '<span class="speak">「' + _x_var + '」中「' + _y_var +'」</span><span class="speak" alt="的"></span>之調整後殘差為' + _adj_residual + '，表示<span class="speak">觀察個數顯著';
+                var _text = '<span class="speak">「' + _y_var + '」中「' + _x_var +'」</span><span class="speak" alt="的"></span>之調整後殘差為' + _adj_residual + '，表示<span class="speak">觀察個數顯著';
                 if (_adj_residual > 0) {
                     _text += "高於期望個數。</span>";
                 }
