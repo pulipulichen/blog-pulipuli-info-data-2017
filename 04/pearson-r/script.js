@@ -231,8 +231,8 @@ var _draw_result_table = function () {
                 
                 if (_display_detail === true) {
                     //_tr_y_attr_r.append('<td class="right-border-bold">Pearson相關<br />顯著性(雙尾)<br />個數</td>');
-                    _tr_y_attr_r.append('<th class="right-border-bold left-border-none" align="left">Pearson相關</th>');
-                    _tr_y_attr_p.append('<th class="right-border-bold left-border-none" align="left">顯著性(雙尾)</th>');
+                    _tr_y_attr_r.append('<th class="right-border-bold left-border-none" align="left">Pearson相關係數r</th>');
+                    _tr_y_attr_p.append('<th class="right-border-bold left-border-none" align="left">顯著性(雙尾)p值</th>');
                     _tr_y_attr_r2.append('<th class="right-border-bold left-border-none" align="left">決定係數</th>');
                     _tr_y_attr_n.append('<th class="right-border-bold left-border-none bottom-border-thin" align="left">個數</th>');
                 }
