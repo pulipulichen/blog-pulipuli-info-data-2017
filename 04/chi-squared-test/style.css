@@ -192,6 +192,9 @@ table td {
 .cross-table td.sig {
     background-color: yellow;
 }
+.cross-table td.sig.neg {
+    background-color: #F5BCA9;
+}
 
 #preview_html {
     /*max-height: 300px !important;*/

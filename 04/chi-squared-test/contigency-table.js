@@ -688,6 +688,9 @@ var _draw_cell_percent_cell = function () {
             
             if (Math.abs(_adj_residual) > 1.96) {
                 _tbody.find('tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').addClass("sig");
+                if (_adj_residual < -1.96) {
+                    _tbody.find('tr[y_var="' + _y_var_name + '"] td[x_var="' + _x_var_name + '"]').addClass("neg");
+                }
             }
             
             _chi_squared += (_std_residual * _std_residual);
