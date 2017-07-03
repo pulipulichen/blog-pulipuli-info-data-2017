@@ -678,13 +678,13 @@ var _create_conclusion = function (_result_div) {
     // pair result
     
     var _pair_result = $('<div><hr />'
-        + '顯著且高度或中度相關: '
+        + '顯著且高度或中度相關，非常具有參考價值：'
         + '<table border="1" cellpadding="0" cellspacing="0" class="sig-table group0"><thead><tr><td>變數x</td><td>變數y</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
         + '<hr />'
-        + '高度或中度相關: '
+        + '高度或中度相關，仍具有參考價值：'
         + '<table cellpadding="0" cellspacing="0"  border="1" class="sig-table group1"><thead><tr><td>變數x</td><td>變數y</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
         + '<hr />'
-        + '顯著低度或無相關: '
+        + '低度或無相關，參考價值不大：'
         + '<table cellpadding="0" cellspacing="0"  border="1" class="sig-table group2"><thead><tr><td>變數x</td><td>變數y</td><td>r</td><td>顯著</td></tr></thead><tbody></tbody></table>'
         + '</div>').appendTo(_return_div);
     
