@@ -65,10 +65,12 @@ $(function () {
                 _create_link("https://docs.google.com/document/d/" + _id + "/export?format=pdf", "PDF", "fa-file-pdf-o");
                 break;
             case "spreadsheets":
+                _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/copy", "Copy", "fa-clone");
                 _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/export?format=xlsx", "Excel", "fa-file-excel-o");
                 _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/export?format=pdf", "PDF", "fa-file-pdf-o");
                 break;
             case "presentation":
+                _create_link("https://docs.google.com/presentation/d/" + _id + "/copy", "Copy", "fa-clone");
                 _create_link("https://docs.google.com/presentation/d/" + _id + "/export/pptx", "Power Point", "fa-file-powerpoint-o");
                 _create_link("https://docs.google.com/presentation/d/" + _id + "/export/pdf", "PDF", "fa-file-pdf-o");
                 break;
@@ -79,7 +81,7 @@ $(function () {
 
     $("#google_drive_share_link_20160926").change(_generate_download_link);
     $("#google_drive_share_link_20160926").keyup(_generate_download_link);
-    _generate_download_link();
+    //_generate_download_link();
     
     
 });
