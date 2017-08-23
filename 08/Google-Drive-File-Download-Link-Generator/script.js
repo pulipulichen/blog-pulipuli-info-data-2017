@@ -39,8 +39,14 @@ $(function () {
             if (_image !== undefined) {
                 _image = '<i class="fa ' + _image + '" aria-hidden="true"></i>';
             }
+            
+            var _msg = '下載' + _format + '格式';
+            if (_format === "Copy") {
+                _msg = "建立副本";
+            }
+            
             _output.append('<span>' 
-                    + '<a href="' + _link + '" target="_blank">' + _image + '下載' + _format + '格式</a>' 
+                    + '<a href="' + _link + '" target="_blank">' + _image + _msg +  '</a>' 
                     + '<button type="button" class="ui button copy">COPY</button>'
                     + '</span>');
             _output.append('<input type="text" style="width: 100%;" value="' + _link + '" onfocus="this.select()" />');
@@ -54,6 +60,7 @@ $(function () {
         _output.empty();
         switch (_type) {
             case "document":
+                _create_link("https://docs.google.com/document/d/" + _id + "/copy", "Copy", "fa-clone");
                 _create_link("https://docs.google.com/document/d/" + _id + "/export?format=doc", "Word", "fa-file-word-o");
                 _create_link("https://docs.google.com/document/d/" + _id + "/export?format=pdf", "PDF", "fa-file-pdf-o");
                 break;
