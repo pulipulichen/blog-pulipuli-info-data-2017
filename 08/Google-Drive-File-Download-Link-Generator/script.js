@@ -61,18 +61,31 @@ $(function () {
         switch (_type) {
             case "document":
                 _create_link("https://docs.google.com/document/d/" + _id + "/copy", "Copy", "fa-clone");
-                _create_link("https://docs.google.com/document/d/" + _id + "/export?format=doc", "Word", "fa-file-word-o");
-                _create_link("https://docs.google.com/document/d/" + _id + "/export?format=pdf", "PDF", "fa-file-pdf-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/document/d/" + _id + "/export?format=pdf", "PDF", "fa-file-pdf-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/document/d/" + _id + "/export?format=doc", "Word", "fa-file-word-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/document/d/" + _id + "/export?format=odt", "OpenDocument Text", "fa-file-text-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/document/d/" + _id + "/export?format=rtf", "Rich Text Format", "fa-file-text-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/document/d/" + _id + "/export?format=txt", "Text", "fa-file-text-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/document/d/" + _id + "/export?format=html", "HTML", "fa-html5");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/document/d/" + _id + "/export?format=epub", "EPUB", "fa-book");
                 break;
             case "spreadsheets":
                 _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/copy", "Copy", "fa-clone");
-                _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/export?format=xlsx", "Excel", "fa-file-excel-o");
-                _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/export?format=pdf", "PDF", "fa-file-pdf-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/spreadsheets/d/" + _id + "/export?format=pdf", "PDF", "fa-file-pdf-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/spreadsheets/d/" + _id + "/export?format=xlsx", "Excel", "fa-file-excel-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/spreadsheets/d/" + _id + "/export?format=ods", "OpenDocument Spreadsheet", "fa-file-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/spreadsheets/d/" + _id + "/export?format=csv", "CSV", "fa-file-text-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/spreadsheets/d/" + _id + "/export?format=csv", "TSV", "fa-file-text-o");
                 break;
             case "presentation":
                 _create_link("https://docs.google.com/presentation/d/" + _id + "/copy", "Copy", "fa-clone");
-                _create_link("https://docs.google.com/presentation/d/" + _id + "/export/pptx", "Power Point", "fa-file-powerpoint-o");
-                _create_link("https://docs.google.com/presentation/d/" + _id + "/export/pdf", "PDF", "fa-file-pdf-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/presentation/d/" + _id + "/export/pdf", "PDF", "fa-file-pdf-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/presentation/d/" + _id + "/export/pptx", "Power Point", "fa-file-powerpoint-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/spreadsheets/d/" + _id + "/export/odp", "OpenDocument Presentation", "fa-file-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/presentation/d/" + _id + "/export/txt", "Text", "fa-file-text-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/presentation/d/" + _id + "/export/jpeg", "JPEG", "fa-picture-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/presentation/d/" + _id + "/export/png", "PNG", "fa-picture-o");
+                _create_link("https://web.archive.org/web/20170224104459/https://docs.google.com/presentation/d/" + _id + "/export/svg", "SVG", "fa-picture-o");
                 break;
             default:
                 _create_link("https://drive.google.com/uc?export=download&id=" + _id, "原始", "fa-file-o");
