@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Google Drive File Download Link Generator</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="style.css" />
+        
+<link rel="stylesheet" href="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.css" />
+<link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" />
+    </head>
+    <body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
+<script src="http://pulipulichen.github.io/blogger/posts/2016/12/puli-util.clipboard.js"></script>
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+
+<script src="script.js"></script>
+
+<!-- ------------------------------------------------------------ -->
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<link rel="stylesheet" href="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.css">
+<link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<script src="https://pulipulichen.github.io/blogger/posts/2016/12/puli-util.clipboard.js"></script>
+
+<!-- ------------------------------------ -->
+
+<form class="file-process-framework ui form">
+
+  <div class="ui two column doubling grid">
+    <div class="column">
+	<div class="ui segment">
+	
+    
+<h1 class="ui horizontal divider header">
+  Input
+</h1>
+
+
+<!-- --------------------------------- -->
+
+<div class="ui bottom attached active tab segment input-field-container" data-tab="textarea">
+  <div class="field" style="display:none;">
+    <label for="input_mode_textarea">Paste text here: </label>
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()" style="display:none;"></textarea>
+  </div>
+  
+  <div class="field">
+    <label for="input_title">
+		Title: 
+		<a href="http://blog.pulipuli.info/2017/09/data-source-and-format.html" target="_blank">參考網頁: 資料來源與形態</a>
+                <a href="https://drive.google.com/drive/folders/0B3_qgRmbvvZ1VVZmUUt4OVk0Y28" target="_blank">[巨量資料探勘與統計應用]</a>
+	</label>
+    <input type="text" class="input_title input-field change-event" id="input_title"  value="[CHI] / [ENG]" />
+  </div>
+  
+  <!--
+  <div class="ui two column  doubling grid">
+	<div class="column">
+		  <div class="field">
+			<label for="textarea1">
+				Bibliography: 
+			</label>
+			<textarea class="mceEditor textarea input-field field-value" id="textarea1" onfocus="this.select()"></textarea>
+		  </div>
+
+	</div>
+	<div class="column">
+		<div class="field">
+			<label for="textarea2">
+				Author:
+			</label>
+			<textarea class="mceEditor textarea input-field field-value change-event" id="textarea2" onfocus="this.select()"></textarea>
+		</div>
+	</div>
+  </div>
+  <div class="ui two column  doubling grid">
+	<div class="column">
+		  <div class="field">
+			<label for="textarea3">
+				Abstract:
+			</label>
+			<textarea class="mceEditor textarea input-field field-value change-event" id="textarea3" onfocus="this.select()"></textarea>
+		  </div> 
+	</div>
+	<div class="column">
+		  <div class="field">
+			<label for="textarea4">
+				Note:
+			</label>
+			<textarea class="mceEditor field-value textarea input-field change-event" id="textarea4" onfocus="this.select()"></textarea>
+		  </div> 
+	</div>
+  </div>
+	-->
+  <!-- <div class="ui three column  doubling grid"> -->
+  
+  <div class="ui two column doubling grid">
+	<div class="column">
+		  <table class="ui table">
+		
+		<tr>
+			<th>
+				Google Drive:
+				<button type="button" class="copy-attr" data-copy-attr="Google Drive (NCCU)">
+					Copy APP Name
+				</button>
+			</th>
+			<td>
+				
+				<input type="text" id="fdf2" class="googledrive change-event  field-value" value="" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				Year:
+			</th>
+			<td>
+				<input type="text" id="year" class="change-event field-value" value="今" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				 Month:
+			</th>
+			<td>
+				<input type="text" id="month" class="change-event field-value" value="" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				 Place:
+			</th>
+			<td>
+				<input type="text" id="place" class="change-event field-value" value="" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				 Iframe:
+				<button type="button" class="copy-ele-value" data-copy-ele-value="#iframe1">Copy</button>
+			</th>
+			<td>
+				<input type="text" id="iframe1" />
+			</td>
+		</tr>
+	  </table>
+<div class="field">
+	<label for="file_list">
+		 File List
+	</label>
+	<textarea id="file_list" class="change-event field-value mceEditor"></textarea>
+  </div>
+	</div>
+	<div class="column">
+		  <table class="ui table">
+		<tr>
+			<th>
+				GitHub: 
+				<button type="button" class="copy-attr github-path" data-copy-attr="D:\xampp\htdocs\blogger-page\posts\2017\01">
+					Copy Path
+				</button>
+			</th>
+			<td>
+				
+				<input type="text" id="fdf1" class="github change-event field-value" value="" placeholder="File Path..." />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<a href="http://l.pulipuli.info/u/onedrive" target="onedrive">OneDrive:</a>
+			</th>
+			<td>
+				
+				<input type="text" id="fdf3" value="" class="change-event field-value" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<a href="http://l.pulipuli.info/u/iframe" target="box">Box:</a>
+			</th>
+			<td>
+				
+				<input type="text" id="fdf4" value="" class="change-event field-value" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<a href="http://l.pulipuli.info/u/mega" target="mega">Mega:</a>
+			</th>
+			<td>
+				
+				<input type="text" id="fdf5" value="" class="change-event field-value" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<a href="http://l.pulipuli.info/u/mediafire" target="mediafire">MediaFire:</a>
+			</th>
+			<td>
+				
+				<input type="text" id="fdf6" value="" class="change-event field-value" />
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<a href="http://l.pulipuli.info/u/iframe" target="slideshare">SlideShare:</a>
+			</th>
+			<td>
+				
+				<input type="text" id="fdf7" value="" class="change-event field-value" />
+			</td>
+		</tr>
+	  </table>
+
+	</div>
+  </div>
+  
+  
+  <!-- --------------------------------- -->
+  
+  
+  <!-- --------------------------------- -->
+  
+  
+  <div class="field">
+	<label for="template">
+		Template:
+	</label>
+	<textarea class="template mceEditor textarea input-field change-event" id="template" onfocus="this.select()"><p>[[IMG </p>
+
+<p>這是巨量資料探勘與統計應用課程的投影片「<a href="{LINK}" target="google-drive">{CHI}</a>」。本單元是屬於系列課程中的「[[???]]」，處理資料類型包括了「類別」跟「連續」兩種。[[abs]]。這個單元包含[[??]]個實作內容。</p>
+<!-- more -->
+<hr />
+    
+<h4>單元大綱 / Outline</h4>
+    
+    <p>[[Outline</p>
+
+<h4>投影片 / Slide</h4>
+
+<p>[[IFRAME</p>
+
+<ul>
+	<li>
+		教學投影片：
+		<a href="{google_presentation}" target="google_presentation">Google Presentation</a>
+	</li>
+	<li>
+		教學投影片其他格式：
+		<a href="{fdf2}" target="GoogleDrive_download">Power Point</a>、
+		<a href="{fdf2_pdf}" target="GoogleDrive_download">PDF</a>、
+		<a href="{fdf2_odp}" target="GoogleDrive_download">OpenDocument Presnetation</a>
+	</li>
+</ul>
+<p>我以Google簡報的檔案匯出成PPTX，再備份到以下位置：</p>
+<ul>
+	<li>
+	<a href="{fdf7}" target="SlideShare_download">SlideShare</a>
+	、
+	<a href="{fdf1}" target="GitHub_download">GitHub</a>
+	、
+	<a href="{fdf3}" target="OneDrive_download">OneDrive</a>
+	、
+	<a href="{fdf4}" target="Box_download">Box</a>
+	、
+	<a href="{fdf5}" target="Mega_download">Mega</a>
+	、
+	<a href="{fdf6}" target="MediaFire_download">MediaFire</a>
+	
+	</li>
+</ul>
+
+<h4>學習單 / Worksheets</h4>
+  
+<p>[[IMG</p>
+    
+    <p>本單元包含了以下的學習單，請搭配課程投影片一起練習吧。</p>
+
+    <p>[[W0?</p>
+
+    <h4>資料集 / Dataset</h4>
+    
+    <p>[[IMG</p>
+    
+    <p>本單元用到了以下資料：</p>
+    
+    <p>[[[Google Spreadsheet</p>
+    
+    <h4>測驗 / Examine</h4>
+    
+    <p>[[IMG</p>
+    
+    <p>本單元最後提供了一份測驗，供同學驗證所學：</p>
+    
+    <p>[[[Google Doc</p>
+
+    <hr />
+    
+<h4>小結 / In closing</h4>
+
+<p>[[In closing</p>
+</textarea>
+  </div> 
+      
+</div>
+
+<!-- -------------------------------------- -->
+    
+  <div class="field">
+    <div class="loading hide"><img src="//dl.dropboxusercontent.com/u/717137/2016/loading.gif" /></div>
+  </div> <!-- <div class="field"> -->
+  
+		</div> <!-- <div class="ui segment"> -->
+	</div> <!-- <div class="column"> -->
+  <!-- -------------------------------------- -->
+  
+    <div class="column">
+  <div class="ui segment display-result" style="">
+  <!-- <div class="display-result"> -->
+  
+    <h2 class="ui horizontal divider header">
+      Result
+    </h2>
+    <div class="field" style="display: none;">
+      <button type="button" class="fluid ui large right labeled icon green button download-file">
+        <i class="right download icon"></i>
+        DOWNLOAD
+      </button>
+    </div>
+
+	<div class="field">
+      <label for="output_folder">
+		Folder:
+		<button type="button" class="copy-ele-value" data-copy-ele-value="#output_folder">Copy</button>
+		[<a href="https://drive.google.com/uc?export=download&id=0B5UXWzdIPpm0YmZBX01OYkw4X2M">Cover Image Template</a>], 
+		[<a href="http://www.rollip.com/wizard/upload" target="Rollip">Rollip</a>],
+		[<a href="https://www.photovisi.com/photovisi/piling-them-up" target="Mashup">Photo Mashup</a>],
+		[<a href="https://ifttt.com/applets/2497993d-blogger-facebook" target="ifttt1">IFTTT1</a>],
+		[<a href="https://ifttt.com/applets/4948871d-blogger" target="ifttt1">IFTTT2</a>],
+		
+	  </label>
+      <input type="text" onfocus="this.select()" id="output_folder" class="output_folder" style="width: calc(100% - 15em)" />
+    </div>
+	
+    <div class="field">
+      <label for="output_title">
+		Title: 
+		<button type="button" class="copy-ele-value" data-copy-ele-value="#output_title">Copy</button>
+		(Tag: 
+			<button type="button" class="copy-attr" data-copy-attr="Course">
+				Course
+			</button>
+			<button type="button" class="copy-attr" data-copy-attr="Presentation">
+				Presentation
+			</button>
+		)
+	  </label>
+      <input type="text" onfocus="this.select()" id="output_title" class="output_title" style="width: calc(100% - 15em)" />
+    </div>
+	    
+    <div class="field">
+      <label for="preview">
+        Result Preview: 
+		<button type="button" id="copy_source_code">Copy Source Code</button>
+		
+        <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em; display: none;">
+          Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
+        </div>
+      </label>
+        
+      <textarea id="preview" class="preview" onfocus="this.select();"></textarea>
+    </div>
+	
+    <div id="preview_html" class="ui segment" ></div>
+  
+  </div>
+    </div> <!-- <div class="column"> -->
+  </div> <!-- <div class="ui two column doubling grid"> -->
+</form>
+
+<!-- ------------------------------------------------------------ -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-37178375-7', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+    </body>
+</html>
