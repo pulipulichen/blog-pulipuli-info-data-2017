@@ -36,11 +36,11 @@ var _combine_input = function () {
     // ---------------------
     // 開始處理
 
-    // github
+    // GitHub
     var _fdf1 = _fields["fdf1"];
     if (_fdf1 !== "") {
         _fdf1 = _fdf1.replace(/\\/g, "/");
-        _fdf1 = _fdf1.replace("D:/xampp/htdocs/blogger-page/", "https://pulipulichen.github.io/blogger/");
+        _fdf1 = _fdf1.replace("D:/xampp/htdocs/blogger-data/", "https://pulipulichen.github.io/blog-pulipuli-info-data-2017/");
         //console.log(["fdf1", _fdf1]);
         _fields["fdf1"] = _fdf1;
     }

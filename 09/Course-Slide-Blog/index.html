@@ -59,6 +59,7 @@ and open the template in the editor.
 		Title: 
 		<a href="http://blog.pulipuli.info/2017/09/data-source-and-format.html" target="_blank">參考網頁: 資料來源與形態</a>
                 <a href="https://drive.google.com/drive/folders/0B3_qgRmbvvZ1VVZmUUt4OVk0Y28" target="_blank">[巨量資料探勘與統計應用]</a>
+                <a href="https://docs.google.com/document/d/1TTrmRP0CkSeNZwS8z2Xt2L1dhLH8I49khD2UON54Stc/edit" target="_blank">[課程內容]</a>
 	</label>
     <input type="text" class="input_title input-field change-event" id="input_title"  value="[CHI] / [ENG]" />
   </div>
@@ -112,15 +113,16 @@ and open the template in the editor.
 			<th>
 				Google Drive:
 				<button type="button" class="copy-attr" data-copy-attr="Google Drive (NCCU)">
-					Copy APP Name
+					Copy
 				</button>
+                                <a href="https://docs.google.com/presentation/d/1TuB-5CmJ7Vpa-Wz2yIt-FNk7lgsF8EJwqLxINr7cUuw/edit#slide=id.g1ce8cf009e_0_16" target="_blank">首頁樣板</a>
 			</th>
 			<td>
 				
 				<input type="text" id="fdf2" class="googledrive change-event  field-value" value="" />
 			</td>
 		</tr>
-		<tr>
+                <tr style="display: none;">
 			<th>
 				Year:
 			</th>
@@ -128,7 +130,7 @@ and open the template in the editor.
 				<input type="text" id="year" class="change-event field-value" value="今" />
 			</td>
 		</tr>
-		<tr>
+		<tr style="display: none;">
 			<th>
 				 Month:
 			</th>
@@ -136,7 +138,7 @@ and open the template in the editor.
 				<input type="text" id="month" class="change-event field-value" value="" />
 			</td>
 		</tr>
-		<tr>
+		<tr style="display: none;">
 			<th>
 				 Place:
 			</th>
@@ -154,7 +156,7 @@ and open the template in the editor.
 			</td>
 		</tr>
 	  </table>
-<div class="field">
+<div class="field"  style="display: none;">
 	<label for="file_list">
 		 File List
 	</label>
@@ -166,7 +168,7 @@ and open the template in the editor.
 		<tr>
 			<th>
 				GitHub: 
-				<button type="button" class="copy-attr github-path" data-copy-attr="D:\xampp\htdocs\blogger-page\posts\2017\01">
+				<button type="button" class="copy-attr github-path" data-copy-attr="D:\xampp\htdocs\blogger-data\blog-pulipuli-info-data-2017\09\Big-Data-Analysis-Course">
 					Copy Path
 				</button>
 			</th>
@@ -186,7 +188,7 @@ and open the template in the editor.
 		</tr>
 		<tr>
 			<th>
-				<a href="http://l.pulipuli.info/u/iframe" target="box">Box:</a>
+				<a href="http://l.pulipuli.info/u/box" target="box">Box:</a>
 			</th>
 			<td>
 				
@@ -213,11 +215,20 @@ and open the template in the editor.
 		</tr>
 		<tr>
 			<th>
-				<a href="http://l.pulipuli.info/u/iframe" target="slideshare">SlideShare:</a>
+				<a href="https://www.slideshare.net/upload" target="slideshare">SlideShare:</a>
 			</th>
 			<td>
 				
 				<input type="text" id="fdf7" value="" class="change-event field-value" />
+			</td>
+		</tr>
+                <tr>
+			<th>
+				<a href="http://l.pulipuli.info/u/google-drive-nccu" target="google-drive-for-edu">Google Drive for Edu</a>
+			</th>
+			<td>
+				
+				<input type="text" id="fdf8" value="" class="change-event field-value" />
 			</td>
 		</tr>
 	  </table>
@@ -276,6 +287,9 @@ and open the template in the editor.
 	<a href="{fdf5}" target="Mega_download">Mega</a>
 	、
 	<a href="{fdf6}" target="MediaFire_download">MediaFire</a>
+        
+        、
+        <a href="{fdf8}" target="GoogleDrive_download">Google Drive</a>
 	
 	</li>
 </ul>
@@ -362,6 +376,9 @@ and open the template in the editor.
 			</button>
 			<button type="button" class="copy-attr" data-copy-attr="Presentation">
 				Presentation
+			</button>
+                        <button type="button" class="copy-attr" data-copy-attr="Series/Big Data Analysis Course">
+				Series/Big Data Analysis Course
 			</button>
 		)
 	  </label>
