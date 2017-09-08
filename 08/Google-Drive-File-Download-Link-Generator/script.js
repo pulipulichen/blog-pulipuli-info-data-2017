@@ -53,6 +53,7 @@ $(function () {
             
             _output.find("button.copy").click(function () {
                 var _val = $(this).parent().next().val().trim();
+                console.log(_val);
                 PULI_UTIL.clipboard.copy(_val);
             });
         };
