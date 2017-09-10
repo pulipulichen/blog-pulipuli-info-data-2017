@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
+Input 
 -->
 <html>
     <head>
@@ -23,7 +21,6 @@ and open the template in the editor.
     <body>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
-<script src="http://pulipulichen.github.io/blogger/posts/2016/12/puli-util.clipboard.js"></script>
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
 
 <script src="script.js"></script>
@@ -35,7 +32,7 @@ and open the template in the editor.
 <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
 <script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
-<script src="https://pulipulichen.github.io/blogger/posts/2016/12/puli-util.clipboard.js"></script>
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/puli-util.clipboard.js"></script>
 
 <!-- ------------------------------------ -->
 
@@ -61,11 +58,11 @@ and open the template in the editor.
   
   <div class="field">
     <label for="input_title">
-		Title: 
-		<a href="http://blog.pulipuli.info/2017/09/measures-of-center-and-spread.html" target="_blank">參考網頁</a>
-                <a href="https://drive.google.com/drive/folders/0B3_qgRmbvvZ1VVZmUUt4OVk0Y28" target="_blank">[巨量資料探勘與統計應用]</a>
-                <a href="https://docs.google.com/document/d/1TTrmRP0CkSeNZwS8z2Xt2L1dhLH8I49khD2UON54Stc/edit" target="_blank">[課程大綱]</a>
-	</label>
+            Title: 
+            <a href="http://blog.pulipuli.info/2017/09/measures-of-center-and-spread.html" target="_blank">參考網頁</a>
+            <a href="https://drive.google.com/drive/folders/0B3_qgRmbvvZ1VVZmUUt4OVk0Y28" target="_blank">[巨量資料探勘與統計應用]</a>
+            <a href="https://docs.google.com/document/d/1TTrmRP0CkSeNZwS8z2Xt2L1dhLH8I49khD2UON54Stc/edit" target="_blank">[課程大綱]</a>
+    </label>
     <input type="text" class="input_title input-field change-event" id="input_title"  value="[CHI] / [ENG]" />
   </div>
   
@@ -168,15 +165,15 @@ and open the template in the editor.
 			</td>
 		</tr>
 	  </table>
-<div class="field"  style="display: none;">
-	<label for="file_list">
-		 File List
-	</label>
-	<textarea id="file_list" class="change-event field-value mceEditor"></textarea>
-  </div>
+            <div class="field"  style="display: none;">
+                <label for="file_list">
+                    File List
+                </label>
+                <textarea id="file_list" class="change-event field-value mceEditor"></textarea>
+            </div>
 	</div>
-	<div class="column">
-		  <table class="ui table">
+	<div class="column" id="cloud_files">
+            <table class="ui table">
 		<tr>
 			<th>
                             GitHub:
@@ -194,7 +191,6 @@ and open the template in the editor.
 				<a href="http://l.pulipuli.info/u/onedrive" target="onedrive">OneDrive:</a>
 			</th>
 			<td>
-				
 				<input type="text" id="fdf3" value="" class="change-event field-value" />
 			</td>
 		</tr>
@@ -268,7 +264,7 @@ and open the template in the editor.
     
 <h4>單元大綱 / Outline</h4>
     
-    <p>[[Outline</p>
+    <ul><li>[[Outline</li></ul>
 
 <h4>投影片 / Slide</h4>
 
@@ -289,21 +285,19 @@ and open the template in the editor.
 <p>我以Google簡報的檔案匯出成PPTX，再備份到以下位置：</p>
 <ul>
 	<li>
-	<a href="{fdf7}" target="SlideShare_download">SlideShare</a>
-	、
-	<a href="{fdf1}" target="GitHub_download">GitHub</a>
-	、
-	<a href="{fdf3}" target="OneDrive_download">OneDrive</a>
-	、
-	<a href="{fdf4}" target="Box_download">Box</a>
-	、
-	<a href="{fdf5}" target="Mega_download">Mega</a>
-	、
-	<a href="{fdf6}" target="MediaFire_download">MediaFire</a>
-        
-        、
-        <a href="{fdf8}" target="GoogleDrive_download">Google Drive</a>
-	
+            <a href="{fdf7}" target="SlideShare_download">SlideShare</a>
+            、
+            <a href="{fdf1}" target="GitHub_download">GitHub</a>
+            、
+            <a href="{fdf3}" target="OneDrive_download">OneDrive</a>
+            、
+            <a href="{fdf4}" target="Box_download">Box</a>
+            、
+            <a href="{fdf5}" target="Mega_download">Mega</a>
+            、
+            <a href="{fdf6}" target="MediaFire_download">MediaFire</a>
+            、
+            <a href="{fdf8}" target="GoogleDrive_download">Google Drive</a>
 	</li>
 </ul>
 
@@ -313,7 +307,7 @@ and open the template in the editor.
     
     <p>本單元包含了以下的學習單，請搭配課程投影片一起練習吧。</p>
 
-    <p>[[W0?</p>
+    <ul><li><a href="" target="_blank">[[[Google Doc</a></li></ul>
 
     <h4>資料集 / Dataset</h4>
     
@@ -321,7 +315,8 @@ and open the template in the editor.
     
     <p>本單元用到了以下資料：</p>
     
-    <p>[[[Google Spreadsheet</p>
+    <ul><li><a href="" target="_blank">[[[Google Spreadsheet</a></li></ul>
+
     <h4>線上操作平臺 / Online Workplace</h4>  <p><a href="https://lh3.googleusercontent.com/-Ee2TDNZT8fI/Waz_d00_QQI/AAAAAAADRIs/Ypnpepb7hVAw2BWLsRw1IH1lrRcn41YRQCHMYCw/s1600-h/google_drive%255B5%255D"><img alt="google_drive" border="0" height="150" src="https://lh3.googleusercontent.com/-9-z6z_oP0kE/Waz_fvo929I/AAAAAAADRIw/XTbMyCVqaH87ENY_ced_o4myhcMFY-7owCHMYCw/google_drive_thumb%255B3%255D?imgmax=800" style="border: 0px currentcolor; border-image: none; display: inline; background-image: none;" title="google_drive" width="150" /></a><a href="https://lh3.googleusercontent.com/-OfWdRncm0Ww/Waz_hxMQZYI/AAAAAAADRI0/V7ec09UcAIwUyUTO_XhKvaMfUI3SCQ5xACHMYCw/s1600-h/Alecive-Flatwoken-Apps-Google-Drive-Forms%255B5%255D"><img alt="Alecive-Flatwoken-Apps-Google-Drive-Forms" border="0" height="150" src="https://lh3.googleusercontent.com/-tNQgkexmgjI/Waz_j7JKfKI/AAAAAAADRI4/akaHW7ubSy0YQDrZU-AgF_fTcPv5e_QggCHMYCw/Alecive-Flatwoken-Apps-Google-Drive-Forms_thumb%255B3%255D?imgmax=800" style="border: 0px currentcolor; border-image: none; display: inline; background-image: none;" title="Alecive-Flatwoken-Apps-Google-Drive-Forms" width="150" /></a><a href="https://lh3.googleusercontent.com/-Be2IxTNbN_0/Waz_mNT9R0I/AAAAAAADRI8/5BLywqgGHI0Ztr0fCBJUhNFNqYiUFTk6gCHMYCw/s1600-h/logo1%255B6%255D"><img alt="logo1" border="0" height="150" src="https://lh3.googleusercontent.com/-mPieTHAj6xo/Waz_n4hY6II/AAAAAAADRJA/G7LPfE6kHsM3_-NB0K83KLamnf6q3OqKwCHMYCw/logo1_thumb%255B4%255D?imgmax=800" style="border: 0px currentcolor; border-image: none; display: inline; background-image: none;" title="logo1" width="150" /></a></p>  <p>本單元的實作不需用到本機端的軟體&#65292;全部使用以下雲端服務&#12290;建議使用<a href="https://www.google.com.tw/chrome/browser/desktop/index.html">Google Chrome瀏覽器</a>開啟&#65306;</p>  <ul>   <li><a href="https://docs.google.com/spreadsheets/">Google試算表</a> (<a href="https://drive.google.com/drive/">Google雲端硬碟</a>)</li>    <li><a href="http://www.r-web.com.tw/">R-Web 雲端資料分析暨引導系統</a>      <br /></li> </ul>
     <h4>測驗 / Examine</h4>
     
@@ -329,7 +324,7 @@ and open the template in the editor.
     
     <p>本單元最後提供了一份測驗，供同學驗證所學：</p>
     
-    <p>[[[Google Doc</p>
+    <ul><li><a href="" target="_blank">[[[Google Doc</a></li></ul>
 
     <hr />
     
@@ -407,10 +402,13 @@ and open the template in the editor.
     <div class="field">
       <label for="preview">
         Result Preview: 
-		<button type="button" id="copy_source_code">Copy Source Code</button>
-		
-        <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em; display: none;">
-          Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
+        <button type="button" id="copy_source_code">Copy Source Code</button>
+
+        <div class="ui pointing below  medium blue basic label encoding" style="margin-left: 1em; display: none;">
+            Get error encoding text? 
+            <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >
+                Try to Convert TXT file to UTF8 encoding?
+            </a>
         </div>
       </label>
         
@@ -425,16 +423,13 @@ and open the template in the editor.
 </form>
 
 <!-- ------------------------------------------------------------ -->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+<script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
 
-  ga('create', 'UA-37178375-7', 'auto');
-  ga('send', 'pageview');
-
-</script>
+ga('create', 'UA-37178375-7', 'auto');
+ga('send', 'pageview');</script>
 
     </body>
 </html>

@@ -180,31 +180,33 @@ String.prototype.replaceAll = function (search, replacement) {
 };
 // -------------------------------------
 
-tinyMCE.init({
-    mode: "specific_textareas",
-    editor_selector: "mceEditor",
-    plugins: [
-        'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-        'searchreplace wordcount visualblocks visualchars code fullscreen',
-        'insertdatetime media nonbreaking save table contextmenu directionality',
-        'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
-    ],
-    //toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image  tableprops',
-    //toolbar2: 'print preview media | forecolor backcolor emoticons | codesample code ',
-    toolbar1: 'insert | codesample code',
+var _tinymce_init = function () {
+    tinyMCE.init({
+        mode: "specific_textareas",
+        editor_selector: "mceEditor",
+        plugins: [
+            'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+            'searchreplace wordcount visualblocks visualchars code fullscreen',
+            'insertdatetime media nonbreaking save table contextmenu directionality',
+            'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
+        ],
+        toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image  tableprops',
+        toolbar2: 'print preview media | forecolor backcolor emoticons | codesample code ',
+        //toolbar1: 'insert | codesample code',
 
-    menubar: false,
-    statusbar: false,
-    toolbar_item_size: "small",
+        menubar: false,
+        statusbar: false,
+        toolbar_item_size: "small",
 
-    setup: function (ed) {
-        ed.on('change', function (e) {
-            //console.log(['TinyMCE change: ', ed.getContent(), ]);
-            $("#" + ed.id).val(ed.getContent());
-            _combine_input();
-        });
-    }
-});
+        setup: function (ed) {
+            ed.on('change', function (e) {
+                //console.log(['TinyMCE change: ', ed.getContent(), ]);
+                $("#" + ed.id).val(ed.getContent());
+                _combine_input();
+            });
+        }
+    });
+};
 
 // --------------------------
 
@@ -244,4 +246,5 @@ $(function () {
     });
 
     _combine_input();
+    _tinymce_init();
 });
