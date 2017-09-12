@@ -1,0 +1,135 @@
+<project outputDirectory="D:\xampp\htdocs\blogger-data\blog-pulipuli-info-data-2017\09\Scan-Tailor-Convertor\example\out" layoutDirection="LTR">
+  <directories>
+    <directory path="D:/xampp/htdocs/blogger-data/blog-pulipuli-info-data-2017/09/Scan-Tailor-Convertor/example" id="1"/>
+  </directories>
+  <files>
+    <file dirId="1" id="2" name="scan-page-001.jpg"/>
+  </files>
+  <images>
+    <image subPages="2" fileImage="0" fileId="2" id="3">
+      <size width="1024" height="691"/>
+      <dpi vertical="300" horizontal="300"/>
+    </image>
+  </images>
+  <pages>
+    <page imageId="3" subPage="left" selected="selected" id="4"/>
+    <page imageId="3" subPage="right" id="5"/>
+  </pages>
+  <file-name-disambiguation>
+    <mapping file="2" label="0"/>
+  </file-name-disambiguation>
+  <filters>
+    <fix-orientation/>
+    <page-split defaultLayoutType="auto-detect">
+      <image id="3">
+        <params mode="manual">
+          <pages type="two-pages">
+            <outline>
+              <point x="0" y="0"/>
+              <point x="1024" y="0"/>
+              <point x="1024" y="691"/>
+              <point x="0" y="691"/>
+              <point x="0" y="0"/>
+            </outline>
+            <cutter1>
+              <p1 x="541.7493681187868" y="14.63929618768328"/>
+              <p2 x="541.7493681187868" y="694.3782991202346"/>
+            </cutter1>
+          </pages>
+          <dependencies>
+            <rotation degrees="0"/>
+            <size width="1024" height="691"/>
+            <layoutType>auto-detect</layoutType>
+          </dependencies>
+        </params>
+      </image>
+    </page-split>
+    <deskew>
+      <page id="4">
+        <params mode="auto" angle="-0.125">
+          <dependencies>
+            <rotation degrees="0"/>
+            <page-outline>
+              <point x="0" y="0"/>
+              <point x="541.749267578125" y="0"/>
+              <point x="541.749267578125" y="691"/>
+              <point x="0" y="691"/>
+              <point x="0" y="0"/>
+            </page-outline>
+          </dependencies>
+        </params>
+      </page>
+      <page id="5">
+        <params mode="auto" angle="-0.25">
+          <dependencies>
+            <rotation degrees="0"/>
+            <page-outline>
+              <point x="1024" y="0"/>
+              <point x="541.749267578125" y="0"/>
+              <point x="541.749267578125" y="691"/>
+              <point x="1024" y="691"/>
+              <point x="1024" y="0"/>
+            </page-outline>
+          </dependencies>
+        </params>
+      </page>
+    </deskew>
+    <select-content>
+      <page id="4">
+        <params mode="auto">
+          <content-rect width="134" x="390" y="638" height="24"/>
+          <content-size-mm width="11.34533333333333" height="2.031999999999996"/>
+          <dependencies>
+            <rotated-page-outline>
+              <point x="0" y="1.181912617356558"/>
+              <point x="541.7479783109484" y="0"/>
+              <point x="543.2555052564751" y="690.9983555425501"/>
+              <point x="1.507526945526708" y="692.1802681599067"/>
+              <point x="0" y="1.181912617356558"/>
+            </rotated-page-outline>
+          </dependencies>
+        </params>
+      </page>
+      <page id="5">
+        <params mode="auto">
+          <content-rect width="444" x="18.00000000000011" y="192" height="476"/>
+          <content-size-mm width="37.592" height="40.30133333333335"/>
+          <dependencies>
+            <rotated-page-outline>
+              <point x="482.2461417424771" y="0"/>
+              <point x="0" y="2.104209098352201"/>
+              <point x="3.015046715759922" y="693.0976312763798"/>
+              <point x="485.2611884582369" y="690.9934221780276"/>
+              <point x="482.2461417424771" y="0"/>
+            </rotated-page-outline>
+          </dependencies>
+        </params>
+      </page>
+    </select-content>
+    <page-layout/>
+    <output>
+      <page id="4">
+        <zones/>
+        <fill-zones/>
+        <params depthPerception="2" despeckleLevel="cautious" dewarpingMode="off">
+          <dpi vertical="600" horizontal="600"/>
+          <color-params colorMode="bw">
+            <color-or-grayscale whiteMargins="0" normalizeIllumination="0"/>
+            <bw thresholdAdj="0"/>
+          </color-params>
+        </params>
+      </page>
+      <page id="5">
+        <zones/>
+        <fill-zones/>
+        <params depthPerception="2" despeckleLevel="cautious" dewarpingMode="off">
+          <dpi vertical="600" horizontal="600"/>
+          <color-params colorMode="bw">
+            <color-or-grayscale whiteMargins="0" normalizeIllumination="0"/>
+            <bw thresholdAdj="0"/>
+          </color-params>
+        </params>
+      </page>
+    </output>
+  </filters>
+</project>
