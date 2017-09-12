@@ -18,11 +18,11 @@ and open the template in the editor.
         .ScanTailor project file: <input id="scantailor20150710b_input" type="file" name="scantailor20150710b_input" />
     </label>
     <textarea id='scantailor20150710b_input_textarea' style='width: 100%;height: 5em' onfocus="this.select()"></textarea>
-    <div class="scantailor20150710b_output_label" style="display: none">
+    <button type="button" onclick='_exec()'>開始轉換</button>
+    <div class="scantailor20150710b_output_label">
         <div>
             Select full content .ScanTailor profile file:</div>
-        <textarea onclick="this.select()" class="scantailor20150710b_output" style="height: 30em; width: 90%; display: block">
-        </textarea>
+        <textarea onclick="this.select()" class="scantailor20150710b_output" style="height: 30em; width: 90%; display: block"></textarea>
         <input class="scantailor20150710b_filename" type="hidden" />
         <button class="scantailor20150710b_download">
             DOWNLOAD</button>

@@ -26,16 +26,16 @@ var _exec = function () {
     var _input = $("#scantailor20150710b_input_textarea").val();
     var _output = _scantailor20150710bSetFullContent(_input);
     jQuery(".scantailor20150710b_output").val(_output);
-    jQuery(".scantailor20150710b_input_label").hide();
+    //jQuery(".scantailor20150710b_input_label").hide();
     jQuery(".scantailor20150710b_output_label").show();
     jQuery(".scantailor20150710b_download").click();
-    jQuery(".scantailor20150710b_reset").click();
+    //jQuery(".scantailor20150710b_reset").click();
 };
 
 setTimeout(function () {
     document.getElementById('scantailor20150710b_input').addEventListener('change', _b_handleFileSelect, false);
     jQuery(".scantailor20150710b_reset").click(function () {
-        jQuery(".scantailor20150710b_output_label").hide();
+        //jQuery(".scantailor20150710b_output_label").hide();
         jQuery(".scantailor20150710b_input_label").show();
     });
 
