@@ -112,7 +112,7 @@ $(function () {
         'height': '100vh'
     });
     
-    var _output = "data,skip,in_semester,entry_count,change_count";
+    var _output = "date,skip,in_semester,entry_count,change_count";
     for (var _i = 0; _i < _full_data.length; _i++) {
         _output = _output + "\n" + _full_data[_i].join(",");
     }
