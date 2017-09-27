@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Iframe-Template</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+    </head>
+    <body>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<link rel="stylesheet" href="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.css">
+<link rel="stylesheet" href="//fontawesome.io/assets/font-awesome/css/font-awesome.css">
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
+<script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/clipboard.min.js"></script>
+<script src="//pulipulichen.github.io/blogger/posts/2016/12/puli-util.clipboard.js"></script>
+<link rel="stylesheet" href="style.css">
+
+<!-- ------------------------------------ -->
+
+<form class="file-process-framework ui form">
+
+  <div class="ui two column doubling grid">
+    <div class="column">
+	<div class="ui segment">
+	
+    
+<h1 class="ui horizontal divider header">
+  Input
+</h1>
+
+
+<!-- --------------------------------- -->
+
+<div class="ui bottom attached active tab segment input-field-container" data-tab="textarea">
+  <div class="field" style="display:none;">
+    <label for="input_mode_textarea">Paste text here: </label>
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()" style="display:none;"></textarea>
+  </div>
+  
+  <div class="field">
+    <label for="input_src">
+		iframe src: 
+	</label>
+    <input type="text" class="input_title input-field change-event" id="input_src"  value="http://blog.pulipuli.info/" />
+  </div>
+  
+      
+</div>
+
+<!-- -------------------------------------- -->
+    
+  <div class="field">
+    <div class="loading hide">
+        <!-- <img src="//dl.dropboxusercontent.com/u/717137/2016/loading.gif" /></div> -->
+  </div> <!-- <div class="field"> -->
+  
+		</div> <!-- <div class="ui segment"> -->
+	</div> <!-- <div class="column"> -->
+  <!-- -------------------------------------- -->
+  
+    <div class="column">
+  <div class="ui segment display-result" style="">
+  <!-- <div class="display-result"> -->
+  
+    <h2 class="ui horizontal divider header">
+      Result
+    </h2>
+    <div class="field" style="display: none;">
+      <button type="button" class="fluid ui large right labeled icon green button download-file">
+        <i class="right download icon"></i>
+        DOWNLOAD
+      </button>
+    </div>
+    
+    <div class="field">
+      <label for="preview">
+        Result Preview: 
+		<button type="button" class="copy-ele-value" data-copy-ele-value="#preview">Copy Source Code</button>
+		
+        <div class="ui  pointing below  medium blue basic label encoding" style="margin-left: 1em; display: none;">
+          Get error encoding text? <a href="http://blog.pulipuli.info/2016/12/utf-8notepad-how-to-convert-plain-text.html" target="notepad" >Try to Convert TXT file to UTF8 encoding?</a>
+        </div>
+      </label>
+        
+      <textarea id="preview" class="preview" onfocus="this.select();"></textarea>
+    </div>
+	
+    <div id="preview_html" class="ui segment" ></div>
+  
+  </div>
+    </div> <!-- <div class="column"> -->
+  </div> <!-- <div class="ui two column doubling grid"> -->
+</form>
+
+
+        <script src="script.js"></script>
+    </body>
+</html>
