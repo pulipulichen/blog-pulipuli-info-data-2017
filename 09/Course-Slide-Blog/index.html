@@ -22,12 +22,12 @@ Input
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
 <script src="//cdn.tinymce.com/4/tinymce.min.js"></script>
+<script src='//cdnjs.cloudflare.com/ajax/libs/sisyphus.js/1.1.3/sisyphus.min.js'></script>
 
 <script src="script.js"></script>
 
 <!-- ------------------------------------------------------------ -->
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <link rel="stylesheet" href="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.css">
 <link rel="stylesheet" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css">
 <script src="//pulipulichen.github.io/blogger/posts/2016/12/semantic/semantic.min.js"></script>
@@ -36,7 +36,7 @@ Input
 
 <!-- ------------------------------------ -->
 
-<form class="file-process-framework ui form">
+<form class="file-process-framework ui form" id="file_process_framework">
 
   <div class="ui two column doubling grid">
     <div class="column">
@@ -44,7 +44,7 @@ Input
 	
     
 <h1 class="ui horizontal divider header">
-  Input
+    Input <input type="reset" value="reset" />
 </h1>
 
 
@@ -53,19 +53,19 @@ Input
 <div class="ui bottom attached active tab segment input-field-container" data-tab="textarea">
   <div class="field" style="display:none;">
     <label for="input_mode_textarea">Paste text here: </label>
-    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()" style="display:none;"></textarea>
+    <textarea class="input-mode textarea" id="input_mode_textarea" onfocus="this.select()" style="display:none;" name="input_mode_textarea"></textarea>
   </div>
   
-  <div class="field">
-    <label for="input_title">
+    <div class="field">
+        <label for="input_title">
             Title: 
             <a href="http://blog.pulipuli.info/2017/09/measures-of-center-and-spread.html" target="_blank">參考網頁</a>
             <a href="https://drive.google.com/drive/folders/0B3_qgRmbvvZ1VVZmUUt4OVk0Y28" target="_blank">[巨量資料探勘與統計應用]</a>
             <a href="https://docs.google.com/document/d/1TTrmRP0CkSeNZwS8z2Xt2L1dhLH8I49khD2UON54Stc/edit" target="_blank">[課程大綱]</a>
-    </label>
-    <input type="text" class="input_title input-field change-event" id="input_title"  value="[CHI] / [ENG]" />
-  </div>
-  
+        </label>
+        <input type="text" class="input_title input-field change-event" id="input_title" name="input_title"  value="[CHI] / [ENG]" />
+    </div>
+
   <!--
   <div class="ui two column  doubling grid">
 	<div class="column">
@@ -120,15 +120,15 @@ Input
 		
 		<tr>
 			<th>
-				Google Drive:
-				<button type="button" class="copy-attr" data-copy-attr="Google Drive (NCCU)">
-					Copy
-				</button>
-                                <a href="https://docs.google.com/presentation/d/1TuB-5CmJ7Vpa-Wz2yIt-FNk7lgsF8EJwqLxINr7cUuw/edit#slide=id.g1ce8cf009e_0_16" target="_blank">首頁樣板</a>
+                            Google Drive:
+                            <button type="button" class="copy-attr" data-copy-attr="Google Drive (NCCU)">
+                                    Copy
+                            </button>
+                            <a href="https://docs.google.com/presentation/d/1TuB-5CmJ7Vpa-Wz2yIt-FNk7lgsF8EJwqLxINr7cUuw/edit#slide=id.g1ce8cf009e_0_16" target="_blank">首頁樣板</a>
 			</th>
 			<td>
 				
-				<input type="text" id="fdf2" class="googledrive change-event  field-value" value="" />
+                            <input type="text" id="fdf2" class="googledrive change-event  field-value" name="fdf2" value="" />
 			</td>
 		</tr>
                 <tr style="display: none;">
@@ -161,7 +161,7 @@ Input
 				<button type="button" class="copy-ele-value" data-copy-ele-value="#iframe1">Copy</button>
 			</th>
 			<td>
-				<input type="text" id="iframe1" />
+				<input type="text" id="iframe1" name="iframe1" />
 			</td>
 		</tr>
 	  </table>
@@ -183,7 +183,7 @@ Input
 			</th>
 			<td>
 				
-				<input type="text" id="fdf1" class="github change-event field-value" value="" placeholder="File Path..." />
+				<input type="text" id="fdf1" name="fdf1" class="github change-event field-value" value="" placeholder="File Path..." />
 			</td>
 		</tr>
 		<tr>
@@ -191,7 +191,7 @@ Input
 				<a href="http://l.pulipuli.info/u/onedrive" target="onedrive">OneDrive:</a>
 			</th>
 			<td>
-				<input type="text" id="fdf3" value="" class="change-event field-value" />
+				<input type="text" id="fdf3" name="fdf3" value="" class="change-event field-value" />
 			</td>
 		</tr>
 		<tr>
@@ -200,7 +200,7 @@ Input
 			</th>
 			<td>
 				
-				<input type="text" id="fdf4" value="" class="change-event field-value" />
+				<input type="text" id="fdf4" name="fdf4" value="" class="change-event field-value" />
 			</td>
 		</tr>
 		<tr>
@@ -209,7 +209,7 @@ Input
 			</th>
 			<td>
 				
-				<input type="text" id="fdf5" value="" class="change-event field-value" />
+				<input type="text" id="fdf5" name="fdf5" value="" class="change-event field-value" />
 			</td>
 		</tr>
 		<tr>
@@ -218,7 +218,7 @@ Input
 			</th>
 			<td>
 				
-				<input type="text" id="fdf6" value="" class="change-event field-value" />
+                            <input type="text" id="fdf6" name="fdf6" value="" class="change-event field-value" />
 			</td>
 		</tr>
 		<tr>
@@ -227,7 +227,7 @@ Input
 			</th>
 			<td>
 				
-				<input type="text" id="fdf7" value="" class="change-event field-value" />
+				<input type="text" id="fdf7" name="fdf7" value="" class="change-event field-value" />
 			</td>
 		</tr>
                 <tr>
@@ -236,7 +236,7 @@ Input
 			</th>
 			<td>
 				
-				<input type="text" id="fdf8" value="" class="change-event field-value" />
+				<input type="text" id="fdf8" name="fdf8" value="" class="change-event field-value" />
 			</td>
 		</tr>
 	  </table>
@@ -255,7 +255,7 @@ Input
 	<label for="template">
 		Template:
 	</label>
-	<textarea class="template mceEditor textarea input-field change-event" id="template" onfocus="this.select()"><p>[[IMG </p>
+	<textarea class="template mceEditor textarea input-field change-event" id="template" name="template" onfocus="this.select()"><p>[[IMG </p>
 
 <p>這是巨量資料探勘與統計應用課程的投影片「<a href="{LINK}" target="google-drive">{CHI}</a>」。本單元是屬於系列課程中的「[[???]]」，處理資料類型包括了「類別」跟「連續」兩種。[[abs]]。</p>
 <p>這個單元包含了四個實作學習單，供同學邊看邊練習。</p>
@@ -430,6 +430,11 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 
 ga('create', 'UA-37178375-7', 'auto');
 ga('send', 'pageview');</script>
+
+
+<script>
+$("#file_process_framework").sisyphus();
+</script>
 
     </body>
 </html>

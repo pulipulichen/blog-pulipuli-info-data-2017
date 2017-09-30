@@ -244,6 +244,8 @@ $(function () {
         var _val = $(_selector).val().trim();
         PULI_UTIL.clipboard.copy(_val);
     });
+    
+    //$("#file_process_framework").sisyphus();
 
     _combine_input();
     _tinymce_init();
