@@ -16,7 +16,7 @@
 @attribute 牙醫補助 {全額,半額,無}
 @attribute 喪事補助 {有,無}
 @attribute 健保補助 {全額,半額,無}
-@attribute cluster {cluster1,cluster2,cluster3,cluster4,cluster5}
+@attribute cluster {cluster1,cluster2,cluster3,cluster4}
 
 @data
 3,4,5,5,'tc',?,'老闆控制',?,?,?,12,'很多','有','無','有','半額',?
