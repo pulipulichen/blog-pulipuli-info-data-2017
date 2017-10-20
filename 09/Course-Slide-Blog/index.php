@@ -165,6 +165,17 @@ Input
 				<input type="text" id="iframe1" name="iframe1" onfocus="this.select()" />
 			</td>
 		</tr>
+            </table>
+            <table class="ui table">
+                <tr>
+			<th>
+                           Link to Iframe:
+                           <button type="button" class="link-to-iframe" >Copy</button>
+			</th>
+			<td>
+                            <input type="text" id="link_to_iframe" name="link_to_iframe" onfocus="this.select()" />
+			</td>
+		</tr>
 	  </table>
             <div class="field"  style="display: none;">
                 <label for="file_list">

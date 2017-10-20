@@ -245,6 +245,13 @@ $(function () {
         PULI_UTIL.clipboard.copy(_val);
     });
     
+    $(".link-to-iframe").click(function () {
+        var _val = $("#link_to_iframe").val().trim();
+        _val = '<iframe src="' + _val + '" width="100%" style="height: 90vh;border: 1px solid #ccc;" frameborder="0" class="post-iframe"></iframe>';
+        PULI_UTIL.clipboard.copy(_val);
+        console.log(_val);
+    });
+    
     //$("#file_process_framework").sisyphus();
 
     _combine_input();
