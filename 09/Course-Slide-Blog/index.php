@@ -1,7 +1,7 @@
+<?php
+include 'config.php';
+?>
 <!DOCTYPE html>
-<!--
-Input 
--->
 <html>
     <head>
         <title>Google Drive File Download Link Generator</title>
@@ -45,7 +45,7 @@ Input
 	
     
 <h1 class="ui horizontal divider header">
-    Input <input type="reset" value="reset" />
+    Input <input type="reset" value="reset" onclick="setTimeout(function(){location.reload();},500)" />
 </h1>
 
 
@@ -116,6 +116,9 @@ Input
                 <li>有講到iCam的地方是否改過了？</li>
                 <li>是不是有不合宜的內容？</li>
                 <li>學習單的投影片是否換了連結？</li>
+                <li>是否寫好了結尾？<button type="button" class="copy-attr" data-copy-attr="這篇談文本探勘就到此為止了。你對文本分析、內容分析等研究的看法如何呢？你是否也曾經做過對大量文本進行解讀的研究呢？從資訊技術的角度來看，你對文本分析又有什麼看法呢？歡迎在下面的留言處與我分享你的想法，或是在AddThis分享工具按讚、分享到Facebook等社群媒體吧！感謝你的耐心閱讀，讓我們下一篇見。">
+                                    Copy
+                            </button></li>
             </ul>
 		  <table class="ui table">
 		
@@ -189,7 +192,7 @@ Input
 		<tr>
 			<th>
                             GitHub:
-                            <button type="button" class="copy-attr" data-copy-attr="D:\xampp\htdocs\blogger-data\blog-pulipuli-info-data-2017\09\Big-Data-Analysis-Course">
+                            <button type="button" class="copy-attr" data-copy-attr="<?php echo $CONFIG["github_path"]; ?>">
                                     Copy Dir Path
                             </button>
 			</th>
@@ -267,7 +270,7 @@ Input
 		Template:
 	</label>
 	<textarea class="template mceEditor textarea input-field change-event" id="template" name="template" onfocus="this.select()"><?php 
-echo file_get_contents("template20171020.html");
+echo file_get_contents("template.html");
 ?></textarea>
   </div> 
       
@@ -301,7 +304,7 @@ echo file_get_contents("template20171020.html");
       <label for="output_folder">
 		Folder:
 		<button type="button" class="copy-ele-value" data-copy-ele-value="#output_folder">Copy</button>
-		[<a href="https://drive.google.com/uc?export=download&id=0B5UXWzdIPpm0YmZBX01OYkw4X2M">Cover Image Template</a>], 
+		[<a href="https://drive.google.com/uc?export=download&id=0B5UXWzdIPpm0YmZBX01OYkw4X2M">Cover Image PPTX</a>], 
 		[<a href="http://www.rollip.com/wizard/upload" target="Rollip">Rollip</a>],
 		[<a href="https://www.photovisi.com/photovisi/piling-them-up" target="Mashup">Photo Mashup</a>],
 		[<a href="https://ifttt.com/applets/2497993d-blogger-facebook#card" target="ifttt1">IFTTT1</a>],
@@ -315,24 +318,15 @@ echo file_get_contents("template20171020.html");
 		Title: 
 		<button type="button" class="copy-ele-value" data-copy-ele-value="#output_title">Copy</button>
 		(Tag: 
-			<button type="button" class="copy-attr" data-copy-attr="Course">
-				Course
-			</button>
-			<button type="button" class="copy-attr" data-copy-attr="Presentation">
-				Presentation
-			</button>
-                        <button type="button" class="copy-attr" data-copy-attr="Series/Big Data Analysis Course">
-				Series
-			</button>
-                        <button type="button" class="copy-attr" data-copy-attr="Software/Weka">
-				Weka
-			</button>
-                        <button type="button" class="copy-attr" data-copy-attr="Software/GoogleDoc">
-				GoogleDoc
-			</button>
-                    <button type="button" class="copy-attr" data-copy-attr="Widget">
-				Widget
-			</button>
+			<?php
+                        foreach ($CONFIG["tags"] AS $key => $value) {
+                            ?>
+                            <button type="button" class="copy-attr" data-copy-attr="<?php echo $value; ?>">
+				<?php echo $key; ?>
+                            </button>
+                            <?php
+                        }
+                        ?>
 		)
 	  </label>
       <input type="text" onfocus="this.select()" id="output_title" class="output_title" style="width: calc(100% - 15em)" />
