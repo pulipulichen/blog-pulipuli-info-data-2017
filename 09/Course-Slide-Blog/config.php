@@ -12,8 +12,10 @@ $CONFIG["tags"] = array(
     'Presentation' => 'Presentation',
     //'Series' => 'Series/Big Data Analysis Course',
     'Series' => 'Series/NOU Word',
-    'Weka' => 'Software/Weka',
-    'GoogleDoc' => 'Software/GoogleDoc',
-    'Widget' => 'Widget',
+    'Word' => 'Software/Word',
+    //'Weka' => 'Software/Weka',
+    
+    //'GoogleDoc' => 'Software/GoogleDoc',
+    //'Widget' => 'Widget',
     
 );

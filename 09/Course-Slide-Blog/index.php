@@ -305,7 +305,7 @@ echo file_get_contents("template.html");
       <label for="output_folder">
 		Folder:
 		<button type="button" class="copy-ele-value" data-copy-ele-value="#output_folder">Copy</button>
-		[<a href="https://drive.google.com/uc?export=download&id=0B5UXWzdIPpm0YmZBX01OYkw4X2M">Cover Image PPTX</a>], 
+		[<a href="blog cover image template.pptx">Cover Image PPTX</a>], 
 		[<a href="http://www.rollip.com/wizard/upload" target="Rollip">Rollip</a>],
 		[<a href="https://www.photovisi.com/photovisi/piling-them-up" target="Mashup">Photo Mashup</a>],
 		[<a href="https://ifttt.com/applets/2497993d-blogger-facebook#card" target="ifttt1">IFTTT1</a>],
