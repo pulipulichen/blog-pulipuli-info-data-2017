@@ -111,15 +111,7 @@ include 'config.php';
   <div class="ui two column doubling grid">
 	<div class="column">
             檢查事項
-            <ul>
-                <li>是不是另外建立副本(blog)了？</li>
-                <li>有講到iCam的地方是否改過了？</li>
-                <li>是不是有不合宜的內容？</li>
-                <li>學習單的投影片是否換了連結？</li>
-                <li>是否寫好了結尾？<button type="button" class="copy-attr" data-copy-attr="這篇談文本探勘就到此為止了。你對文本分析、內容分析等研究的看法如何呢？你是否也曾經做過對大量文本進行解讀的研究呢？從資訊技術的角度來看，你對文本分析又有什麼看法呢？歡迎在下面的留言處與我分享你的想法，或是在AddThis分享工具按讚、分享到Facebook等社群媒體吧！感謝你的耐心閱讀，讓我們下一篇見。">
-                                    Copy
-                            </button></li>
-            </ul>
+            <?php echo file_get_contents('checklist.html'); ?>
 		  <table class="ui table">
 		
 		<tr>
