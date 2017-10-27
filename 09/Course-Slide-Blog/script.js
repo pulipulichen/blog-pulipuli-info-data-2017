@@ -190,7 +190,7 @@ var _tinymce_init = function () {
             'insertdatetime media nonbreaking save table contextmenu directionality',
             'emoticons template paste textcolor colorpicker textpattern imagetools codesample toc'
         ],
-        toolbar1: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image  tableprops',
+        toolbar1: 'fullscreen | undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image  tableprops',
         toolbar2: 'print preview media | forecolor backcolor emoticons | codesample code ',
         //toolbar1: 'insert | codesample code',
 
@@ -250,6 +250,34 @@ $(function () {
         _val = '<iframe src="' + _val + '" width="100%" style="height: 90vh;border: 1px solid #ccc;" frameborder="0" class="post-iframe"></iframe>';
         PULI_UTIL.clipboard.copy(_val);
         console.log(_val);
+    });
+    
+    $(".path-to-github").click(function () {
+        var _path = $("#path_to_github").val().trim();
+        _path = $.trim(_path);
+
+        if (_path.substr(0, 1) === '"' || _path.substr(0, 1) === "'") {
+            _path = _path.substring(1, _path.length-1);
+        }
+
+        var _url = _path;
+        _url = _url.replace(/\\/g, "/");
+
+        var _gp_url, _lh_url;
+        if (_url.indexOf("/blogger-page/") > -1) {
+            _url = _url.substring(_url.indexOf("/blogger-page/")+13, _url.length);
+
+            _gp_url = "https://pulipulichen.github.io/blogger" + _url;
+            _lh_url = "http://localhost/blogger-page" + _url;
+        }
+        else if (_url.indexOf("/blogger-data/") > -1) {
+            _url = _url.substring(_url.indexOf("/blogger-data/")+13, _url.length);
+
+            _gp_url = "https://pulipulichen.github.io" + _url;
+            _lh_url = "http://localhost/blogger-data" + _url;
+        }
+        
+        PULI_UTIL.clipboard.copy(_gp_url);
     });
     
     //$("#file_process_framework").sisyphus();

@@ -171,6 +171,15 @@ include 'config.php';
                             <input type="text" id="link_to_iframe" name="link_to_iframe" onfocus="this.select()" />
 			</td>
 		</tr>
+                <tr>
+			<th>
+                           Local file path to GitHub:
+                           <button type="button" class="path-to-github" >Copy</button>
+			</th>
+			<td>
+                            <input type="text" id="path_to_github" name="path_to_github" onfocus="this.select()" />
+			</td>
+		</tr>
 	  </table>
             <div class="field"  style="display: none;">
                 <label for="file_list">
