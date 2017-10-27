@@ -60,9 +60,9 @@ include 'config.php';
     <div class="field">
         <label for="input_title">
             Title: 
-            <a href="http://blog.pulipuli.info/2017/09/t-testing-differences-between-means.html" target="_blank">參考網頁</a>
-            <a href="https://drive.google.com/drive/folders/0B3_qgRmbvvZ1VVZmUUt4OVk0Y28" target="_blank">[巨量資料探勘與統計應用]</a>
-            <a href="https://docs.google.com/document/d/1TTrmRP0CkSeNZwS8z2Xt2L1dhLH8I49khD2UON54Stc/edit" target="_blank">[課程大綱]</a>
+            <a href="<?php echo $CONFIG["demo_page"]; ?>" target="_blank">參考網頁</a>
+            <a href="<?php echo $CONFIG["google_drive"]; ?>" target="_blank">[Google Drive]</a>
+            <a href="<?php echo $CONFIG["outline"]; ?>" target="_blank">[課程大綱]</a>
         </label>
         <input type="text" class="input_title input-field change-event" id="input_title" name="input_title"  value="[CHI] / [ENG]" />
     </div>
