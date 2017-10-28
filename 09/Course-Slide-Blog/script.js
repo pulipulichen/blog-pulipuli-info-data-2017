@@ -278,6 +278,8 @@ $(function () {
         }
         
         PULI_UTIL.clipboard.copy(_gp_url);
+        
+        $("#path_to_github").val("");
     });
     
     //$("#file_process_framework").sisyphus();
