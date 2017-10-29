@@ -40,7 +40,34 @@ var _combine_input = function () {
     var _fdf1 = _fields["fdf1"];
     if (_fdf1 !== "") {
         _fdf1 = _fdf1.replace(/\\/g, "/");
-        _fdf1 = _fdf1.replace("D:/xampp/htdocs/blogger-data/", "https://pulipulichen.github.io/blog-pulipuli-info-data-2017/");
+        var _path = _fdf1.trim();
+        
+        if (_path.substr(0, 1) === '"' || _path.substr(0, 1) === "'") {
+            _path = _path.substring(1, _path.length-1);
+        }
+
+        var _url = _path;
+        _url = _url.replace(/\\/g, "/");
+
+        var _gp_url;
+        if (_url.indexOf("/blogger-page/") > -1) {
+            _url = _url.substring(_url.indexOf("/blogger-page/")+13, _url.length);
+
+            _gp_url = "https://pulipulichen.github.io/blogger" + _url;
+        }
+        else if (_url.indexOf("/2015-NOU-Word-documents/") > -1) {
+            _url = _url.substring(_url.indexOf("/2015-NOU-Word-documents/")+25, _url.length);
+
+            _gp_url = "https://pulipulichen.github.io/2015-NOU-Word-documents/" + _url;
+        }
+        else if (_url.indexOf("/blogger-data/") > -1) {
+            _url = _url.substring(_url.indexOf("/blogger-data/")+13, _url.length);
+
+            _gp_url = "https://pulipulichen.github.io" + _url;
+        }
+        
+        //_fdf1 = _fdf1.replace("D:/xampp/htdocs/blogger-data/", "https://pulipulichen.github.io/blog-pulipuli-info-data-2017/");
+        _fdf1 = _gp_url;
         //console.log(["fdf1", _fdf1]);
         _fields["fdf1"] = _fdf1;
     }
@@ -264,18 +291,21 @@ $(function () {
         var _url = _path;
         _url = _url.replace(/\\/g, "/");
 
-        var _gp_url, _lh_url;
+        var _gp_url;
         if (_url.indexOf("/blogger-page/") > -1) {
             _url = _url.substring(_url.indexOf("/blogger-page/")+13, _url.length);
 
             _gp_url = "https://pulipulichen.github.io/blogger" + _url;
-            _lh_url = "http://localhost/blogger-page" + _url;
+        }
+        else if (_url.indexOf("/2015-NOU-Word-documents/") > -1) {
+            _url = _url.substring(_url.indexOf("/2015-NOU-Word-documents/")+25, _url.length);
+
+            _gp_url = "https://pulipulichen.github.io/2015-NOU-Word-documents/" + _url;
         }
         else if (_url.indexOf("/blogger-data/") > -1) {
             _url = _url.substring(_url.indexOf("/blogger-data/")+13, _url.length);
 
             _gp_url = "https://pulipulichen.github.io" + _url;
-            _lh_url = "http://localhost/blogger-data" + _url;
         }
         
         PULI_UTIL.clipboard.copy(_gp_url);
