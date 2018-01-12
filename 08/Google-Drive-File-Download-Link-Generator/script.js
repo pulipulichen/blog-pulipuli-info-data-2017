@@ -44,6 +44,9 @@ $(function () {
             if (_format === "Copy") {
                 _msg = "建立副本";
             }
+            if (_format === "Present") {
+                _msg = "簡報播放模式";
+            }
             
             _output.append('<span>' 
                     + '<a href="' + _link + '" target="_blank">' + _image + _msg +  '</a>' 
@@ -80,6 +83,7 @@ $(function () {
                 break;
             case "presentation":
                 _create_link("https://docs.google.com/presentation/d/" + _id + "/copy", "Copy", "fa-clone");
+                _create_link("https://docs.google.com/presentation/d/" + _id + "/present", "Present", "fa-play-circle-o ");
                 _create_link("https://docs.google.com/presentation/d/" + _id + "/export/pdf", "PDF", "fa-file-pdf-o");
                 _create_link("https://docs.google.com/presentation/d/" + _id + "/export/pptx", "Power Point", "fa-file-powerpoint-o");
                 _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/export/odp", "OpenDocument Presentation", "fa-file-o");
