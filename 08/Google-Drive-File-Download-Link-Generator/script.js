@@ -44,8 +44,11 @@ $(function () {
             if (_format === "Copy") {
                 _msg = "建立副本";
             }
-            if (_format === "Present") {
+            else if (_format === "Present") {
                 _msg = "簡報播放模式";
+            }
+            else if (_format === "Preview") {
+                _msg = "預覽播放";
             }
             
             _output.append('<span>' 
@@ -64,6 +67,7 @@ $(function () {
         _output.empty();
         switch (_type) {
             case "document":
+                _create_link("https://docs.google.com/document/d/" + _id + "/preview", "Preview", " fa-play-circle");
                 _create_link("https://docs.google.com/document/d/" + _id + "/copy", "Copy", "fa-clone");
                 _create_link("https://docs.google.com/document/d/" + _id + "/export?format=pdf", "PDF", "fa-file-pdf-o");
                 _create_link("https://docs.google.com/document/d/" + _id + "/export?format=doc", "Word", "fa-file-word-o");
@@ -74,6 +78,7 @@ $(function () {
                 _create_link("https://docs.google.com/document/d/" + _id + "/export?format=epub", "EPUB", "fa-book");
                 break;
             case "spreadsheets":
+                _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/preview", "Preview", " fa-play-circle");
                 _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/copy", "Copy", "fa-clone");
                 _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/export?format=pdf", "PDF", "fa-file-pdf-o");
                 _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/export?format=xlsx", "Excel", "fa-file-excel-o");
@@ -82,8 +87,9 @@ $(function () {
                 _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/export?format=csv", "TSV", "fa-file-text-o");
                 break;
             case "presentation":
+                _create_link("https://docs.google.com/presentation/d/" + _id + "/preview", "Preview", " fa-play-circle");
                 _create_link("https://docs.google.com/presentation/d/" + _id + "/copy", "Copy", "fa-clone");
-                _create_link("https://docs.google.com/presentation/d/" + _id + "/present", "Present", "fa-play-circle-o ");
+                _create_link("https://docs.google.com/presentation/d/" + _id + "/present", "Present", "fa-play-circle-o");
                 _create_link("https://docs.google.com/presentation/d/" + _id + "/export/pdf", "PDF", "fa-file-pdf-o");
                 _create_link("https://docs.google.com/presentation/d/" + _id + "/export/pptx", "Power Point", "fa-file-powerpoint-o");
                 _create_link("https://docs.google.com/spreadsheets/d/" + _id + "/export/odp", "OpenDocument Presentation", "fa-file-o");
