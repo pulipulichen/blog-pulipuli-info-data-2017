@@ -88,7 +88,7 @@ var _calc_normal_dist = function () {
     }
 
     if (_dist === "dist_t") {
-        var _score = tdistr(_df, _p);
+        var _score = tdistr(_df, _p / 2); // 修正，原本寫成查詢的是單尾，現在改成雙尾
         _interval = _score * _a;
     }
     else if (_dist === "dist_normal") {
