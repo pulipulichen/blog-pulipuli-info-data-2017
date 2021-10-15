@@ -39,7 +39,7 @@ var _combine_input = function () {
 };	// var _combine_input = function () {
 
 // ------------------------------------------------------
-
+/*
 tinyMCE.init({
 	mode : "specific_textareas",
 	editor_selector : "mceEditor",
@@ -59,6 +59,7 @@ tinyMCE.init({
 	   });
     }
 });
+*/
 
 var _convert_spec_to_table = function (_spec) {
 	
